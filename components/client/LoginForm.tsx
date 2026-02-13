@@ -13,6 +13,9 @@ import { toast } from "sonner"
 import { useFieldErrors } from "@/hooks/use-field-error"
 import { Spinner } from "../ui/spinner"
 import { Checkbox } from "../ui/checkbox"
+import { useUserStore } from "@/store/user.store"
+import { RoleName } from "@/common/constants/app.constant"
+import { useRouter } from "next/navigation"
 
 
 const LoginForm = () => {
@@ -21,6 +24,8 @@ const LoginForm = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const {login, isLoading, isAuthenticated, error} = useAuthStore()
+    const {getCurrentUser, user} = useUserStore();
+    const router = useRouter();
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -36,14 +41,26 @@ const LoginForm = () => {
         setPassword('')
     }, [error])
 
+    useEffect(() => {
+        console.log(user)
+        if(user) {
+            console.log("Run here")
+            if(user.role.name === RoleName.ADMIN) {
+                router.replace('/admin/dashboard')
+            } else {
+                router.replace('/')
+            }
+        }
+    },[user])
     const fieldErrors = useFieldErrors(error)
 
     const handleLogin = async () => {
         await login({email, password})
+        await getCurrentUser()
     }
 
     return (
-        <Card className="w-full max-w-sm shadow-lg shadow-primary/30">
+        <Card className="w-full max-w-sm shadow-2xl shadow-primary">
             <h1 className="mb-6 text-3xl font-bold text-center text-primary uppercase">
                 Đăng nhập
             </h1>

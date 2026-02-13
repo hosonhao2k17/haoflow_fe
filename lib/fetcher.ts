@@ -8,13 +8,15 @@ export const fetcher = async <T>(url: string, init?: RequestInit): Promise<T> =>
         ...init,
         headers: {
             'Content-Type': 'application/json',
-            ...init?.headers
+            ...init?.headers,
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            
         }
     })
-    const data = await res.json()
+    const json = await res.json()
     if(!res.ok) {
-        throw data
+        throw json
     }
 
-    return data;
+    return json.data;
 }

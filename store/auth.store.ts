@@ -28,13 +28,13 @@ export const useAuthStore = create<AuthState>((set) => ({
                 isAuthenticated: true,
                 isLoading: false
             })
+            localStorage.setItem('accessToken',data.accessToken);
         } catch (err) {
-            console.log(err)
             set({
-                    isAuthenticated: false,
-                    isLoading: false,
-                    accessToken: null,
-                    error: err as ApiError
+                isAuthenticated: false,
+                isLoading: false,
+                accessToken: null,
+                error: err as ApiError
             }) 
         }
     }
