@@ -5,3 +5,4 @@ export default function Home() {
     <h1>Trang chủ</h1>
   );
 }
+  
