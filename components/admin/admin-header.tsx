@@ -9,7 +9,7 @@ const AdminHeader = () => {
   return (
     <div className="border-b border-gray-200 flex justify-between items-center px-6 py-4 bg-white">
 
-      <h1 className="uppercase text-2xl font-bold tracking-wide text-gray-800">
+      <h1 className="uppercase text-2xl font-bold tracking-wide text-primary">
         Trang quản trị
       </h1>
 
@@ -35,9 +35,8 @@ const AdminHeader = () => {
           </Avatar>
 
           <div className="leading-tight">
-            <p className="text-sm font-semibold text-gray-800">
+            <p className="text-sm font-semibold text-primary">
               {user?.fullName}
-              Hào đẹp trai
             </p>
 
             <span
@@ -48,7 +47,6 @@ const AdminHeader = () => {
               }`}
             >
               {user?.role?.name}
-              admin
             </span>
           </div>
         </div>

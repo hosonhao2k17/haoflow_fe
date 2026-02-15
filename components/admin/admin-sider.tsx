@@ -38,7 +38,7 @@ const AdminSider = () => {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-primary text-white flex flex-col p-5">
+    <aside className="w-64 bg-primary text-white flex flex-col h-full  fixed p-5">
 
       <div className="mb-10">
         <h2 className="text-xl font-bold tracking-wide">

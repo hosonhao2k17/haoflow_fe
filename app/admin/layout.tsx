@@ -25,16 +25,18 @@ export default function AdminLayout({ children }: Props) {
   }, [user, router])
 
   return (
-    <div className="flex bg-primary min-h-screen">
+    <div className="flex bg-primary min-h-screen ">
         {/* sider  */}
         <AdminSider />
         {/* end sider  */}
-        <div className="bg-white w-full mt-3 mb-3 mr-3 shadow-white rounded-xl p-3">
+        <div className="bg-white w-full mt-3 ml-64 mb-3 mr-3 shadow-white rounded-xl p-3">
             {/* header  */}
             <AdminHeader />
             
             {/* end header  */}
-            {children}
+            <div className="p-3">
+              {children}
+            </div>
         </div>
     </div>
   )

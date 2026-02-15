@@ -9,3 +9,7 @@ export const getCurrentUser = async (): Promise<User> => {
 
     return data;
 }
+
+export const getUsers = async () => {
+    return await fetcher<any>(`users`);
+}
