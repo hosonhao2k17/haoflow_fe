@@ -1,5 +1,4 @@
-import config from "@/config/config";
-import { fetcher } from "@/lib/fetcher";
+import {api} from "@/config/axios";
 
 export interface LoginDto {
     email: string;
@@ -12,9 +11,6 @@ export interface LoginRdo {
 }
 
 export const login = async (dto: LoginDto) => {
-    const data = await fetcher<LoginRdo>(`auth/login`,{
-        method: 'POST',
-        body: JSON.stringify(dto)
-    })
-    return data;
+    const res = await api.post('auth/login',dto)
+    return res.data;
 }

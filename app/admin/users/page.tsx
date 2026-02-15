@@ -2,16 +2,19 @@
 
 import UsersTable from "@/components/admin/users/users-table"
 import { useUserStore } from "@/store/user.store"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Users = () => {
   
+  const [keyword, setKeyword] = useState<string>('');
   const {getUsers, users} = useUserStore();
   useEffect(() => {
-     getUsers()
-  },[getUsers])
+     getUsers({
+      keyword
+     })
+  },[getUsers, keyword])
   return (
-    <UsersTable users={users}/>
+    <UsersTable users={users} setKeyword={setKeyword}/>
   )
 }
 

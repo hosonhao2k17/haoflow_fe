@@ -22,9 +22,11 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 interface Props {
     users: User[];
+    setKeyword: (keyword: string) => void
 }
 const UsersTable = ({
-    users
+    users,
+    setKeyword
 }: Props) => {
 
 
@@ -38,7 +40,10 @@ const UsersTable = ({
                         <Field>
                             <FieldLabel>Tìm kiếm</FieldLabel>
                             <ButtonGroup>
-                                <Input placeholder="Nhập tên hoặc email...."/>
+                                <Input 
+                                    placeholder="Nhập tên hoặc email...." 
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                />
                                 <Button>Tìm</Button>
                             </ButtonGroup>
                         </Field>

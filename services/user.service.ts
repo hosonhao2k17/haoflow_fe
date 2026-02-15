@@ -1,15 +1,26 @@
+import { OffsetPaginationDto } from "@/common/interfaces/offset-pagination.interface";
 import { User } from "@/common/interfaces/user.interface";
-import { fetcher } from "@/lib/fetcher"
+import {api} from "@/config/axios";
 
 
 
 export const getCurrentUser = async (): Promise<User> => {
 
-    const data = await fetcher<User>(`users/me`);
-
-    return data;
+    const res = await api.get<User>('users/me')
+    return res.data;
 }
 
-export const getUsers = async () => {
-    return await fetcher<any>(`users`);
+export interface QueryUserDto extends OffsetPaginationDto {
+    keyword?: string;
+    gender?: string;
+    status?: string;
+    roleId?: string;
+    createdBy?: string;
+    updatedBy?: string;
+}
+export const getUsers = async (query: QueryUserDto = {}) => {
+    const res = await api.get('users',{
+        params: query
+    })
+    return res.data
 }
