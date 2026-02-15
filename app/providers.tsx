@@ -1,4 +1,5 @@
 "use client"
+import { useCurrentUser } from "@/queries/users/use-current-user.query"
 import { useUserStore } from "@/store/user.store"
 import React, { useEffect } from "react"
 
@@ -8,11 +9,14 @@ const Providers = ({
 }: {
     children: React.ReactNode
 }) => {
-    const getCurrentUser = useUserStore(state => state.getCurrentUser)
+    const {data} = useCurrentUser()
+    const setUser = useUserStore((state) => state.setUser)
 
     useEffect(() => {
-        getCurrentUser()
-    }, [getCurrentUser])
+        if(data) {
+            setUser(data)
+        }
+    }, [data, setUser])
 
     return <>{children}</>
 }

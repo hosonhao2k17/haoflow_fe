@@ -1,20 +1,19 @@
 "use client"
 
 import UsersTable from "@/components/admin/users/users-table"
+import { useUsersQuery } from "@/queries/users/use-users.query";
 import { useUserStore } from "@/store/user.store"
 import { useEffect, useState } from "react";
 
 const Users = () => {
   
-  const [keyword, setKeyword] = useState<string>('');
-  const {getUsers, users} = useUserStore();
-  useEffect(() => {
-     getUsers({
-      keyword
-     })
-  },[getUsers, keyword])
+  const [keyword, setKeyword] = useState<string>();
+  const {data} = useUsersQuery({
+    keyword
+  })
+  
   return (
-    <UsersTable users={users} setKeyword={setKeyword}/>
+    <UsersTable users={data?.items ?? []} setKeyword={setKeyword}/>
   )
 }
 
