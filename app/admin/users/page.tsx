@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 const Users = () => {
   
   const [keyword, setKeyword] = useState<string>();
-  const {data} = useUsersQuery({
-    keyword
+  const [limit, setLimit] = useState<number>(10);
+  const {data, isLoading} = useUsersQuery({
+    keyword,
+    limit
   })
   
   return (
-    <UsersTable users={data?.items ?? []} setKeyword={setKeyword}/>
+    <UsersTable isLoading={isLoading} users={data?.items ?? []} setKeyword={setKeyword} setLimit={setLimit}/>
   )
 }
 

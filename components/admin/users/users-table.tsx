@@ -4,7 +4,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowBigDown, ArrowDownWideNarrow, Book, Check, Edit, ExternalLink, FileText, Mars, Menu, MoreHorizontal, MoreHorizontalIcon, Plus, Sheet, Trash, UserPlus, Venus, X } from "lucide-react";
+import { ArrowBigDown, ArrowDownWideNarrow, Book, Check, Edit, ExternalLink, FileText, Mars, Menu, MoreHorizontal, MoreHorizontalIcon, Plus, Sheet, Trash, UserPlus, UserRoundX, Venus, X } from "lucide-react";
 import UsersDonutChart from "./users-donut-chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,16 +17,22 @@ import { Gender, UserStatus } from "@/common/constants/app.constant";
 import { formatDate } from "@/lib/date";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import TableSkeleton from "@/components/skeletons/table.skeleton";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 
 
 
 interface Props {
     users: User[];
-    setKeyword: (keyword: string | undefined) => void
+    setKeyword: (keyword: string | undefined) => void;
+    setLimit: (limit: number) => void;
+    isLoading: boolean
 }
 const UsersTable = ({
     users,
-    setKeyword
+    setKeyword,
+    setLimit,
+    isLoading
 }: Props) => {
 
 
@@ -102,12 +108,12 @@ const UsersTable = ({
                             <FieldLabel>
                                 Lấy tất cả
                             </FieldLabel>
-                            <Select defaultValue="10">
+                            <Select defaultValue="10" onValueChange={(value) => setLimit(parseInt(value))}>
                                 <SelectTrigger className="bg-primary text-primary-foreground">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="bg-primary text-primary-foreground" defaultValue="10">
-                                    <SelectGroup>
+                                <SelectContent  className="bg-primary text-primary-foreground">
+                                    <SelectGroup >
                                         <SelectItem value="10">10</SelectItem>
                                         <SelectItem value="20">20</SelectItem>
                                         <SelectItem value="50">50</SelectItem>
@@ -139,7 +145,9 @@ const UsersTable = ({
                     </div>
                 </div>
                 <div className="mt-2">
-                    <Table  >
+                    {
+                        isLoading ? <TableSkeleton rows={5} columns={5} /> :
+                        <Table  >
                         <TableHeader>
                             <TableRow>
                                 <TableHead >
@@ -150,7 +158,7 @@ const UsersTable = ({
                                 </TableHead>
                                 <TableHead>
                                     <Popover >
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                             <Button variant="ghost">
                                                 Vai trò
                                                 <Menu  />
@@ -176,7 +184,7 @@ const UsersTable = ({
                                 </TableHead>
                                 <TableHead className="flex items-center">
                                     <Popover >
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                             <Button variant="ghost" size="icon">
                                                 Trạng thái
                                                 <Menu  />
@@ -202,7 +210,7 @@ const UsersTable = ({
                                 </TableHead>
                                 <TableHead>
                                     <Popover >
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                             <Button variant="ghost" size="sm">
                                                 Xác thực
                                                 <Menu  />
@@ -224,7 +232,7 @@ const UsersTable = ({
                                 </TableHead>
                                 <TableHead>
                                     <Popover >
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                             <Button variant="ghost" size="sm">
                                                 Giới tính
                                                 <Menu  />
@@ -257,6 +265,30 @@ const UsersTable = ({
                         </TableHeader>
                         <TableBody>
                             {
+                                users.length === 0 
+                                ?
+                                <TableRow >
+                                    <TableCell colSpan={8}>
+                                        <Empty>
+                                            <EmptyHeader>
+                                                <EmptyMedia>
+                                                    <UserRoundX />  
+                                                </EmptyMedia>
+                                                <EmptyTitle>
+                                                    Không có dữ liệu nào
+                                                </EmptyTitle>
+                                                <EmptyDescription>
+                                                    Không có dữ liệu nào được tìm thấy vui lòng thêm dữ liệu 
+                                                </EmptyDescription>
+                                            </EmptyHeader>
+                                            <EmptyContent className="flex-row justify-center gap-3">
+                                                <Button>Tạo</Button>
+                                                <Button variant="outline">Nhập</Button>
+                                            </EmptyContent>
+                                        </Empty>
+                                    </TableCell>
+                                </TableRow>
+                                :
                                 users.map((item) => (
                                     <TableRow className="hover:bg-primary hover:text-primary-foreground text-primary">
                                         <TableCell> <Checkbox/> </TableCell>
@@ -317,10 +349,13 @@ const UsersTable = ({
                                             </DropdownMenu>
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            }   
+                                    ))
+                                        
+                            }
                         </TableBody>
                     </Table>
+                    }
+                    
                 </div>
             </div>
 
