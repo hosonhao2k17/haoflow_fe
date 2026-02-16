@@ -21,6 +21,7 @@ import TableSkeleton from "@/components/skeletons/table.skeleton";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { OffsetPaginationRdo } from "@/common/interfaces/offset-pagination.interface";
 import { Arrow } from "radix-ui/internal";
+import { useState } from "react";
 
 
 
@@ -53,7 +54,10 @@ const UsersTable = ({
     sortOrder
 }: Props) => {
 
-
+    
+    const [selectedIds, setSelectedIds] = useState<string[]>([])
+    const isAllSelected = users.length === selectedIds.length;
+    console.log(selectedIds)
     return (
         <div className="flex flex-col">
             {/* header  */}
@@ -183,7 +187,17 @@ const UsersTable = ({
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-8" >
-                                    <Checkbox />
+                                    <Checkbox 
+                                        checked={isAllSelected}
+                                        onCheckedChange={(checked) => {
+                                            setSelectedIds(users.map((item) => item.id))
+                                            if(checked) {
+                                                setSelectedIds(users.map((item) => item.id))
+                                            } else {
+                                                setSelectedIds([])
+                                            }
+                                         }}
+                                    />
                                 </TableHead>
                                 <TableHead className="w-70">
                                     Người dùng
@@ -332,7 +346,20 @@ const UsersTable = ({
                                 :
                                 users.map((item) => (
                                     <TableRow className="hover:bg-primary hover:text-primary-foreground text-primary">
-                                        <TableCell> <Checkbox/> </TableCell>
+                                        <TableCell>
+                                            <Checkbox 
+                                                checked={selectedIds.includes(item.id)}
+                                                onCheckedChange={(checked) => {
+                                                    if(checked) {
+                                                        setSelectedIds(prev => [...prev, item.id])
+                                                    } else {
+                                                        setSelectedIds(prev => prev.filter((val) => val !== item.id))
+                                                    }
+                                                    
+                                                }}
+                                                value={item.id}
+                                            />  
+                                        </TableCell>
                                         <TableCell>
                                             <div className="flex gap-3 items-center">
                                                 <Avatar >
