@@ -1,4 +1,5 @@
 
+
 export enum SortOrder {
     ASC = 'asc',
     DESC = 'desc'
@@ -25,3 +26,6 @@ export enum RoleName {
     ADMIN = 'admin',
     USER = 'user'
 }
+
+export const DEFAULT_SORT_BY = 'createdAt'
+export const DEFAULT_SORT_ORDER = SortOrder.ASC

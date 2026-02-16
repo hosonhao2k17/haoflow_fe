@@ -4,7 +4,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowBigDown, ArrowDownWideNarrow, Book, Check, Edit, ExternalLink, FileText, Mars, Menu, MoreHorizontal, MoreHorizontalIcon, Plus, Sheet, Trash, UserPlus, UserRoundX, Venus, X } from "lucide-react";
+import { ArrowBigDown, ArrowDownWideNarrow, ArrowUpWideNarrow, Book, Check, Edit, ExternalLink, FileText, Mars, Menu, MoreHorizontal, MoreHorizontalIcon, Plus, Sheet, Trash, UserPlus, UserRoundX, Venus, X } from "lucide-react";
 import UsersDonutChart from "./users-donut-chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,12 +13,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Gender, UserStatus } from "@/common/constants/app.constant";
+import { Gender, SortOrder, UserStatus } from "@/common/constants/app.constant";
 import { formatDate } from "@/lib/date";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import TableSkeleton from "@/components/skeletons/table.skeleton";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { OffsetPaginationRdo } from "@/common/interfaces/offset-pagination.interface";
+import { Arrow } from "radix-ui/internal";
 
 
 
@@ -26,13 +28,29 @@ interface Props {
     users: User[];
     setKeyword: (keyword: string | undefined) => void;
     setLimit: (limit: number) => void;
-    isLoading: boolean
+    isLoading: boolean;
+    setPage: (page: number) => void;
+    offsetPagination: OffsetPaginationRdo;
+    setStatus: (status: UserStatus) => void;
+    setVerified: (verified: boolean) => void;
+    setGender: (gender: Gender) => void;
+    setSortBy: (sortBy: string) => void;
+    setSortOrder: (sortOrder: SortOrder) => void;
+    sortOrder: SortOrder
 }
 const UsersTable = ({
     users,
     setKeyword,
     setLimit,
-    isLoading
+    isLoading,
+    setPage,
+    offsetPagination,
+    setStatus,
+    setVerified,
+    setGender,
+    setSortBy,
+    setSortOrder,
+    sortOrder
 }: Props) => {
 
 
@@ -125,20 +143,34 @@ const UsersTable = ({
                         <Pagination>
                             <PaginationContent>
                                 <PaginationItem>
-                                    <PaginationPrevious />
+                                    <PaginationPrevious 
+                                        onClick={() => {
+                                            if(offsetPagination.page !== 1) {
+                                                setPage(offsetPagination.page - 1)
+                                            }
+                                        }} 
+                                    />
                                 </PaginationItem>
+                                {
+                                    Array.from({length: offsetPagination?.totalPages ?? 1}).map((item, index) => (
+                                        <PaginationItem >
+                                            <PaginationLink 
+                                                onClick={() => setPage(index + 1)} 
+                                                isActive={offsetPagination?.page === index + 1 ? true : false}
+                                            >
+                                                {index + 1}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    ))
+                                }
                                 <PaginationItem>
-                                    <PaginationLink isActive>
-                                        1
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink>
-                                        2
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationNext />
+                                    <PaginationNext onClick={
+                                        () => {
+                                            if(offsetPagination.page < offsetPagination.totalPages) {
+                                                setPage(offsetPagination.page + 1)
+                                            }
+                                        }}
+                                    />
                                 </PaginationItem>
                             </PaginationContent>
                         </Pagination>
@@ -147,13 +179,13 @@ const UsersTable = ({
                 <div className="mt-2">
                     {
                         isLoading ? <TableSkeleton rows={5} columns={5} /> :
-                        <Table  >
+                        <Table className="table-fixed" >
                         <TableHeader>
                             <TableRow>
-                                <TableHead >
+                                <TableHead className="w-8" >
                                     <Checkbox />
                                 </TableHead>
-                                <TableHead>
+                                <TableHead className="w-70">
                                     Người dùng
                                 </TableHead>
                                 <TableHead>
@@ -191,17 +223,17 @@ const UsersTable = ({
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-43 p-3" align="start">
-                                            <RadioGroup className="min-w-fit">
+                                            <RadioGroup  onValueChange={(val) => setStatus(val as UserStatus)} className="min-w-fit">
                                                 <div className="flex gap-3 items-center">
                                                     <RadioGroupItem value="active" id="active"/>
-                                                    <Label className="bg-green-50">
-                                                        Hoạt động
+                                                    <Label className="text-green-500">
+                                                        active 
                                                     </Label>
                                                 </div>
                                                 <div className="flex gap-3 items-center">
                                                     <RadioGroupItem value="inactive" id="inactive"/>
-                                                    <Label className="bg-green-50">
-                                                        Không Hoạt động
+                                                    <Label className="text-red-500">
+                                                        inactive
                                                     </Label>
                                                 </div>
                                             </RadioGroup>
@@ -217,13 +249,13 @@ const UsersTable = ({
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-20 p-3" align="end">
-                                            <RadioGroup className="min-w-fit">
+                                            <RadioGroup className="min-w-fit" onValueChange={(value) => setVerified(value === "true")}>
                                                 <div className="flex gap-3 items-center">
-                                                    <RadioGroupItem value="active" id="active"/>
+                                                    <RadioGroupItem value="true" id="true"/>
                                                     <Check className="text-green-600"/>
                                                 </div>
                                                 <div className="flex gap-3 items-center">
-                                                    <RadioGroupItem value="inactive" id="inactive"/>
+                                                    <RadioGroupItem value="false" id="false"/>
                                                     <X className="text-red-500"/>
                                                 </div>
                                             </RadioGroup>
@@ -239,13 +271,13 @@ const UsersTable = ({
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-20 p-3" align="start">
-                                            <RadioGroup className="min-w-fit">
+                                            <RadioGroup onValueChange={(val: Gender) => setGender(val)} className="min-w-fit">
                                                 <div className="flex gap-3 items-center">
-                                                    <RadioGroupItem value="active" id="active"/>
+                                                    <RadioGroupItem value="male" id="male"/>
                                                     <Mars />
                                                 </div>
                                                 <div className="flex gap-3 items-center">
-                                                    <RadioGroupItem value="inactive" id="inactive"/>
+                                                    <RadioGroupItem value="female" id="female"/>
                                                     <Venus />
                                                 </div>
                                             </RadioGroup>
@@ -253,9 +285,18 @@ const UsersTable = ({
                                     </Popover>
                                 </TableHead>
                                 <TableHead>
-                                    <Button variant="ghost">
+                                    <Button variant="ghost" onClick={() => {
+                                        setSortBy('createdBy')
+                                        setSortOrder(sortOrder === SortOrder.ASC ? SortOrder.DESC  : SortOrder.ASC)
+                                    }}>
                                         Ngày thêm
-                                        <ArrowDownWideNarrow />
+                                        {
+                                            sortOrder === SortOrder.DESC 
+                                            ?
+                                            <ArrowDownWideNarrow />
+                                            : 
+                                            <ArrowUpWideNarrow />
+                                        }
                                     </Button>
                                 </TableHead>
                                 <TableHead>
