@@ -1,5 +1,5 @@
 import { Gender, RoleName, UserStatus } from "@/common/constants/app.constant";
-import { Role } from "@/common/interfaces/role.interface";
+import { Role } from "@/features/role/interfaces/role.interface";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

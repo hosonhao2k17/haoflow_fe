@@ -1,7 +1,7 @@
 "use client"
 
 import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, Gender, SortOrder, UserStatus } from "@/common/constants/app.constant";
-import { Role } from "@/common/interfaces/role.interface";
+import { Role } from "@/features/role/interfaces/role.interface";
 import UsersCreate from "@/features/user/components/users-create";
 import UsersTable from "@/features/user/components/users-table"
 import { useRolesQuery } from "@/features/role/role.hook";

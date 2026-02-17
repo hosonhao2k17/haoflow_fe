@@ -1,6 +1,6 @@
-import { Gender, UserStatus } from "../constants/app.constant";
-import { Base } from "./base.interface";
-import { Role } from "./role.interface";
+import { Gender, UserStatus } from "../../../common/constants/app.constant";
+import { Base } from "../../../common/interfaces/base.interface";
+import { Role } from "../../role/interfaces/role.interface";
 
 export interface User extends Base{
     id: string;

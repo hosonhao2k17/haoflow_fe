@@ -1,4 +1,4 @@
-import { Action } from "../constants/app.constant";
+import { Action } from "../../../common/constants/app.constant";
 
 
 export interface Role {

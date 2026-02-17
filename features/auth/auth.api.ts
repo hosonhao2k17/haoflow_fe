@@ -1,14 +1,7 @@
 import {api} from "@/config/axios";
+import { LoginDto } from "./interfaces/login-dto.interface";
+import { LoginRdo } from "./interfaces/login-rdo.interface";
 
-export interface LoginDto {
-    email: string;
-    password: string;
-}
-
-export interface LoginRdo {
-    accessToken: string;
-    expiresIn: number;
-}
 
 export const login = async (dto: LoginDto): Promise<LoginRdo> => {
     const res = await api.post('auth/login',dto)

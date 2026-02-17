@@ -1,4 +1,4 @@
-import { User } from "@/common/interfaces/user.interface"
+import { User } from "@/features/user/interfaces/user.interface"
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Field, FieldLabel } from "@/components/ui/field";

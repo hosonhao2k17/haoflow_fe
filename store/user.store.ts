@@ -1,4 +1,4 @@
-import { User } from "@/common/interfaces/user.interface";
+import { User } from "@/features/user/interfaces/user.interface";
 import { create } from "zustand";
 
 

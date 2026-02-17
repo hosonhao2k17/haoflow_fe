@@ -1,4 +1,5 @@
-import {LoginRdo } from "@/features/auth/auth.api";
+
+import { LoginRdo } from "@/features/auth/interfaces/login-rdo.interface";
 import { create } from "zustand";
 
 interface AuthState {
