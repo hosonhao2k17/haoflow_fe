@@ -81,7 +81,7 @@ function SelectContent({
         >
           {children}
         </SelectPrimitive.Viewport>
-        <SelectScrollDownButton />
+        <SelectScrollDownButton  className="text-primary" />
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
   )
@@ -119,7 +119,7 @@ function SelectItem({
         className="absolute right-2 flex size-3.5 items-center justify-center"
       >
         <SelectPrimitive.ItemIndicator >
-          <CheckIcon className="size-4 text-primary-foreground"  />
+          <CheckIcon className="size-4 text-primary"  />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -171,7 +171,7 @@ function SelectScrollDownButton({
       )}
       {...props}
     >
-      <ChevronDownIcon className="size-4" />
+      <ChevronDownIcon className="size-4 bg-primary" />
     </SelectPrimitive.ScrollDownButton>
   )
 }

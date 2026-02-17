@@ -26,3 +26,12 @@ export const getUsers = async (query: QueryUserDto = {}) => {
     })
     return res.data
 }
+
+export interface CreateUserDto extends Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy' | 'role'> {
+    password: string;
+}
+
+export const createUser = async (createDto: CreateUserDto) => {
+    const res = await api.post('users',createDto);
+    return res.data
+}

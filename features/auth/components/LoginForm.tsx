@@ -1,21 +1,21 @@
 "use client"
 import { Eye, EyeOff, Lock, Mail } from "lucide-react"
-import { Card, CardContent, CardFooter } from "../ui/card"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Button } from "../ui/button"
-import React, { SubmitEventHandler, useEffect, useState } from "react"
+import { Card, CardContent, CardFooter } from "../../../components/ui/card"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../../../components/ui/input-group"
+import { Field, FieldError, FieldLabel } from "../../../components/ui/field"
+import { Button } from "../../../components/ui/button"
+import { useEffect, useState } from "react"
 import { useAuthStore } from "@/store/auth.store"
-import { ApiError } from "@/common/interfaces/api-error.interface"
 import { toast } from "sonner"
-import { useFieldErrors } from "@/hooks/use-field-error"
-import { Spinner } from "../ui/spinner"
-import { Checkbox } from "../ui/checkbox"
+import { mapFieldErrors } from "@/lib/map-field-error"
+import { Spinner } from "../../../components/ui/spinner"
+import { Checkbox } from "../../../components/ui/checkbox"
 import { useUserStore } from "@/store/user.store"
 import { RoleName } from "@/common/constants/app.constant"
 import { useRouter } from "next/navigation"
+import { useLogin } from "../auth.hook"
+import { useCurrentUser } from "@/features/user/user.hook"
+import { ApiError } from "@/common/interfaces/api-error.interface"
 
 
 const LoginForm = () => {
@@ -23,40 +23,30 @@ const LoginForm = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const {login, isLoading, isAuthenticated, error} = useAuthStore()
-    const {getCurrentUser, user} = useUserStore();
-    const router = useRouter();
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            toast.success("Đăng nhập thành công")
-        }
-    }, [isAuthenticated])
-
-    useEffect(() => {
-        if (error && !error.details) {
-            toast.error(error.message)
-        }
-        setEmail('')
-        setPassword('')
-    }, [error])
-
-    useEffect(() => {
-        console.log(user)
-        if(user) {
-            console.log("Run here")
-            if(user.role.name === RoleName.ADMIN) {
-                router.replace('/admin/dashboard')
-            } else {
-                router.replace('/')
-            }
-        }
-    },[user])
-    const fieldErrors = useFieldErrors(error)
+    const {setAuth} = useAuthStore();
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+    const loginMutation = useLogin()
+    const router = useRouter()
 
     const handleLogin = async () => {
-        await login({email, password})
-        await getCurrentUser()
+        loginMutation.mutate(
+            {email, password},
+            {
+                onSuccess: (data) => {
+                    toast.success("Đăng nhập thành công")
+                    setAuth({
+                        accessToken: data?.accessToken as string,
+                        expiresIn: data?.expiresIn as number
+                    })
+                    router.replace("/")
+                },
+                onError: (err: any) => {
+                    toast.error(err.response.data.message)
+                    setFieldErrors(mapFieldErrors(err.response.data))
+                    
+                }
+            }
+        )
     }
 
     return (
@@ -83,7 +73,7 @@ const LoginForm = () => {
                             placeholder="Nhập email của bạn..."
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            disabled={isLoading}
+                            disabled={loginMutation.isPending}
                             className="h-11"
                         />
 
@@ -109,7 +99,7 @@ const LoginForm = () => {
                         placeholder="Nhập mật khẩu của bạn..."
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        disabled={isLoading}
+                        disabled={loginMutation.isPending}
                         className="h-11"
                         />
 
@@ -160,10 +150,10 @@ const LoginForm = () => {
                 {/* Submit */}
                 <Button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={loginMutation.isPending}
                     className="w-full h-11 flex items-center justify-center gap-2"
                     >
-                    {isLoading ? <Spinner /> : <Lock className="w-4 h-4" />}
+                    {loginMutation.isPending ? <Spinner /> : <Lock className="w-4 h-4" />}
                     Đăng nhập
                 </Button>
             </form>

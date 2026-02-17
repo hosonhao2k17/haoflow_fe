@@ -10,7 +10,7 @@ export interface LoginRdo {
     expiresIn: number;
 }
 
-export const login = async (dto: LoginDto) => {
+export const login = async (dto: LoginDto): Promise<LoginRdo> => {
     const res = await api.post('auth/login',dto)
     return res.data;
 }

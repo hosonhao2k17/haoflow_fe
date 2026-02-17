@@ -37,6 +37,7 @@ interface Props {
     setGender: (gender: Gender) => void;
     setSortBy: (sortBy: string) => void;
     setSortOrder: (sortOrder: SortOrder) => void;
+    setOpenUsersCreate: (open: boolean) => void;
     sortOrder: SortOrder
 }
 const UsersTable = ({
@@ -51,13 +52,13 @@ const UsersTable = ({
     setGender,
     setSortBy,
     setSortOrder,
-    sortOrder
+    sortOrder,
+    setOpenUsersCreate
 }: Props) => {
 
     
     const [selectedIds, setSelectedIds] = useState<string[]>([])
     const isAllSelected = users.length === selectedIds.length;
-    console.log(selectedIds)
     return (
         <div className="flex flex-col">
             {/* header  */}
@@ -87,7 +88,7 @@ const UsersTable = ({
                     <Field>
                         <FieldLabel>Tùy chọn</FieldLabel>
                         <ButtonGroup>
-                            <Button>
+                            <Button onClick={() => setOpenUsersCreate(true)}>
                                 <UserPlus />
                                 Thêm
                             </Button>

@@ -1,5 +1,6 @@
 "use client"
-import { useCurrentUser } from "@/queries/users/use-current-user.query"
+
+import { useCurrentUser } from "@/features/user/user.hook"
 import { useUserStore } from "@/store/user.store"
 import React, { useEffect } from "react"
 

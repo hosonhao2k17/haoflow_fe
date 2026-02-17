@@ -1,4 +1,4 @@
-import LoginForm from "@/components/client/LoginForm"
+import LoginForm from "@/features/auth/components/LoginForm"
 
 
 export const Login = () => {
