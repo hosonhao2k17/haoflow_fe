@@ -158,7 +158,7 @@ const UsersTable = ({
                                 </PaginationItem>
                                 {
                                     Array.from({length: offsetPagination?.totalPages ?? 1}).map((item, index) => (
-                                        <PaginationItem >
+                                        <PaginationItem key={index} >
                                             <PaginationLink 
                                                 onClick={() => setPage(index + 1)} 
                                                 isActive={offsetPagination?.page === index + 1 ? true : false}

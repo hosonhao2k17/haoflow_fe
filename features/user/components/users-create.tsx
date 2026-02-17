@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { CreateUserDto } from "@/features/user/user.api";
 import { Cake, Check, EyeClosed, Image, MailIcon, Mars, Merge, UserIcon, UserPlusIcon, X } from "lucide-react";
 import { SubmitEventHandler, useState } from "react";
+import { CreateUserDto } from "../interfaces/create-user-dto.interface";
+import { useCreateUser } from "../user.hook";
+import { toast } from "sonner";
 
 
 interface Props {
@@ -20,7 +22,7 @@ interface Props {
 }
 
 const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
-    const [user, setUser] = useState<CreateUserDto>({
+    const defaultUserState = {
         fullName: "",
         email: "",
         status: UserStatus.ACTIVE,
@@ -28,12 +30,25 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
         verified: false,
         gender: Gender.MALE,
         birthDate: null,
-        password: ""
-    });
-    console.log(roles)
-    const handleCreate = (e) => {
-        e.preventDefault()
-        console.log(user)
+        password: "",
+        roleId: ""
+    }
+    const [user, setUser] = useState<CreateUserDto>(defaultUserState);
+    const createUser = useCreateUser()
+    const handleCreate = (e:any) => {
+        e.preventDefault();
+        createUser.mutate(user,{
+            onSuccess: (data) => {
+                toast.success("Người dùng tạo thành công")
+                setOpenUsersCreate(false)
+            },
+            onError: (err: any) => {
+                toast.error("Người dụng chưa được tạo");
+                setUser(defaultUserState)
+            }
+        });
+        
+        
     }
     return (
         <Sheet open={open} onOpenChange={setOpenUsersCreate} >
@@ -55,11 +70,12 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                             <InputGroupInput 
                                                 placeholder="Nhập tên người dùng..."
                                                 name="fullName"
+                                                value={user.fullName}
                                                 onChange={
-                                                    (e) => setUser((prev) => ({
+                                                    (e) => setUser({
                                                         ...user,
                                                         fullName: e.target.value
-                                                    }))
+                                                    })
                                                 }
                                             />
                                             <InputGroupAddon align="inline-end">
@@ -100,6 +116,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                         email: e.target.value
                                                     })
                                                 }
+                                                value={user.email}
                                             />
                                             <InputGroupAddon align="inline-end">
                                                 <MailIcon />
@@ -121,6 +138,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                         password: e.target.value
                                                     })
                                                 }
+                                                value={user.password}
                                             />
                                             <InputGroupAddon align="inline-end">
                                                 <EyeClosed />
@@ -141,6 +159,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                         gender: val as Gender
                                                     })
                                                 }
+                                                value={user.gender ?? ""}
                                             >
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Chọn giới tính "/>
@@ -169,6 +188,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                         status: val as UserStatus
                                                     })
                                                 }
+                                                value={user.status ?? ""}
                                             >
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Chọn trạng thái"/>
@@ -193,12 +213,13 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                             </FieldLabel>
                                             <Select 
                                                 name="role"
-                                                // onValueChange={
-                                                //     (val) => setUser({
-                                                //         ...user,
-                                                //         role: val as Gender
-                                                //     })
-                                                // }
+                                                onValueChange={
+                                                    (val) => setUser({
+                                                        ...user,
+                                                        roleId: val
+                                                    })
+                                                }
+                                                value={user.roleId ?? ""}
                                             >
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Chọn vai trò"/>
@@ -207,7 +228,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                     <SelectGroup>
                                                         {
                                                             roles?.map((item) => (
-                                                                <SelectItem value={item.name}>
+                                                                <SelectItem key={item.id} value={item.id}>
                                                                     {item.title}
                                                                 </SelectItem>
                                                             ))
@@ -231,6 +252,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                             birthDate: e.target.value
                                                         })
                                                     }
+                                                    value={user.birthDate ?? ""}
                                                 />
                                                 <InputGroupAddon align="inline-end">
                                                     <Cake  />
