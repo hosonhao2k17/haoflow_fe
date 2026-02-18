@@ -7,6 +7,9 @@ import UsersTable from "@/features/user/components/users-table"
 import { useRolesQuery } from "@/features/role/role.hook";
 import { useUsersQuery } from "@/features/user/user.hook";
 import { useEffect, useState } from "react";
+import { User } from "@/features/user/interfaces/user.interface";
+import UsersEdit from "@/features/user/components/users-edit";
+import { UserFormValue } from "@/features/user/interfaces/user-form.interface";
 
 const Users = () => {
   
@@ -19,7 +22,12 @@ const Users = () => {
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_BY);
   const [sortOrder, setSortOrder] = useState<SortOrder>(DEFAULT_SORT_ORDER)
   const [openUsersCreate, setOpenUsersCreate] = useState<boolean>(false);
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [user, setUser] = useState<UserFormValue>();
+
+
   const {data: roles} = useRolesQuery()
+  
   const {data, isLoading} = useUsersQuery({
     keyword,
     limit,
@@ -32,12 +40,20 @@ const Users = () => {
   })
   return (
     <>
+      <UsersEdit 
+        setOpen={setOpenEdit}
+        open={openEdit}
+        user={user as UserFormValue}
+        setUser={setUser}
+      />
       <UsersCreate
         roles={roles?.items}
         open={openUsersCreate}
         setOpenUsersCreate={setOpenUsersCreate} 
       />
       <UsersTable 
+        setOpenEdit={setOpenEdit}
+        setUser={setUser}
         isLoading={isLoading} 
         users={data?.items ?? []} 
         setKeyword={setKeyword} 

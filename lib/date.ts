@@ -19,3 +19,8 @@ export const getBirthDateRange = () => {
         max: maxDate.toISOString().split("T")[0],
     }
 }
+
+export const formatDateForInput = (isoString: string) => {
+  return isoString.split("T")[0]
+}
+

@@ -22,6 +22,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { OffsetPaginationRdo } from "@/common/interfaces/offset-pagination.interface";
 import { Arrow } from "radix-ui/internal";
 import { useState } from "react";
+import { UserFormValue } from "../interfaces/user-form.interface";
 
 
 
@@ -38,9 +39,12 @@ interface Props {
     setSortBy: (sortBy: string) => void;
     setSortOrder: (sortOrder: SortOrder) => void;
     setOpenUsersCreate: (open: boolean) => void;
-    sortOrder: SortOrder
+    sortOrder: SortOrder;
+    setUser: (user: UserFormValue) => void;
+    setOpenEdit: (open: boolean) => void;
 }
 const UsersTable = ({
+    setUser,
     users,
     setKeyword,
     setLimit,
@@ -53,7 +57,8 @@ const UsersTable = ({
     setSortBy,
     setSortOrder,
     sortOrder,
-    setOpenUsersCreate
+    setOpenUsersCreate,
+    setOpenEdit
 }: Props) => {
 
     
@@ -123,7 +128,7 @@ const UsersTable = ({
             <div className="border mt-3 p-2 relative rounded-xl border-primary">
                 <div className="flex justify-between items-center m-2">
                     <div>
-                        <Badge variant="outline">0 trên 5 dòng đã chọn</Badge>
+                        <Badge variant="outline">{selectedIds.length} trên {offsetPagination?.totalRecords} dòng đã chọn</Badge>
                     </div>
 
                     <div className="flex">
@@ -191,7 +196,6 @@ const UsersTable = ({
                                     <Checkbox 
                                         checked={isAllSelected}
                                         onCheckedChange={(checked) => {
-                                            setSelectedIds(users.map((item) => item.id))
                                             if(checked) {
                                                 setSelectedIds(users.map((item) => item.id))
                                             } else {
@@ -346,7 +350,7 @@ const UsersTable = ({
                                 </TableRow>
                                 :
                                 users.map((item) => (
-                                    <TableRow className="hover:bg-primary hover:text-primary-foreground text-primary">
+                                    <TableRow key={item.id} className="hover:bg-primary hover:text-primary-foreground text-primary">
                                         <TableCell>
                                             <Checkbox 
                                                 checked={selectedIds.includes(item.id)}
@@ -401,7 +405,15 @@ const UsersTable = ({
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>
+                                                    <DropdownMenuItem 
+                                                        onClick={() => {
+                                                            setUser({
+                                                                ...item,
+                                                                roleId: item.role.id
+                                                            })
+                                                            setOpenEdit(true)
+                                                        }}
+                                                    >
                                                         <Edit />
                                                         Sửa
                                                     </DropdownMenuItem>

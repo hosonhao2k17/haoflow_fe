@@ -16,8 +16,8 @@ const TableSkeleton = (prop: Props = {rows: 5, columns: 5}) => {
             <TableHeader>
                 <TableRow>
                     {
-                        Array.from({length: columns}).map(() => (
-                            <TableHead>
+                        Array.from({length: columns}).map((_,i) => (
+                            <TableHead key={i}>
                                 <Skeleton className="h-9 w-full"/>
                             </TableHead>
                         ))
