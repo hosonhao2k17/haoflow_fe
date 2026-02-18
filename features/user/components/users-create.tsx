@@ -8,11 +8,15 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Cake, Check, EyeClosed, Image, MailIcon, Mars, Merge, UserIcon, UserPlusIcon, X } from "lucide-react";
-import { SubmitEventHandler, useState } from "react";
+import { Cake, Check, Eye, EyeClosed, Image, MailIcon, Mars, Merge, UserIcon, UserPlusIcon, Venus, X } from "lucide-react";
+import React, { SubmitEventHandler, useState } from "react";
 import { CreateUserDto } from "../interfaces/create-user-dto.interface";
 import { useCreateUser } from "../user.hook";
 import { toast } from "sonner";
+import { useUpload } from "@/features/upload/upload.hook";
+import { Spinner } from "@/components/ui/spinner";
+import FieldRequired from "@/components/ui/field-required";
+import { getBirthDateRange } from "@/lib/date";
 
 
 interface Props {
@@ -34,7 +38,26 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
         roleId: ""
     }
     const [user, setUser] = useState<CreateUserDto>(defaultUserState);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const createUser = useCreateUser()
+    const uploadFile = useUpload()
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if(!file) return 
+        if (!file.type.startsWith("image/")) {
+            toast.error("File phải là hình ảnh")
+            return
+        }
+        uploadFile.mutate(file, {
+            onSuccess: (data) => {
+                setUser({...user, avatar: data.url})
+            },
+            onError: (error: any) => {
+                toast.error("Đăng ảnh thất bại")
+            }
+        })
+    }
     const handleCreate = (e:any) => {
         e.preventDefault();
         createUser.mutate(user,{
@@ -54,7 +77,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
         <Sheet open={open} onOpenChange={setOpenUsersCreate} >
             <SheetContent className="border-primary ">
                 <SheetHeader >
-                    <SheetTitle>Thêm 1 người dùng mới</SheetTitle>
+                    <SheetTitle className="flex gap-2 items-center justify-center">Thêm 1 người dùng mới <UserPlusIcon /> </SheetTitle>
                     <SheetDescription>Thêm một người dùng mới bất kỳ</SheetDescription>
                 </SheetHeader>
                 <div className="pl-4 pr-4">
@@ -63,13 +86,14 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                             <FieldSet>
                                 <FieldGroup>
                                     <Field>
-                                        <FieldLabel>
-                                            Họ và tên
-                                        </FieldLabel>
+                                        <FieldRequired>
+                                            Họ và tên 
+                                        </FieldRequired>
                                         <InputGroup>
                                             <InputGroupInput 
                                                 placeholder="Nhập tên người dùng..."
                                                 name="fullName"
+                                                required
                                                 value={user.fullName}
                                                 onChange={
                                                     (e) => setUser({
@@ -87,24 +111,35 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                         <FieldLabel>
                                             Chọn avatar 
                                         </FieldLabel>
-                                        <Avatar size="lg">
-                                            <AvatarImage src="https://github.com/shadcn.png"/>
-                                        </Avatar>
+        
                                         <InputGroup>
                                             <InputGroupInput 
                                                 type="file"
-                                                name="avatar"
+                                                name="file"
+                                                accept="image/*"
+                                                onChange={handleAvatarChange}
                                             />
                                             <InputGroupAddon align="inline-end">
-                                                <Image />
+                                                {
+                                                    uploadFile.isPending ? <Spinner /> : <Image />
+                                                }
                                             </InputGroupAddon>
                                         </InputGroup>
+                                        {
+                                            user.avatar 
+                                            ? 
+                                            <Avatar size="lg">
+                                                <AvatarImage src={user.avatar ?? ""}/>
+                                            </Avatar>
+                                            : 
+                                            <></>
+                                        }
                                         
                                     </Field>
                                     <Field>
-                                        <FieldLabel>
+                                        <FieldRequired>
                                             Email
-                                        </FieldLabel>
+                                        </FieldRequired>
                                         <InputGroup>
                                             <InputGroupInput 
                                                 type="email"
@@ -124,12 +159,12 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                         </InputGroup>
                                     </Field>
                                     <Field>
-                                        <FieldLabel>
+                                        <FieldRequired>
                                             Mật khẩu
-                                        </FieldLabel>
+                                        </FieldRequired>
                                         <InputGroup>
                                             <InputGroupInput 
-                                                type="password"
+                                                type={showPassword ? "text" : "password"}
                                                 name="password"
                                                 placeholder="Nhập mật khẩu..."
                                                 onChange={
@@ -140,8 +175,18 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                 }
                                                 value={user.password}
                                             />
-                                            <InputGroupAddon align="inline-end">
-                                                <EyeClosed />
+                                            <InputGroupAddon 
+                                                align="inline-end" 
+                                                className="cursor-pointer"
+                                                onClick={() => setShowPassword(prev => !prev)}
+                                            >
+                                                {
+                                                    showPassword
+                                                    ? 
+                                                    <Eye />
+                                                    :
+                                                    <EyeClosed />
+                                                }
                                             </InputGroupAddon>
                                             
                                         </InputGroup>
@@ -170,7 +215,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                                             <Mars />
                                                         </SelectItem>
                                                         <SelectItem value="female">
-                                                            <Merge />
+                                                            <Venus />
                                                         </SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -208,9 +253,9 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <Field>
-                                            <FieldLabel>
-                                                Vai trò 
-                                            </FieldLabel>
+                                            <FieldRequired>
+                                                Vai trò
+                                            </FieldRequired>
                                             <Select 
                                                 name="role"
                                                 onValueChange={
@@ -243,6 +288,8 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                                             </FieldLabel>
                                             <InputGroup>
                                                 <InputGroupInput 
+                                                    max={getBirthDateRange().max}
+                                                    min={getBirthDateRange().min}
                                                     name="birthDate"
                                                     type="date"
                                                     placeholder="Chọn ngày sinh"
