@@ -19,6 +19,7 @@ const Users = () => {
   const [status, setStatus] = useState<UserStatus>();
   const [verified, setVerified] = useState<boolean>();
   const [gender, setGender] = useState<Gender>();
+  const [roleId, setRoleId] = useState<string>()
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_BY);
   const [sortOrder, setSortOrder] = useState<SortOrder>(DEFAULT_SORT_ORDER)
   const [openUsersCreate, setOpenUsersCreate] = useState<boolean>(false);
@@ -36,7 +37,8 @@ const Users = () => {
     verified,
     gender,
     sortBy,
-    sortOrder
+    sortOrder,
+    roleId
   })
   return (
     <>
@@ -52,6 +54,7 @@ const Users = () => {
         setOpenUsersCreate={setOpenUsersCreate} 
       />
       <UsersTable 
+        roles={roles?.items}
         setOpenEdit={setOpenEdit}
         setUser={setUser}
         isLoading={isLoading} 
@@ -67,6 +70,7 @@ const Users = () => {
         setSortOrder={setSortOrder}
         sortOrder={sortOrder}
         setOpenUsersCreate={setOpenUsersCreate}
+        setRoleId={setRoleId}
       />
     </>
   )

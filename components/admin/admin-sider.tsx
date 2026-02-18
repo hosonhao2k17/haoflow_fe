@@ -10,6 +10,7 @@ import {
   LogOut,
 } from "lucide-react"
 import clsx from "clsx"
+import { Button } from "../ui/button"
 
 const menu = [
   {
@@ -75,10 +76,10 @@ const AdminSider = () => {
       </nav>
 
       <div className="pt-6 border-t border-white/10">
-        <button className="flex items-center gap-2 text-sm hover:text-red-300 transition">
+        <Button >
           <LogOut size={16} />
           Logout
-        </button>
+        </Button>
       </div>
 
     </aside>

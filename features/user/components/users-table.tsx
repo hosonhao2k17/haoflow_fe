@@ -4,7 +4,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowBigDown, ArrowDownWideNarrow, ArrowUpWideNarrow, Book, Check, Edit, ExternalLink, FileText, Mars, Menu, MoreHorizontal, MoreHorizontalIcon, Plus, Sheet, Trash, UserPlus, UserRoundX, Venus, X } from "lucide-react";
+import { ArrowBigDown, ArrowDownWideNarrow, ArrowUpDown, ArrowUpWideNarrow, Book, Check, Edit, ExternalLink, FileText, Mars, Menu, MoreHorizontal, MoreHorizontalIcon, Plus, Sheet, Trash, UserPlus, UserRoundX, Venus, X } from "lucide-react";
 import UsersDonutChart from "./users-donut-chart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,6 +23,7 @@ import { OffsetPaginationRdo } from "@/common/interfaces/offset-pagination.inter
 import { Arrow } from "radix-ui/internal";
 import { useState } from "react";
 import { UserFormValue } from "../interfaces/user-form.interface";
+import { Role } from "@/features/role/interfaces/role.interface";
 
 
 
@@ -42,6 +43,8 @@ interface Props {
     sortOrder: SortOrder;
     setUser: (user: UserFormValue) => void;
     setOpenEdit: (open: boolean) => void;
+    roles: Role[];
+    setRoleId: (roleId: string) => void;
 }
 const UsersTable = ({
     setUser,
@@ -58,7 +61,9 @@ const UsersTable = ({
     setSortOrder,
     sortOrder,
     setOpenUsersCreate,
-    setOpenEdit
+    setOpenEdit,
+    setRoleId,
+    roles = [],
 }: Props) => {
 
     
@@ -207,7 +212,7 @@ const UsersTable = ({
                                 <TableHead className="w-70">
                                     Người dùng
                                 </TableHead>
-                                <TableHead>
+                                <TableHead className="w-40">
                                     <Popover >
                                         <PopoverTrigger asChild>
                                             <Button variant="ghost">
@@ -216,27 +221,28 @@ const UsersTable = ({
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-43 p-3" align="start">
-                                            <RadioGroup className="min-w-fit">
-                                                <div className="flex gap-3 items-center">
-                                                    <RadioGroupItem value="user" id="active"/>
-                                                    <Label className="bg-green-50">
-                                                        Người dùng
-                                                    </Label>
-                                                </div>
-                                                <div className="flex gap-3 items-center">
-                                                    <RadioGroupItem value="admin" id="inactive"/>
-                                                    <Label className="bg-green-50">
-                                                        Quản trị viên
-                                                    </Label>
-                                                </div>
+                                            <RadioGroup 
+                                                className="min-w-fit" 
+                                                onValueChange={(val) => setRoleId(val)}
+                                            >
+                                                {
+                                                    roles?.map((item) => (
+                                                        <div key={item.id} className="flex gap-3 items-center">
+                                                            <RadioGroupItem value={item.id} id={item.id}/>
+                                                            <Label className="bg-green-50">
+                                                                {item.title}
+                                                            </Label>
+                                                        </div>
+                                                    ))
+                                                }
                                             </RadioGroup>
                                         </PopoverContent>
                                     </Popover>
                                 </TableHead>
-                                <TableHead className="flex items-center">
+                                <TableHead >
                                     <Popover >
-                                        <PopoverTrigger asChild>
-                                            <Button variant="ghost" size="icon">
+                                        <PopoverTrigger >
+                                            <Button variant="ghost" >
                                                 Trạng thái
                                                 <Menu  />
                                             </Button>
@@ -282,6 +288,17 @@ const UsersTable = ({
                                     </Popover>
                                 </TableHead>
                                 <TableHead>
+                                    <Button variant="ghost" onClick={() => {
+                                        setSortBy('birthDate')
+                                        setSortOrder(sortOrder === SortOrder.ASC ? SortOrder.DESC  : SortOrder.ASC)
+                                    }}>
+                                        Sinh nhật
+                                        {
+                                            <ArrowUpDown />
+                                        }
+                                    </Button>
+                                </TableHead>
+                                <TableHead>
                                     <Popover >
                                         <PopoverTrigger asChild>
                                             <Button variant="ghost" size="sm">
@@ -318,7 +335,7 @@ const UsersTable = ({
                                         }
                                     </Button>
                                 </TableHead>
-                                <TableHead>
+                                <TableHead className="w-20">
                                     Thao tác
                                 </TableHead>
                             </TableRow>
@@ -350,7 +367,7 @@ const UsersTable = ({
                                 </TableRow>
                                 :
                                 users.map((item) => (
-                                    <TableRow key={item.id} className="hover:bg-primary hover:text-primary-foreground text-primary">
+                                    <TableRow key={item.id}>
                                         <TableCell>
                                             <Checkbox 
                                                 checked={selectedIds.includes(item.id)}
@@ -377,7 +394,7 @@ const UsersTable = ({
                                             </div>
                                         </TableCell>
                                         <TableCell className="font-bold">{item.role.title}</TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-start">
                                             <Badge className={item.status === UserStatus.ACTIVE ? "bg-green-700" : "bg-red-500"}>
                                                 {item.status}
                                             </Badge>
@@ -388,6 +405,9 @@ const UsersTable = ({
                                             <Check className="text-green-600"/> : 
                                             <X className="text-red-500"/>
                                         }</TableCell>
+                                        <TableCell className="font-bold">
+                                            {item.birthDate ? formatDate(item.birthDate) : "Không"}
+                                        </TableCell>
                                         <TableCell>
                                             {
                                                 item.gender === Gender.MALE ? 
@@ -401,7 +421,7 @@ const UsersTable = ({
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button variant="ghost" size="icon">
-                                                        <MoreHorizontalIcon />
+                                                        <MoreHorizontalIcon  className="h-4 w-4 text-muted-foreground" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
@@ -417,7 +437,7 @@ const UsersTable = ({
                                                         <Edit />
                                                         Sửa
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem>
+                                                    <DropdownMenuItem >
                                                         <ExternalLink />
                                                         Chi tiết
                                                     </DropdownMenuItem>
