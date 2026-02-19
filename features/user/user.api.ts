@@ -36,3 +36,8 @@ export const updateUser = async (id: string, updateDto: UpdateUserDto): Promise<
     const res = await api.patch(`users/${id}`, updateDto);
     return res.data;
 }
+
+export const removeUser = async (id: string) => {
+    const res = await api.delete(`users/${id}`);
+    return res.data;
+}

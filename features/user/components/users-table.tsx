@@ -24,6 +24,9 @@ import { Arrow } from "radix-ui/internal";
 import { useState } from "react";
 import { UserFormValue } from "../interfaces/user-form.interface";
 import { Role } from "@/features/role/interfaces/role.interface";
+import { useRemoveUser } from "../user.hook";
+import { toast } from "sonner";
+import { AlertDialogDestructive } from "@/components/ui/aler-dialog";
 
 
 
@@ -59,6 +62,19 @@ const UsersTable = ({
     filter
 }: Props) => {
 
+    const removeUser = useRemoveUser()
+    const [confirmRemove, setConfirmRemove] = useState<boolean>(false);
+    
+    const handleRemove = (id: string) =>{
+        removeUser.mutate(id,{
+            onSuccess: () => {
+                toast.success("Xóa người dùng thành công")
+            },
+            onError: () => {
+                toast.error("Xóa người dùng thất bại")
+            }
+        })
+    }
     
     const [selectedIds, setSelectedIds] = useState<string[]>([])
     const isAllSelected = users.length === selectedIds.length;
@@ -377,10 +393,23 @@ const UsersTable = ({
                                             Chi tiết
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem variant="destructive">
+                                        <DropdownMenuItem 
+                                            variant="destructive"
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                setConfirmRemove(true)
+                                            }}
+                                        >
                                             <Trash />
                                             Xóa
                                         </DropdownMenuItem>
+                                        <AlertDialogDestructive 
+                                            open={confirmRemove}
+                                            setOpen={setConfirmRemove}
+                                            title="Xóa người dùng"
+                                            content="Bạn có chắc xóa người dùng này ko"
+                                            onConfirm={() => handleRemove(item.id)}
+                                        />
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>

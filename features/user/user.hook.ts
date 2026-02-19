@@ -1,4 +1,4 @@
-import { createUser, getCurrentUser, getUser, getUsers, updateUser } from "@/features/user/user.api";
+import { createUser, getCurrentUser, getUser, getUsers, removeUser, updateUser } from "@/features/user/user.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QueryUserDto } from "./interfaces/query-user-dto.interface";
 import { CreateUserDto } from "./interfaces/create-user-dto.interface";
@@ -46,6 +46,17 @@ export const useUpdateUser = () => {
     const queryClient = useQueryClient()    
     return useMutation({
         mutationFn: (payload: IdPayload<string, UpdateUserDto>) => updateUser(payload.id, payload.dto),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["users"]})
+        }
+    })
+}
+
+export const useRemoveUser = () => {
+
+    const queryClient = useQueryClient()    
+    return useMutation({
+        mutationFn: (id: string) => removeUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["users"]})
         }
