@@ -1,60 +1,22 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useGetUser } from "../user.hook";
-import { toast } from "sonner";
-import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronsUpDown, PlusIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { formatDate } from "@/lib/date";
-import { useState } from "react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button";
-import UsersDetailSkeleton from "./skeletons/users-detail.skeleton";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Collapsible } from "@/components/ui/collapsible"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 
 
 
-interface Props {
-    open: boolean;
-    setOpen: (val: boolean) => void;
-    userId: string;
-}
-const UserDetail = ({
-    open,
-    setOpen,
-    userId
-}: Props) => {
-    const {data, error, isPending} = useGetUser(userId);
-    const [openCollapse, setOpenCollapse] = useState<boolean>(false);
+const UsersDetailSkeleton = () => {
 
-    return (<Sheet
-                open={open}
-                onOpenChange={setOpen}
-            >
-                <SheetContent>
-                    <SheetHeader>
-                        <SheetTitle> Chi tiết người dùng</SheetTitle>
-                    </SheetHeader>
-                    {
-                        data
-                        ?
-                        <div className="ml-3 mr-3">
-                            {/* header profile  */}
-                            <Separator />
+
+    return (
+        <div className="ml-3 mr-3">
+            <Separator />
                             <div className="flex items-center gap-5 mt-1 mb-1">
-                                <Avatar className="h-20 w-20" >
-                                    <AvatarImage src={data.avatar ?? "https://github.com/shadcn.png"}/>
-                                    <AvatarFallback>
-                                        {data.fullName}
-                                    </AvatarFallback>
-                                    <AvatarBadge>
-                                        <PlusIcon />
-                                    </AvatarBadge>
-                                </Avatar>
+                                <Skeleton className="rounded-full w-20 h-20"/>
                                 <div className="flex flex-col gap-2 text-primary">
-                                    <h1 className="font-bold text-2xl">{data.fullName}</h1>
-                                    <p>{data.email}</p>
+                                    <Skeleton className="w-10 -h-4"/>
+                                    <Skeleton  className="w-10 -h-4"/>
                                 </div>
                                 
                             </div>
@@ -76,7 +38,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Họ và tên 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.fullName}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -86,7 +48,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Email
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.email}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -96,7 +58,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Giới tính 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.gender}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -106,7 +68,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Sinh nhật
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.birthDate}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -116,7 +78,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Trạng thái 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.status}</FieldDescription>
+                                                         <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -126,7 +88,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Xác thực
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.status}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -136,7 +98,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Ngày tạo
                                                         </FieldLabel>
-                                                        <FieldDescription>{formatDate(data.createdAt)}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -146,7 +108,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Ngày cập nhật
                                                         </FieldLabel>
-                                                        <FieldDescription>{formatDate(data.updatedAt)}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -156,7 +118,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Id
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.id}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -166,7 +128,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Tạo bởi 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.createdBy}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -183,7 +145,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Id 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.role.id}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                         
                                                     </Field>
                                                 </FieldGroup>
@@ -195,7 +157,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Tên 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.role.title}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -205,7 +167,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Số lượng quyền 
                                                         </FieldLabel>
-                                                        <FieldDescription>{data.role.permissions.length}</FieldDescription>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -215,27 +177,7 @@ const UserDetail = ({
                                                         <FieldLabel>
                                                             Các quyền
                                                         </FieldLabel>
-                                                        <Collapsible
-                                                            open={openCollapse}
-                                                            onOpenChange={setOpenCollapse}
-                                                        >   
-                                                            <CollapsibleTrigger>
-                                                                <Button variant="outline">
-                                                                    Xem
-                                                                    <ChevronsUpDown />
-                                                                </Button>
-                                                            </CollapsibleTrigger>
-                                                            <CollapsibleContent>
-                                                                {
-                                                                    data.role.permissions.map((item) => (
-                                                                        <div className="rounded-md border px-4 py-2 text-sm">
-                                                                            <p className="font-medium">{item.subject}</p>
-                                                                            <p className="text-muted-foreground">{item.action}</p>
-                                                                        </div>
-                                                                    ))
-                                                                }
-                                                            </CollapsibleContent>
-                                                        </Collapsible>
+                                                        <Skeleton className="w-15 h-10" />
                                                     </Field>
                                                 </FieldGroup>
                                             </FieldGroup>
@@ -250,14 +192,8 @@ const UserDetail = ({
                                 </AccordionItem>
                             </Accordion>
                             <Separator />
-                        </div>
-                    : 
-                        <UsersDetailSkeleton />
-                    }
-                </SheetContent>
-            
-            </Sheet>
+        </div>
     )
 }
 
-export default UserDetail
+export default UsersDetailSkeleton
