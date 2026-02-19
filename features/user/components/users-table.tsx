@@ -328,7 +328,7 @@ const UsersTable = ({
                             <TableCell>
                                 <div className="flex gap-3 items-center">
                                     <Avatar >
-                                        <AvatarImage src="https://github.com/shadcn.png"/>
+                                        <AvatarImage src={item.avatar ?? "https://github.com/shadcn.png"}/>
                                     </Avatar>
                                     <div className="flex flex-col ">
                                         <h1 className="font-bold">{item.fullName}</h1>

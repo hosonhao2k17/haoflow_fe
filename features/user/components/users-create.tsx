@@ -49,8 +49,11 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
             onSuccess: (data) => {
                 toast.success("Người dùng tạo thành công")
                 setOpenUsersCreate(false)
+                setUser(defaultUserState)
             },
             onError: (err: any) => {
+                console.log(user)
+                console.log(err.response.data)
                 toast.error("Người dụng chưa được tạo");
                 setUser(defaultUserState)
                 setFieldErrors(err.response.data)
@@ -67,6 +70,7 @@ const UsersCreate = ({open, setOpenUsersCreate, roles}:Props) => {
                     <SheetDescription>Thêm một người dùng mới bất kỳ</SheetDescription>
                 </SheetHeader>
                 <UsersForm 
+                    isPending={createUser.isPending}
                     handleSubmit={handleCreate}
                     user={user}
                     edit={false}

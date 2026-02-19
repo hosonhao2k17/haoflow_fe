@@ -25,6 +25,7 @@ const UserDetail = ({
     setOpen,
     userId
 }: Props) => {
+    if(!userId) return;
     const {data, error, isPending} = useGetUser(userId);
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
 

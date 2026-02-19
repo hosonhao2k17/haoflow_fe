@@ -23,7 +23,8 @@ interface UsersFormProps {
     handleSubmit: (e: any) => void; 
     user: UserFormValue,
     setUser: (user: UserFormValue) => void;
-    fieldErrors: Record<string, string>
+    fieldErrors: Record<string, string>;
+    isPending?: boolean;
 }
 
 const UsersForm = ({
@@ -31,7 +32,8 @@ const UsersForm = ({
     handleSubmit,
     user,
     setUser,
-    fieldErrors
+    fieldErrors,
+    isPending = false
 }: UsersFormProps) => {
 
     const uploadFile = useUpload()
@@ -312,7 +314,7 @@ const UsersForm = ({
                                 
                             </div>
                             <Field>
-                                <Button type="submit">
+                                <Button type="submit" disabled={isPending}>
                                     Thêm
                                     <UserPlusIcon />
                                 </Button>
