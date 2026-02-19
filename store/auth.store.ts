@@ -1,24 +1,23 @@
-
-import { LoginRdo } from "@/features/auth/interfaces/login-rdo.interface";
-import { create } from "zustand";
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface AuthState {
-    isAuthenticated: boolean;
-    accessToken: string | null;
-    expiresIn: number;
-    setAuth: (loginRdo: LoginRdo) => void;
+    accessToken: string | null
+    expiresIn: number | null
+    setAuth: (data: { accessToken: string; expiresIn: number }) => void
+    clearAuth: () => void
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-    accessToken: null,
-    isAuthenticated: false,
-    expiresIn: 0,
-    setAuth: (lgRdo: LoginRdo) => {
-        set({
-            isAuthenticated: true,
-            accessToken: lgRdo.accessToken,
-            expiresIn: lgRdo.expiresIn
-        })
-        localStorage.setItem('accessToken',lgRdo.accessToken)
-    }
-}))
+export const useAuthStore = create<AuthState>()(
+    persist(
+        (set) => ({
+            accessToken: null,
+            expiresIn: null,
+            setAuth: (data) => set(data),
+            clearAuth: () => set({ accessToken: null, expiresIn: null }),
+        }),
+        {
+            name: "auth-storage",
+        }
+    )
+)

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Users,
@@ -11,6 +11,11 @@ import {
 } from "lucide-react"
 import clsx from "clsx"
 import { Button } from "../ui/button"
+import { useLogout } from "@/features/auth/auth.hook"
+import { AlertLogoutDialog } from "@/features/auth/components/logout-dialog"
+import { useState } from "react"
+import { toast } from "sonner"
+import { useAuthStore } from "@/store/auth.store"
 
 const menu = [
   {
@@ -37,10 +42,28 @@ const menu = [
 
 const AdminSider = () => {
   const pathname = usePathname()
-
+  const logout = useLogout()
+  const [confirmLogout, setConfirmLogout] = useState<boolean>(false);
+  const {clearAuth} = useAuthStore()
+  const router = useRouter()
+  const handleLogout = () => {
+    try {
+      logout.mutateAsync()
+      toast.success("Đăng xuất thành công");
+      router.replace("/login")
+      clearAuth()
+    } catch (error) {
+      toast.error("Có lỗi khi đăng xuất")
+    }
+  }
   return (
-    <aside className="w-64 bg-primary text-white flex flex-col h-full  fixed p-5">
 
+    <aside className="w-64 bg-primary text-white flex flex-col h-full  fixed p-5">
+      <AlertLogoutDialog 
+        open={confirmLogout}
+        setOpen={setConfirmLogout}
+        handleLogout={handleLogout}
+      />
       <div className="mb-10">
         <h2 className="text-xl font-bold tracking-wide">
           Hao Flow
@@ -76,7 +99,7 @@ const AdminSider = () => {
       </nav>
 
       <div className="pt-6 border-t border-white/10">
-        <Button >
+        <Button onClick={() => setConfirmLogout(true)}>
           <LogOut size={16} />
           Logout
         </Button>

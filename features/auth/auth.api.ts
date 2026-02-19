@@ -7,3 +7,8 @@ export const login = async (dto: LoginDto): Promise<LoginRdo> => {
     const res = await api.post('auth/login',dto)
     return res.data;
 }
+
+export const logout = async () :Promise<void> => {
+    const res = await api.post('auth/logout');
+    return res.data;
+}

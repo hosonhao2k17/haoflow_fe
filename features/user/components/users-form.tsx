@@ -300,10 +300,10 @@ const UsersForm = ({
                                             onChange={
                                                 (e) => setUser({
                                                     ...user,
-                                                    birthDate: e.target.value
+                                                    birthDate: new Date(e.target.value)
                                                 })
                                             }
-                                            value={user.birthDate ? formatDateForInput(user.birthDate) : ""}
+                                            value={user.birthDate ? formatDateForInput(user.birthDate.toString()) : ""}
                                         />
                                         <InputGroupAddon align="inline-end">
                                             <Cake  />
