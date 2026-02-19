@@ -13,6 +13,12 @@ export const getCurrentUser = async (): Promise<User> => {
     return res.data;
 }
 
+export const getUser = async (id: string) => {
+
+    const res = await api.get(`users/${id}`);
+    return res.data
+}
+
 
 export const getUsers = async (query: QueryUserDto = {}) => {
     const res = await api.get('users',{

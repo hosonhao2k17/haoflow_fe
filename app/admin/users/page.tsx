@@ -37,7 +37,6 @@ const Users = () => {
   
 
   const {data: roles} = useRolesQuery()
-  
   const {data, isLoading} = useUsersQuery({
     keyword,
     limit,
@@ -64,6 +63,7 @@ const Users = () => {
       />
       <UserDetail
         open={openDetail}
+        userId={user?.id as string}
         setOpen={setOpenDetail}
       />
       <div className="flex flex-col">

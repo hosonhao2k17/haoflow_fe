@@ -4,5 +4,5 @@ import { User } from "./user.interface";
 
 
 export interface UserFormValue extends Partial<Omit<User,'role'>> {
-    roleId: string;
+    roleId?: string;
 }

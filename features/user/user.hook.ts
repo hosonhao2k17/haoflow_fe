@@ -1,4 +1,4 @@
-import { createUser, getCurrentUser, getUsers, updateUser } from "@/features/user/user.api";
+import { createUser, getCurrentUser, getUser, getUsers, updateUser } from "@/features/user/user.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QueryUserDto } from "./interfaces/query-user-dto.interface";
 import { CreateUserDto } from "./interfaces/create-user-dto.interface";
@@ -20,6 +20,13 @@ export const useCurrentUser = () => {
     return useQuery({
         queryKey: ["user"],
         queryFn: () => getCurrentUser()
+    })
+}
+
+export const useGetUser = (id: string) => {
+    return useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(id)
     })
 }
 

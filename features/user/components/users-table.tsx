@@ -365,7 +365,13 @@ const UsersTable = ({
                                             Sửa
                                         </DropdownMenuItem>
                                         <DropdownMenuItem 
-                                            onClick={() => setOpenDetail(true)}
+                                            onClick={() => {
+                                                setOpenDetail(true)
+                                                setUser({
+                                                    id: item.id
+                                                })
+                                            }}
+                                            
                                         >
                                             <ExternalLink />
                                             Chi tiết
