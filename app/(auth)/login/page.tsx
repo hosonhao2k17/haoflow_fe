@@ -1,3 +1,4 @@
+import CardAuth from "@/features/auth/components/CardAuth"
 import LoginForm from "@/features/auth/components/LoginForm"
 
 
@@ -5,10 +6,9 @@ export const Login = () => {
 
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-primary">
-            
+        <CardAuth title="Đăng nhập">
             <LoginForm />
-        </div>
+        </CardAuth>
     )
 }
 

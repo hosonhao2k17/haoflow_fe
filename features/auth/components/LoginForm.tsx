@@ -50,115 +50,107 @@ const LoginForm = () => {
     }
 
     return (
-        <Card className="w-full max-w-sm shadow-[0_0_20px_rgba(0,0,0,0.2)] shadow-primary-foreground">
-            <h1 className="mb-6 text-3xl font-bold text-center text-primary uppercase">
-                Đăng nhập
-            </h1>
+        <form
+            className="space-y-6"
+            onSubmit={(e) => {
+            e.preventDefault()
+                handleLogin()
+            }}
+        >
+            {/* Email */}
+            <Field>
+                <FieldLabel className="text-primary">Email</FieldLabel>
 
-            <CardContent className="pt-0">
-                <form
-                    className="space-y-6"
-                    onSubmit={(e) => {
-                    e.preventDefault()
-                        handleLogin()
-                    }}
-                >
-                    {/* Email */}
-                    <Field>
-                        <FieldLabel className="text-primary">Email</FieldLabel>
-
-                        <InputGroup>
-                            <InputGroupInput
-                                type="email"
-                                placeholder="Nhập email của bạn..."
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                disabled={loginMutation.isPending}
-                                className="h-11"
-                            />
-
-                            <InputGroupAddon align="inline-end">
-                            <Mail className="w-4 h-4 text-muted-foreground" />
-                            </InputGroupAddon>
-                        </InputGroup>
-
-                        {fieldErrors.email && (
-                            <FieldError className="mt-2 text-sm text-red-500">
-                            {fieldErrors.email}
-                            </FieldError>
-                        )}
-                    </Field>
-
-                    {/* Password */}
-                    <Field>
-                        <FieldLabel className="text-primary">Mật khẩu</FieldLabel>
-
-                        <InputGroup>
-                            <InputGroupInput
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Nhập mật khẩu của bạn..."
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            disabled={loginMutation.isPending}
-                            className="h-11"
-                            />
-
-                            <InputGroupAddon align="inline-end">
-                            <button
-                                type="button"
-                                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
-                                onClick={() => setShowPassword((prev) => !prev)}
-                                className="
-                                flex items-center justify-center
-                                bg-transparent border-0 p-0
-                                text-muted-foreground
-                                hover:text-primary
-                                transition-colors
-                                "
-                            >
-                                {showPassword ? (
-                                <EyeOff className="w-4 h-4" />
-                                ) : (
-                                <Eye className="w-4 h-4" />
-                                )}
-                            </button>
-                            </InputGroupAddon>
-                        </InputGroup>
-
-                        {fieldErrors.password && (
-                            <FieldError className="mt-2 text-sm text-red-500">
-                            {fieldErrors.password}
-                            </FieldError>
-                        )}
-                    </Field>
-
-                    {/* Remember + forgot */}
-                    <div className="flex items-center justify-between text-sm">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                        <Checkbox />
-                        <span>Ghi nhớ tôi</span>
-                    </label>
-
-                    <a
-                        href="#"
-                        className="text-primary hover:underline transition-colors"
-                    >
-                        Quên mật khẩu?
-                    </a>
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
+                <InputGroup>
+                    <InputGroupInput
+                        type="email"
+                        placeholder="Nhập email của bạn..."
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         disabled={loginMutation.isPending}
-                        className="w-full h-11 flex items-center justify-center gap-2"
-                        >
-                        {loginMutation.isPending ? <Spinner /> : <Lock className="w-4 h-4" />}
-                        Đăng nhập
-                    </Button>
-                </form>
-            </CardContent>
-        </Card>
+                        className="h-11"
+                    />
+
+                    <InputGroupAddon align="inline-end">
+                    <Mail className="w-4 h-4 text-muted-foreground" />
+                    </InputGroupAddon>
+                </InputGroup>
+
+                {fieldErrors.email && (
+                    <FieldError className="mt-2 text-sm text-red-500">
+                    {fieldErrors.email}
+                    </FieldError>
+                )}
+            </Field>
+
+            {/* Password */}
+            <Field>
+                <FieldLabel className="text-primary">Mật khẩu</FieldLabel>
+
+                <InputGroup>
+                    <InputGroupInput
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Nhập mật khẩu của bạn..."
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loginMutation.isPending}
+                    className="h-11"
+                    />
+
+                    <InputGroupAddon align="inline-end">
+                    <button
+                        type="button"
+                        aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="
+                        flex items-center justify-center
+                        bg-transparent border-0 p-0
+                        text-muted-foreground
+                        hover:text-primary
+                        transition-colors
+                        "
+                    >
+                        {showPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                        ) : (
+                        <Eye className="w-4 h-4" />
+                        )}
+                    </button>
+                    </InputGroupAddon>
+                </InputGroup>
+
+                {fieldErrors.password && (
+                    <FieldError className="mt-2 text-sm text-red-500">
+                    {fieldErrors.password}
+                    </FieldError>
+                )}
+            </Field>
+
+            {/* Remember + forgot */}
+            <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox />
+                <span>Ghi nhớ tôi</span>
+            </label>
+
+            <a
+                href="#"
+                className="text-primary hover:underline transition-colors"
+            >
+                Quên mật khẩu?
+            </a>
+            </div>
+
+            {/* Submit */}
+            <Button
+                type="submit"
+                disabled={loginMutation.isPending}
+                className="w-full h-11 flex items-center justify-center gap-2"
+                >
+                {loginMutation.isPending ? <Spinner /> : <Lock className="w-4 h-4" />}
+                Đăng nhập
+            </Button>
+        </form>
         )
 
 }
