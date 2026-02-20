@@ -6,8 +6,9 @@ import {
   LayoutDashboard,
   Users,
   Settings,
-  BarChart3,
+  Key,
   LogOut,
+  UserLock,
 } from "lucide-react"
 import clsx from "clsx"
 import { Button } from "../ui/button"
@@ -16,6 +17,7 @@ import { AlertLogoutDialog } from "@/features/auth/components/logout-dialog"
 import { useState } from "react"
 import { toast } from "sonner"
 import { useAuthStore } from "@/store/auth.store"
+import { Separator } from "../ui/separator"
 
 const menu = [
   {
@@ -24,17 +26,22 @@ const menu = [
     icon: LayoutDashboard,
   },
   {
-    name: "Users",
+    name: "Người dùng",
     href: "/admin/users",
     icon: Users,
   },
   {
-    name: "Analytics",
-    href: "/admin/analytics",
-    icon: BarChart3,
+    name: "Vai trò",
+    href: "/admin/roles",
+    icon: Key,
   },
   {
-    name: "Settings",
+    name: "Quyền",
+    href: "/admin/permissions",
+    icon: UserLock,
+  },
+  {
+    name: "Hệ thống",
     href: "/admin/settings",
     icon: Settings,
   },
@@ -97,7 +104,7 @@ const AdminSider = () => {
           )
         })}
       </nav>
-
+      <Separator />
       <div className="pt-6 border-t border-white/10">
         <Button onClick={() => setConfirmLogout(true)}>
           <LogOut size={16} />

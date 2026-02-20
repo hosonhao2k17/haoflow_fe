@@ -1,9 +1,10 @@
 import { createUser, getCurrentUser, getUser, getUsers, removeUser, updateUser } from "@/features/user/user.api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import { QueryUserDto } from "./interfaces/query-user-dto.interface";
 import { CreateUserDto } from "./interfaces/create-user-dto.interface";
 import { UpdateUserDto } from "./interfaces/update-user-dto.interface";
 import { IdPayload } from "@/common/interfaces/id-payload.interface";
+import { User } from "./interfaces/user.interface";
 
 
 export const useUsersQuery = (query: QueryUserDto) => {
@@ -15,11 +16,12 @@ export const useUsersQuery = (query: QueryUserDto) => {
     })
 }
 
-export const useCurrentUser = () => {
+export const useCurrentUser = (options?: Omit<UseQueryOptions<User>, "queryKey" | "queryFn">) => {
 
     return useQuery({
         queryKey: ["user"],
-        queryFn: () => getCurrentUser()
+        queryFn: () => getCurrentUser(),
+        ...options
     })
 }
 

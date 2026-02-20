@@ -1,25 +1,25 @@
 "use client"
 
+import { useEffect } from "react"
 import { useCurrentUser } from "@/features/user/user.hook"
+import { useAuthStore } from "@/store/auth.store"
 import { useUserStore } from "@/store/user.store"
-import React, { useEffect } from "react"
 
+const Providers = ({ children }: { children: React.ReactNode }) => {
+  const { accessToken } = useAuthStore()
+  const setUser = useUserStore((state) => state.setUser)
 
-const Providers = ({
-    children
-}: {
-    children: React.ReactNode
-}) => {
-    const {data} = useCurrentUser()
-    const setUser = useUserStore((state) => state.setUser)
+  const { data, isSuccess } = useCurrentUser({
+    enabled: !!accessToken
+  })
 
-    useEffect(() => {
-        if(data) {
-            setUser(data)
-        }
-    }, [data, setUser])
+  useEffect(() => {
+    if (isSuccess && data) {
+      setUser(data)
+    }
+  }, [data, isSuccess, setUser])
 
-    return <>{children}</>
+  return <>{children}</>
 }
 
 export default Providers

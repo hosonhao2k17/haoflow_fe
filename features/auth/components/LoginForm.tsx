@@ -38,7 +38,7 @@ const LoginForm = () => {
                         accessToken: data?.accessToken as string,
                         expiresIn: data?.expiresIn as number
                     })
-                    router.replace("/")
+                    router.replace("/admin/users")
                 },
                 onError: (err: any) => {
                     toast.error(err.response.data.message)
