@@ -11,8 +11,7 @@ const Register = () =>  {
         <CardAuth
             title="Đăng ký"
         >
-            <>
-            </>
+            <RegisterForm />
         </CardAuth>
     )
 }

@@ -7,9 +7,9 @@ export interface User extends Base{
     fullName: string;
     email: string;
     avatar: string | null;
-    gender: Gender | null;
+    gender?: Gender | null;
     password: string;
-    birthDate: Date | null; 
+    birthDate?: Date | null; 
     verified: boolean;
     status: UserStatus;
 

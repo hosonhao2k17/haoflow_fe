@@ -9,7 +9,7 @@ const AuthLayout = ({children}: Props) => {
 
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-primary">
+        <div className="flex justify-center items-center min-h-screen bg-primary overflow-hidden">
             {children}
         </div>
     )
