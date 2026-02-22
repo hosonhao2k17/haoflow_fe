@@ -13,6 +13,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "sonner"
 import { Gender } from "@/common/constants/app.constant"
 import { mapFieldErrors } from "@/lib/map-field-error"
+import Link from "next/link"
 
 
 const RegisterForm  = () => {
@@ -173,6 +174,9 @@ const RegisterForm  = () => {
                     )}
                 </Field>
                 
+            </div>
+            <div className="flex justify-between">
+                Bạn đã có tài khoản ? <Link href="/login" className="text-primary underline"> Đăng nhập</Link>
             </div>
             <Button
                 type="submit"
