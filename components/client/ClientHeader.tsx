@@ -15,7 +15,7 @@ const ClientHeader = () => {
   const targetProgress = 68
 
   return (
-    <header className="w-full bg-primary text-primary-foreground px-6 py-4 shadow-md">
+    <header className="w-full bg-primary text-primary-foreground px-6 sticky py-4 shadow-md">
       <div className="flex items-center justify-between">
         
         {/* LEFT SECTION */}
