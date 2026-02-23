@@ -6,15 +6,22 @@ import {
   ChevronRight,
   Calendar,
   Search,
+  UserPlusIcon,
+  CalendarPlus,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { formatDate } from "@/lib/date"
+import { CruMode } from "@/common/constants/app.constant"
 
 
+interface Props {
+  setOpen: (open: boolean) => void;
+  setMode: (mode: CruMode) => void;
+}
 
-const DailyPlanTool = () => {
+const DailyPlanTool = ({setOpen, setMode}:Props) => {
   
 
   return (
@@ -70,6 +77,17 @@ const DailyPlanTool = () => {
               className="pl-9 w-44"
             />
           </div>
+
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setOpen(true)
+              setMode(CruMode.CREATE)
+            }}
+          >
+            <CalendarPlus />
+            Thêm
+          </Button>
         </div>
 
         {/* Search + Sort */}

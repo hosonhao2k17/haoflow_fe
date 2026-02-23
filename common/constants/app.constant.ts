@@ -35,3 +35,9 @@ export enum TaskStatus {
     DONE = "done",
     SKIPPED = "skipped"
 }
+
+export enum CruMode {
+    CREATE = 'create',
+    READ = 'read',
+    UPDATE = 'update'
+}

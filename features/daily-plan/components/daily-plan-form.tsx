@@ -1,0 +1,158 @@
+"use client"
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { CalendarDays, Clock } from "lucide-react"
+import { CruMode } from "@/common/constants/app.constant"
+import { DailyPlan } from "../interfaces/daily-plan.interface"
+import { useState } from "react"
+import { CreateDailyPlan } from "../interfaces/create-daily-plan.interface"
+
+interface Props {
+  open: boolean
+  setOpen: (open: boolean) => void;
+  mode: CruMode;
+  dailyPlan: DailyPlan;
+
+}
+
+const DailyPlanForm = ({ 
+    open, 
+    setOpen, 
+    mode, 
+    dailyPlan, 
+}: Props) => {
+
+    
+    const [form, setForm] = useState<CreateDailyPlan>(dailyPlan ?? {
+        title: "",
+        description: "",
+        timeBlock: {
+            startTime: new Date(),
+            endTime: new Date()
+        },
+        date: new Date()
+    });
+
+    const handleSubmit = () => {
+
+    }
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="sm:max-w-lg rounded-2xl p-0 overflow-hidden">
+
+                {/* Header */}
+                <div className="bg-[#1E3A8A] text-white px-6 py-5">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-semibold tracking-wide flex items-center gap-2">
+                            <CalendarDays className="w-5 h-5" />
+                            {mode === CruMode.CREATE ? "Thêm hoạch hằng ngày" : "Sửa kế hoạch hằng ngày"}
+                        </DialogTitle>
+                    </DialogHeader>
+                </div>
+
+                {/* Body */}
+                <div className="p-6 space-y-6 bg-white">
+
+                {/* Date */}
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-gray-700">
+                            Ngày thực hiện
+                        </Label>
+                        <Input
+                            type="date"
+                            onChange={(e) => setForm({...form, date: new Date(e.target.value)})}
+                            className="rounded-xl focus-visible:ring-[#1E3A8A]"
+                        />
+                    </div>
+
+                    {/* Title */}
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-gray-700">
+                            Tiêu đề
+                        </Label>
+                        <Input
+                            placeholder="Ví dụ: Học Next.js 30 phút"
+                            className="rounded-xl focus-visible:ring-[#1E3A8A]"
+                            value={form.title}
+                            onChange={(e) => setForm({...form, title: e.target.value})}
+                        />
+                    </div>
+
+                    {/* Description */}
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-gray-700">
+                             Mô tả
+                        </Label>
+                        <Textarea
+                            rows={3}
+                            placeholder="Ghi chú thêm nếu cần..."
+                            className="rounded-xl resize-none focus-visible:ring-[#1E3A8A]"
+                            value={form.description}
+                            onChange={(e) => setForm({...form, description: e.target.value})}
+                        />
+                    </div>
+
+                    {/* Time Block */}
+                    <div className="space-y-3">
+                        <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-[#1E3A8A]" />
+                            Khung giờ
+                        </Label>
+
+                        <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border">
+                            <div className="space-y-2">
+                                <Label className="text-xs text-gray-500">
+                                Bắt đầu
+                                </Label>
+                                <Input
+                                    type="time"
+                                    onChange={(e) => setForm({...form, timeBlock: {...form.timeBlock,startTime: new Date(e.target.value)}})}
+                                    className="rounded-xl focus-visible:ring-[#1E3A8A]"
+                                    
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label className="text-xs text-gray-500">
+                                    Kết thúc
+                                </Label>
+                                <Input
+                                    type="time"
+                                    className="rounded-xl focus-visible:ring-[#1E3A8A]"
+                                    onChange={(e) => setForm({...form, timeBlock: {...form.timeBlock,endTime: new Date(e.target.value)}})}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <DialogFooter className="px-6 py-4 bg-gray-50 border-t flex justify-between">
+                    <Button
+                        variant="ghost"
+                        onClick={() => setOpen(false)}
+                    >
+                        Huỷ
+                    </Button>
+                    <Button onClick={() => handleSubmit()} className="bg-[#1E3A8A] hover:bg-[#162c6b] text-white rounded-xl">
+                        Lưu nhiệm vụ
+                    </Button>
+                    </DialogFooter>
+
+                </DialogContent>
+        </Dialog>
+    )
+}
+
+export default DailyPlanForm

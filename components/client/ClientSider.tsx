@@ -25,12 +25,12 @@ const menus = [
   },
   {
     name: "Kế hoạch",
-    href: "plan",
+    href: "/plan",
     icon: BookCheck,
     childrens: [
       {
         name: "Kế hoạch hằng ngày",
-        href: "plan/task",
+        href: "/plan/task",
         icon: ListTodo,
       },
       {
