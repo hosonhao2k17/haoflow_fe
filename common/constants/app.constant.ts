@@ -29,3 +29,9 @@ export enum RoleName {
 
 export const DEFAULT_SORT_BY = 'createdAt'
 export const DEFAULT_SORT_ORDER = SortOrder.DESC
+
+export enum TaskStatus {
+    TODO = "todo",
+    DONE = "done",
+    SKIPPED = "skipped"
+}

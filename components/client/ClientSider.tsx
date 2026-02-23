@@ -19,23 +19,23 @@ import clsx from "clsx"
 
 const menus = [
   {
-    name: "Home",
+    name: "Trang chủ",
     href: "/",
     icon: House,
   },
   {
-    name: "Daily Plan",
-    href: "/daily-plans",
+    name: "Kế hoạch",
+    href: "plan",
     icon: BookCheck,
     childrens: [
       {
-        name: "Tasks",
-        href: "/daily-plans/task",
+        name: "Kế hoạch hằng ngày",
+        href: "plan/task",
         icon: ListTodo,
       },
       {
-        name: "Category",
-        href: "/daily-plans/category",
+        name: "Danh mục",
+        href: "/plan/category",
         icon: FolderKanban,
       },
       {

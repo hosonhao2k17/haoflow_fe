@@ -1,5 +1,5 @@
-import DailyPlanSchedule from "@/features/daily-plan/daily-plan-schedule"
-import DailyPlanTool from "@/features/daily-plan/daily-plan-tool"
+import DailyPlanSchedule from "@/features/daily-plan/components/daily-plan-schedule"
+import DailyPlanTool from "@/features/daily-plan/components/daily-plan-tool"
 
 
 
