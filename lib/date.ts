@@ -20,8 +20,8 @@ export const getBirthDateRange = () => {
     }
 }
 
-export const formatDateForInput = (isoString: string) => {
-  return isoString.split("T")[0]
+export const formatDateForInput = (date:  Date) => {
+  return date.toISOString().split("T")[0]
 }
 
 export const formatHour = (input: string | Date): string => {

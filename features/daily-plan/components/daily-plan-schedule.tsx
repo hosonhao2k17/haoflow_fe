@@ -64,7 +64,7 @@ const DailyPlanSchedule = ({
               {/* TIME BLOCK */}
               <div className="flex items-center gap-2 text-xs text-muted-foreground mt-4">
                 <Clock className="w-4 h-4" />
-                  {formatHour(plan.timeBlock.startTime)} - {formatHour(plan.timeBlock.endTime)}
+                  {plan.timeBlock.startTime} - {plan.timeBlock.endTime}
               </div>
 
               {/* PROGRESS */}

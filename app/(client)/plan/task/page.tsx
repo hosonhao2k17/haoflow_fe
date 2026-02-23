@@ -16,6 +16,7 @@ const task = () => {
     const [cruMode, setCruMode] = useState<CruMode>(CruMode.CREATE);
     const [dailyPlan, setDailyPlan] = useState<DailyPlan>();
     const {data, isLoading} = useDailyPlans({})
+    
     return (
         <>
             <div className="flex flex-col">
@@ -38,7 +39,6 @@ const task = () => {
             </div>
             <DailyPlanForm 
                 dailyPlan={dailyPlan}
-                setDailyPlan={setDailyPlan}
                 mode={cruMode}
                 open={openCreate}
                 setOpen={setOpenCreate}

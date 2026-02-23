@@ -9,8 +9,8 @@ export interface DailyPlan extends Base {
   description: string
   summary: SummaryTask;
   timeBlock: {
-    startTime: Date
-    endTime: Date
+    startTime: string
+    endTime: string
   }
   tasks: Task[]
   date: Date
