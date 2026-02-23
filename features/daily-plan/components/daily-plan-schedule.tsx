@@ -7,24 +7,26 @@ import { useDailyPlans } from "../daly-plan.hook"
 import { formatDate, formatHour, getWeekdayVN, isToday } from "@/lib/date"
 import { DailyPlan } from "../interfaces/daily-plan.interface"
 import { TaskStatus } from "@/common/constants/app.constant"
+import DailyPlanScheduleSkeleton from "./skeletons/daily-plan-schedule.skeleton"
 
 
-const DailyPlanSchedule = () => {
+interface Props {
+  dailyPlans: DailyPlan[];
+  isLoading: boolean;
+}
 
-  const { data, isLoading } = useDailyPlans({})
+const DailyPlanSchedule = ({
+  dailyPlans,
+  isLoading
+}: Props) => {
 
-  if (isLoading) return <div className="p-6">Loading...</div>
-  if (!data) return null
 
-  return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl flex gap-2 items-center font-semibold uppercase">
-        Kế hoạch hằng tuần
-        <Calendar />
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {data.items.map((plan: DailyPlan) => {
+  return isLoading
+        ? 
+        <DailyPlanScheduleSkeleton />
+        :
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {dailyPlans.map((plan: DailyPlan) => {
           console.log(plan)
           const total = plan.summary.totalTask
           const done = plan.summary.completedTasks
@@ -120,8 +122,7 @@ const DailyPlanSchedule = () => {
           )
         })}
       </div>
-    </div>
-  )
+     
 }
 
 export default DailyPlanSchedule
