@@ -13,6 +13,11 @@ export const getDailyPlans = async (query: QueryDailyPlan) => {
     return res.data;
 }
 
+export const getDailyPlan = async (id: string) => {
+    const res = await api.get(`daily-plans/${id}`)
+    return res.data;
+}
+
 export const createDailyPlan = async (dto: CreateDailyPlan) => {
     const res = await api.post('daily-plans',dto);
     return res.data;

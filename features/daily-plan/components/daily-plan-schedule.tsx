@@ -10,6 +10,7 @@ import { CruMode, TaskStatus } from "@/common/constants/app.constant"
 import DailyPlanScheduleSkeleton from "./skeletons/daily-plan-schedule.skeleton"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
 
 
 interface Props {
@@ -148,11 +149,11 @@ const DailyPlanSchedule = ({
                     ))}
                 </div>
 
-                {total > 3 && (
-                  <p className="text-xs text-center text-muted-foreground mt-2 cursor-pointer">
+                
+                  <Link href={`/plan/${plan.id}`} className="text-xs text-center text-muted-foreground mt-2 cursor-pointer">
                     Xem chi tiết →
-                  </p>
-                )}
+                  </Link>
+                
               </div>
             </div>
             
