@@ -18,6 +18,7 @@ interface Props {
   setOpen: (open: boolean) => void;
   setMode: (mode: CruMode) => void;
   setDailyPlan: (dailyPlan: DailyPlan) => void;
+  setOpenRemove: (open: boolean) => void;
 }
 
 const DailyPlanSchedule = ({
@@ -25,7 +26,8 @@ const DailyPlanSchedule = ({
   isLoading,
   setOpen,
   setMode,
-  setDailyPlan
+  setDailyPlan,
+  setOpenRemove
 }: Props) => {
 
 
@@ -71,6 +73,11 @@ const DailyPlanSchedule = ({
                     size="sm" 
                     className="text-red-500"  
                     variant="ghost"
+                    onClick={() => {
+                      setDailyPlan(plan)
+                      setOpenRemove(true)
+                      
+                    }}
                   >
                     <Trash />
                   </Button>

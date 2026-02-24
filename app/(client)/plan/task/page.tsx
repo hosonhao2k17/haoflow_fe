@@ -1,22 +1,39 @@
 "use client"
 
 import { CruMode } from "@/common/constants/app.constant"
+import { AlertDialogDestructive } from "@/components/ui/aler-dialog"
 import DailyPlanForm from "@/features/daily-plan/components/daily-plan-form"
 import DailyPlanSchedule from "@/features/daily-plan/components/daily-plan-schedule"
 import DailyPlanTool from "@/features/daily-plan/components/daily-plan-tool"
-import { useDailyPlans } from "@/features/daily-plan/daly-plan.hook"
+import { useDailyPlans, useRemoveDailyPlan } from "@/features/daily-plan/daly-plan.hook"
 import { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface"
 import { Calendar } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 
 
 const task = () => {
     const [open, setOpen] = useState<boolean>(false);
+    const [openRemove, setOpenRemove] = useState<boolean>(false);
     const [cruMode, setCruMode] = useState<CruMode>(CruMode.CREATE);
     const [dailyPlan, setDailyPlan] = useState<DailyPlan>();
     const {data, isLoading} = useDailyPlans({})
     
+    const removeDailyPlanMutation = useRemoveDailyPlan();
+
+    const handleRemove = () => {
+        removeDailyPlanMutation.mutate(dailyPlan?.id as string, {
+            onSuccess: () => {
+                toast.success("Loại bỏ kế hoạch thành công")
+                setOpenRemove(false)
+            },
+            onError: () => {
+                toast.error("Loại bỏ kế hoạch không thành công"),
+                setOpenRemove(false)
+            }
+        })
+    }
     return (
         <>
             <div className="flex flex-col">
@@ -33,6 +50,7 @@ const task = () => {
                     <DailyPlanSchedule 
                         dailyPlans={data?.items}
                         isLoading={isLoading}
+                        setOpenRemove={setOpenRemove}
                         setOpen={setOpen}
                         setMode={setCruMode}
                         setDailyPlan={setDailyPlan}
@@ -45,6 +63,13 @@ const task = () => {
                 mode={cruMode}
                 open={open}
                 setOpen={setOpen}
+            />
+            <AlertDialogDestructive 
+                open={openRemove}
+                setOpen={setOpenRemove}
+                title="Xác nhận muốn xóa"
+                content="Bạn muốn xóa kế hoạch này chứ"
+                onConfirm={handleRemove}
             />
         </>
     )

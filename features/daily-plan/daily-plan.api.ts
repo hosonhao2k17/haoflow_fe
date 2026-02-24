@@ -22,3 +22,8 @@ export const editDailyPlan = async (id: string, dto: EditDailyPlan) => {
     const res = await api.patch(`daily-plans/${id}`,dto);
     return res.data;
 }
+
+export const removeDailyPlan = async (id: string) => {
+    const res = await api.delete(`daily-plans/${id}`);
+    return res.data;
+}
