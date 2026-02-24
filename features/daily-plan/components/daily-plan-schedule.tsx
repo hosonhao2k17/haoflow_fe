@@ -1,7 +1,7 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-import { Clock, CheckCircle2, Calendar, Ban, Circle, Pencil } from "lucide-react"
+import { Clock, CheckCircle2, Calendar, Ban, Circle, Pencil, Trash } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useDailyPlans } from "../daly-plan.hook"
 import { formatDate, formatHour, getWeekdayVN, isToday } from "@/lib/date"
@@ -53,19 +53,28 @@ const DailyPlanSchedule = ({
                 <p className="text-lg font-semibold uppercase text-primary">
                   {getWeekdayVN(plan.date.toString())}
                 </p>
-                <Button 
-                  onClick={() => {
-                    
-                    setDailyPlan(plan)
-                    setMode(CruMode.UPDATE)
-                    setOpen(true)
-                  }} 
-                  size="sm" 
-                  className="text-primary"  
-                  variant="ghost"
-                >
-                  <Pencil />
-                </Button>
+                <div>
+                  <Button 
+                    onClick={() => {
+                      
+                      setDailyPlan(plan)
+                      setMode(CruMode.UPDATE)
+                      setOpen(true)
+                    }} 
+                    size="sm" 
+                    className="text-primary"  
+                    variant="ghost"
+                  >
+                    <Pencil />
+                  </Button>
+                  <Button
+                    size="sm" 
+                    className="text-red-500"  
+                    variant="ghost"
+                  >
+                    <Trash />
+                  </Button>
+                </div>
               </div>
               <Separator className="h-3 bg-primary"/>
               {/* TITLE */}

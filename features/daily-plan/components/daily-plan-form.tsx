@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { CalendarDays, Clock } from "lucide-react"
+import { CalendarDays, Clock, Save } from "lucide-react"
 import { CruMode } from "@/common/constants/app.constant"
 import { DailyPlan } from "../interfaces/daily-plan.interface"
 import { useEffect, useState } from "react"
@@ -21,6 +21,7 @@ import { useCreateDailyPlan, useEditDailyPlan } from "../daly-plan.hook"
 import { toast } from "sonner"
 import { formatDate, formatDateForInput } from "@/lib/date"
 import { EditDailyPlan } from "../interfaces/edit-daily-plan.interface"
+import { Spinner } from "@/components/ui/spinner"
 
 interface Props {
   open: boolean
@@ -61,6 +62,10 @@ const DailyPlanForm = ({
     }, [dailyPlan, mode])
     const editDailyPlanMutation = useEditDailyPlan();
     const createDailyPlanMutation = useCreateDailyPlan();
+
+    const isPending = mode === CruMode.CREATE
+        ? createDailyPlanMutation.isPending
+        : editDailyPlanMutation.isPending;
     const handleCreate = () => {
         createDailyPlanMutation.mutate(form as CreateDailyPlan,{
             onSuccess: () => {
@@ -112,6 +117,7 @@ const DailyPlanForm = ({
                             Ngày thực hiện
                         </Label>
                         <Input
+                            disabled={isPending}
                             type="date"
                             onChange={(e) => setForm({...form, date: e.target.value})}
                             className="rounded-xl focus-visible:ring-[#1E3A8A]"
@@ -125,6 +131,7 @@ const DailyPlanForm = ({
                             Tiêu đề
                         </Label>
                         <Input
+                            disabled={isPending}
                             placeholder="Ví dụ: Học Next.js 30 phút"
                             className="rounded-xl focus-visible:ring-[#1E3A8A]"
                             value={form.title}
@@ -138,6 +145,7 @@ const DailyPlanForm = ({
                              Mô tả
                         </Label>
                         <Textarea
+                            disabled={isPending}
                             rows={3}
                             placeholder="Ghi chú thêm nếu cần..."
                             className="rounded-xl resize-none focus-visible:ring-[#1E3A8A]"
@@ -159,6 +167,7 @@ const DailyPlanForm = ({
                                 Bắt đầu
                                 </Label>
                                 <Input
+                                    disabled={isPending}
                                     type="time"
                                     onChange={(e) => setForm({...form, startTime: e.target.value})}
                                     className="rounded-xl focus-visible:ring-[#1E3A8A]"
@@ -172,6 +181,7 @@ const DailyPlanForm = ({
                                     Kết thúc
                                 </Label>
                                 <Input
+                                    disabled={isPending}
                                     type="time"
                                     className="rounded-xl focus-visible:ring-[#1E3A8A]"
                                     onChange={(e) => setForm({...form, endTime: e.target.value})}
@@ -190,8 +200,15 @@ const DailyPlanForm = ({
                     >
                         Huỷ
                     </Button>
-                    <Button onClick={() => mode === CruMode.CREATE ? handleCreate() : handleEdit()} className="bg-[#1E3A8A] hover:bg-[#162c6b] text-white rounded-xl">
+                    <Button disabled={isPending} onClick={() => mode === CruMode.CREATE ? handleCreate() : handleEdit()} className="bg-[#1E3A8A] hover:bg-[#162c6b] text-white rounded-xl">
                         Lưu nhiệm vụ
+                        {
+                            isPending
+                            ?
+                            <Spinner />
+                            :
+                            <Save />
+                        }
                     </Button>
                     </DialogFooter>
 
