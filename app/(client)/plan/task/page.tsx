@@ -12,7 +12,7 @@ import { useState } from "react"
 
 
 const task = () => {
-    const [openCreate, setOpenCreate] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
     const [cruMode, setCruMode] = useState<CruMode>(CruMode.CREATE);
     const [dailyPlan, setDailyPlan] = useState<DailyPlan>();
     const {data, isLoading} = useDailyPlans({})
@@ -22,7 +22,7 @@ const task = () => {
             <div className="flex flex-col">
             
                 <DailyPlanTool 
-                    setOpen={setOpenCreate} 
+                    setOpen={setOpen} 
                     setMode={setCruMode}
                 />
                 <div className="p-6 space-y-6">
@@ -33,6 +33,9 @@ const task = () => {
                     <DailyPlanSchedule 
                         dailyPlans={data?.items}
                         isLoading={isLoading}
+                        setOpen={setOpen}
+                        setMode={setCruMode}
+                        setDailyPlan={setDailyPlan}
                     />
                 </div>
                 
@@ -40,8 +43,8 @@ const task = () => {
             <DailyPlanForm 
                 dailyPlan={dailyPlan}
                 mode={cruMode}
-                open={openCreate}
-                setOpen={setOpenCreate}
+                open={open}
+                setOpen={setOpen}
             />
         </>
     )

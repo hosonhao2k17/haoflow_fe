@@ -19,6 +19,6 @@ export const createDailyPlan = async (dto: CreateDailyPlan) => {
 }
 
 export const editDailyPlan = async (id: string, dto: EditDailyPlan) => {
-    const res = await api.patch(`daily-plan/${id}`,dto);
+    const res = await api.patch(`daily-plans/${id}`,dto);
     return res.data;
 }

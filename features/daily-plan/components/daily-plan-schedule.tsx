@@ -1,23 +1,31 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-import { Clock, CheckCircle2, Calendar, Ban, Circle } from "lucide-react"
+import { Clock, CheckCircle2, Calendar, Ban, Circle, Pencil } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useDailyPlans } from "../daly-plan.hook"
 import { formatDate, formatHour, getWeekdayVN, isToday } from "@/lib/date"
 import { DailyPlan } from "../interfaces/daily-plan.interface"
-import { TaskStatus } from "@/common/constants/app.constant"
+import { CruMode, TaskStatus } from "@/common/constants/app.constant"
 import DailyPlanScheduleSkeleton from "./skeletons/daily-plan-schedule.skeleton"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 
 
 interface Props {
   dailyPlans: DailyPlan[];
   isLoading: boolean;
+  setOpen: (open: boolean) => void;
+  setMode: (mode: CruMode) => void;
+  setDailyPlan: (dailyPlan: DailyPlan) => void;
 }
 
 const DailyPlanSchedule = ({
   dailyPlans,
-  isLoading
+  isLoading,
+  setOpen,
+  setMode,
+  setDailyPlan
 }: Props) => {
 
 
@@ -27,7 +35,6 @@ const DailyPlanSchedule = ({
         :
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {dailyPlans.map((plan: DailyPlan) => {
-          console.log(plan)
           const total = plan.summary.totalTask
           const done = plan.summary.completedTasks
 
@@ -42,15 +49,29 @@ const DailyPlanSchedule = ({
               )}
             >
               {/* DAY LABEL */}
-              <p className="text-xs font-semibold text-primary">
-                {getWeekdayVN(plan.date.toString())}
-              </p>
-
+              <div className="flex justify-between">
+                <p className="text-lg font-semibold uppercase text-primary">
+                  {getWeekdayVN(plan.date.toString())}
+                </p>
+                <Button 
+                  onClick={() => {
+                    
+                    setDailyPlan(plan)
+                    setMode(CruMode.UPDATE)
+                    setOpen(true)
+                  }} 
+                  size="sm" 
+                  className="text-primary"  
+                  variant="ghost"
+                >
+                  <Pencil />
+                </Button>
+              </div>
+              <Separator className="h-3 bg-primary"/>
               {/* TITLE */}
               <h2 className="font-semibold text-lg mt-1">
                 {plan.title}
               </h2>
-
               {/* DESCRIPTION */}
               <p className="text-xs text-muted-foreground mt-1">
                 {plan.description}
@@ -64,7 +85,7 @@ const DailyPlanSchedule = ({
               {/* TIME BLOCK */}
               <div className="flex items-center gap-2 text-xs text-muted-foreground mt-4">
                 <Clock className="w-4 h-4" />
-                  {plan.timeBlock.startTime} - {plan.timeBlock.endTime}
+                  {plan.startTime.slice(0,5)} - {plan.endTime.slice(0,5 )}
               </div>
 
               {/* PROGRESS */}

@@ -15,11 +15,12 @@ import { Label } from "@/components/ui/label"
 import { CalendarDays, Clock } from "lucide-react"
 import { CruMode } from "@/common/constants/app.constant"
 import { DailyPlan } from "../interfaces/daily-plan.interface"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CreateDailyPlan } from "../interfaces/create-daily-plan.interface"
-import { useCreateDailyPlan } from "../daly-plan.hook"
+import { useCreateDailyPlan, useEditDailyPlan } from "../daly-plan.hook"
 import { toast } from "sonner"
 import { formatDate, formatDateForInput } from "@/lib/date"
+import { EditDailyPlan } from "../interfaces/edit-daily-plan.interface"
 
 interface Props {
   open: boolean
@@ -39,17 +40,29 @@ const DailyPlanForm = ({
     const dfState = {
         title: "",
         description: "",
-        timeBlock: {
-            startTime: "05:00",
-            endTime: "22:00"
-        },
-        date: new Date()
+        startTime: "",
+        endTime: "",
+        date: new Date().toISOString().split("T")[0]
     }
-    const [form, setForm] = useState<CreateDailyPlan>(dailyPlan ?? dfState);
+    const [form, setForm] = useState<CreateDailyPlan | EditDailyPlan>(dfState);
 
+    useEffect(() => {
+        if (dailyPlan && mode === CruMode.UPDATE) {
+            setForm({
+                title: dailyPlan.title,
+                description: dailyPlan.description,
+                startTime: dailyPlan.startTime?.slice(0, 5),
+                endTime: dailyPlan.endTime?.slice(0, 5),
+                date: dailyPlan.date.split("T")[0],
+            })
+        } else {
+            setForm(dfState)
+        }
+    }, [dailyPlan, mode])
+    const editDailyPlanMutation = useEditDailyPlan();
     const createDailyPlanMutation = useCreateDailyPlan();
     const handleCreate = () => {
-        createDailyPlanMutation.mutate(form,{
+        createDailyPlanMutation.mutate(form as CreateDailyPlan,{
             onSuccess: () => {
                 toast.success("Tạo thành công")
                 setForm(dfState);
@@ -58,12 +71,23 @@ const DailyPlanForm = ({
             onError: (error: any) => {
                 toast.error("Tạo thất bại")
                 setForm(dfState)
+                
             }
         })
     }
 
+
     const handleEdit = () => {
-        
+        editDailyPlanMutation.mutate({id: dailyPlan?.id as string, dto: form},{
+            onSuccess: () => {
+                toast.success("Cập nhật thành công")
+                setOpen(false)
+            },
+            onError: (error: any) => {
+                toast.error("Cập nhật thất bại")
+                console.log(error.response.data)
+            }
+        })
     }
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -89,9 +113,9 @@ const DailyPlanForm = ({
                         </Label>
                         <Input
                             type="date"
-                            onChange={(e) => setForm({...form, date: new Date(e.target.value)})}
+                            onChange={(e) => setForm({...form, date: e.target.value})}
                             className="rounded-xl focus-visible:ring-[#1E3A8A]"
-                            value={formatDateForInput(form.date)}
+                            value={form.date}
                         />
                     </div>
 
@@ -136,9 +160,9 @@ const DailyPlanForm = ({
                                 </Label>
                                 <Input
                                     type="time"
-                                    onChange={(e) => setForm({...form, timeBlock: {...form.timeBlock,startTime: e.target.value}})}
+                                    onChange={(e) => setForm({...form, startTime: e.target.value})}
                                     className="rounded-xl focus-visible:ring-[#1E3A8A]"
-                                    value={form.timeBlock.startTime}
+                                    value={form.startTime}
                                     
                                 />
                             </div>
@@ -150,8 +174,8 @@ const DailyPlanForm = ({
                                 <Input
                                     type="time"
                                     className="rounded-xl focus-visible:ring-[#1E3A8A]"
-                                    onChange={(e) => setForm({...form, timeBlock: {...form.timeBlock,endTime: e.target.value}})}
-                                    value={form.timeBlock.endTime}
+                                    onChange={(e) => setForm({...form, endTime: e.target.value})}
+                                    value={form.endTime}
                                 />
                             </div>
                         </div>
@@ -166,7 +190,7 @@ const DailyPlanForm = ({
                     >
                         Huỷ
                     </Button>
-                    <Button onClick={handleCreate} className="bg-[#1E3A8A] hover:bg-[#162c6b] text-white rounded-xl">
+                    <Button onClick={() => mode === CruMode.CREATE ? handleCreate() : handleEdit()} className="bg-[#1E3A8A] hover:bg-[#162c6b] text-white rounded-xl">
                         Lưu nhiệm vụ
                     </Button>
                     </DialogFooter>
