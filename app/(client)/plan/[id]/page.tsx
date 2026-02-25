@@ -12,16 +12,23 @@ import {
   Pencil,
   ArrowUp,
   ArrowDown,
+  Move,
+  Plus,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useDailyPlan } from "@/features/daily-plan/daly-plan.hook"
+import { Task } from "@/features/task/interfaces/task.interface"
+import { formatDate } from "@/lib/date"
+
 
 
 
 const DailyPlanDetail = () => {
   const { id } = useParams()
-
-
-  
+  if(!id) return;
+  const {data} = useDailyPlan(id as string);
+  console.log(data)
+  if(!data) return;
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       {/* HEADER */}
@@ -29,48 +36,55 @@ const DailyPlanDetail = () => {
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-semibold">
-              Thứ 2 như buoi
+              {data.title}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Thứ 3 như buon
+              {data.description}
             </p>
           </div>
 
-          <Button variant="outline" size="sm">
-            <Pencil className="w-4 h-4 mr-2" />
-            Edit Plan
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Plus className="w-4 h-4" />
+              Thêm
+            </Button>
+            <Button variant="outline" size="sm">
+              <Pencil className="w-4 h-4" />
+              Sửa
+            </Button>
+          </div>
+          
         </div>
 
         <div className="text-xs text-muted-foreground flex gap-6">
-          <span>Date: {22/11/2025}</span>
+          <span>Ngày: {formatDate(data.date)}</span>
           <span>
-            Created: 23/11/2027
+            Tạo vào: {formatDate(data.createdAt)}
           </span>
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            {`10:00`} -{" "}
-            {`20:00`}
+            {data.startTime.slice(0,5)} -{" "}
+            {data.endTime.slice(0,5)}
           </span>
         </div>
 
         <div>
           <div className="flex justify-between text-xs mb-1">
             <span>
-              {done}/{total} tasks completed
+              {30}/{40} Công việc đã hoàn thành
             </span>
-            <span>{progress}%</span>
+            <span>{30}%</span>
           </div>
-          <Progress value={progress} />
+          <Progress value={40} />
         </div>
       </div>
 
       {/* TASK LIST */}
-      <div className="space-y-4">
-        {[].map((task) => (
+      <div className="space-y-4 gap-5 grid grid-cols-2">
+        {data?.tasks.map((task: Task, index: number) => (
           <div
             key={task.id}
-            className="bg-white shadow-primary shadow-xl border rounded-xl p-4 flex justify-between items-start hover:shadow-md transition"
+            className="bg-white  shadow-xl border rounded-xl p-4 flex justify-between items-start hover:shadow-md transition"
           >
             <div className="flex gap-4">
               <button
@@ -82,6 +96,9 @@ const DailyPlanDetail = () => {
                 ) : (
                   <Circle className="w-5 h-5 text-muted-foreground" />
                 )}
+                <span className="text-primary">
+                  {index + 1}
+                </span>
               </button>
 
               <div>
@@ -92,35 +109,28 @@ const DailyPlanDetail = () => {
                       "line-through text-muted-foreground"
                   )}
                 >
-                  {task.title}
+                  {task.todo}
                 </h3>
 
                 <p className="text-sm text-muted-foreground mt-1">
                   {task.description}
                 </p>
 
-                <p className="text-xs text-muted-foreground mt-2">
-                  {task.startTime} - {task.endTime}
-                </p>
+                <div className="text-xs items-center text-muted-foreground mt-2 flex gap-5">
+                  <p >
+                    {task.startTime.slice(0,5)} - {task.endTime.slice(0,5)}
+                  </p>
+                  {
+                    <span className="flex gap-1">
+                      Danh mục: <p className="text-primary font-bold">{task.category ? task.category.title : "Chưa có"}</p>
+                    </span>
+                    
+                  }
+                </div>
               </div>
             </div>
 
             <div className="flex gap-2">
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() =>{}}
-              >
-                <ArrowUp className="w-4 h-4" />
-              </Button>
-
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() =>{} }
-              >
-                <ArrowDown className="w-4 h-4" />
-              </Button>
 
               <Button size="icon" variant="ghost">
                 <Pencil className="w-4 h-4" />

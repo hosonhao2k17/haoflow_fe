@@ -13,7 +13,7 @@ interface Props {
     items: TaskCategory[]
 }
 
-const CategoryList = ({items}: Props) => {
+const CategoryList = ({items= []}: Props) => {
 
 
     return (

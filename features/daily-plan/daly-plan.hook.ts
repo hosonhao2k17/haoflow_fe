@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { QueryDailyPlan } from "./interfaces/query-daily-plan.interface"
-import { createDailyPlan, editDailyPlan, getDailyPlans, removeDailyPlan } from "./daily-plan.api"
+import { createDailyPlan, editDailyPlan, getDailyPlan, getDailyPlans, removeDailyPlan } from "./daily-plan.api"
 import { CreateDailyPlan } from "./interfaces/create-daily-plan.interface"
 import { EditDailyPlan } from "./interfaces/edit-daily-plan.interface"
 import { IdPayload } from "@/common/interfaces/id-payload.interface"
@@ -25,6 +25,14 @@ export const useCreateDailyPlan = () => {
                 queryKey: ['dailyPlans']
             })
         }
+    })
+}
+
+export const useDailyPlan = (id: string) => {
+
+    return useQuery({
+        queryKey: ["dailyPlan",id],
+        queryFn: () => getDailyPlan(id)
     })
 }
 
