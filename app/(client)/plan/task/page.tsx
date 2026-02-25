@@ -7,6 +7,7 @@ import DailyPlanSchedule from "@/features/daily-plan/components/daily-plan-sched
 import DailyPlanTool from "@/features/daily-plan/components/daily-plan-tool"
 import { useDailyPlans, useRemoveDailyPlan } from "@/features/daily-plan/daly-plan.hook"
 import { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface"
+import { getRangeWeek } from "@/lib/date"
 import { Calendar } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -14,11 +15,18 @@ import { toast } from "sonner"
 
 
 const task = () => {
+
+    const [startDate, setStartDate] = useState<string>(getRangeWeek().startDate);
+    const [endDate, setEndDate] = useState<string>(getRangeWeek().endDate);
+
     const [open, setOpen] = useState<boolean>(false);
     const [openRemove, setOpenRemove] = useState<boolean>(false);
     const [cruMode, setCruMode] = useState<CruMode>(CruMode.CREATE);
     const [dailyPlan, setDailyPlan] = useState<DailyPlan>();
-    const {data, isLoading} = useDailyPlans({})
+    const {data, isLoading} = useDailyPlans({
+        startDate,
+        endDate
+    })
     
     const removeDailyPlanMutation = useRemoveDailyPlan();
 
@@ -41,6 +49,10 @@ const task = () => {
                 <DailyPlanTool 
                     setOpen={setOpen} 
                     setMode={setCruMode}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                    startDate={startDate}
+                    endDate={endDate}
                 />
                 <div className="p-6 space-y-6">
                     <h1 className="text-2xl flex gap-2 items-center font-semibold uppercase">

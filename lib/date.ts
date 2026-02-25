@@ -63,3 +63,27 @@ export function isToday(dateString: string) {
     today.getDate() === date.getDate()
   )
 }
+
+
+export const getRangeWeek = (date: Date = new Date()) => {
+  const current = new Date(date)
+
+  // Chuẩn hóa về 00:00:00 để tránh lệch timezone khi so sánh
+  current.setHours(0, 0, 0, 0)
+
+  const day = current.getDay() // 0 (Sun) -> 6 (Sat)
+
+  // Chuyển về Monday
+  const diffToMonday = day === 0 ? -6 : 1 - day
+
+  const startDate = new Date(current)
+  startDate.setDate(current.getDate() + diffToMonday)
+
+  const endDate = new Date(startDate)
+  endDate.setDate(startDate.getDate() + 6)
+
+  return {
+    startDate: startDate.toString(),
+    endDate: endDate.toString(),
+  }
+}

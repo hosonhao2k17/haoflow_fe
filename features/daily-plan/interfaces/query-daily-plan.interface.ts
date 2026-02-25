@@ -4,4 +4,6 @@ import { OffsetPaginationDto } from "@/common/interfaces/offset-pagination.inter
 
 export interface QueryDailyPlan extends CursorPaginationDto {
     keyword?: string;
+    startDate?: string;
+    endDate?: string;
 }

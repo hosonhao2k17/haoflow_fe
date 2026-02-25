@@ -19,9 +19,20 @@ import { CruMode } from "@/common/constants/app.constant"
 interface Props {
   setOpen: (open: boolean) => void;
   setMode: (mode: CruMode) => void;
+  setStartDate: (date: string) => void;
+  setEndDate: (date: string) => void;
+  startDate: string;
+  endDate: string;
 }
 
-const DailyPlanTool = ({setOpen, setMode}:Props) => {
+const DailyPlanTool = ({
+  setOpen, 
+  setMode,
+  setStartDate,
+  setEndDate,
+  startDate,
+  endDate
+}:Props) => {
   
 
   return (
@@ -58,11 +69,47 @@ const DailyPlanTool = ({setOpen, setMode}:Props) => {
         {/* Week control */}
         <div className="flex items-center gap-3 flex-wrap">
 
-          <Button variant="outline" size="icon" >
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => {
+              setStartDate((prev: string) => {
+                if (!prev) return prev
+                const newStart = new Date(prev)
+                newStart.setDate(newStart.getDate() - 7)
+                return newStart
+              })
+
+              setEndDate((prev: string) => {
+                if (!prev) return prev
+                const newEnd = new Date(prev)
+                newEnd.setDate(newEnd.getDate() - 7)
+                return newEnd
+              })
+            }}
+          >
             <ChevronLeft className="w-4 h-4" />
           </Button>
 
-          <Button variant="outline" size="icon">
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={() => {
+              setStartDate((prev: string) => {
+                if (!prev) return prev
+                const newStart = new Date(prev)
+                newStart.setDate(newStart.getDate() + 7)
+                return newStart
+              })
+
+              setEndDate((prev: string) => {
+                if (!prev) return prev
+                const newEnd = new Date(prev)
+                newEnd.setDate(newEnd.getDate() + 7)
+                return newEnd
+              })
+            }}
+          >
             <ChevronRight className="w-4 h-4" />
           </Button>
 
