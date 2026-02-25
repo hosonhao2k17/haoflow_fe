@@ -41,7 +41,7 @@ const TaskCard = ({
   }
   
   return (
-      <div className="flex justify-between max-h-30 items-start">
+      <div className="flex justify-between max-h-30 relative items-start">
               <div className="flex gap-4">
                 <TaskStatusTab
                   isPending={updateTaskMutation.isPending}
@@ -87,7 +87,10 @@ const TaskCard = ({
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex absolute gap-1 right-0">
+                <Button size="sm" className="rounded-full" variant="outline">
+                  {index + 1}
+                </Button>
                 <Button
                   size="icon"
                   variant="ghost"

@@ -22,6 +22,7 @@ import { formatDate } from "@/lib/date"
 import TaskEdit from "@/features/task/components/TaskEdit"
 import TaskCard from "@/features/task/components/TaskCard"
 import TaskHeader from "@/features/task/components/TaskHeader"
+import TaskCreate from "@/features/task/components/TaskCreate"
 
 
 
@@ -29,15 +30,26 @@ import TaskHeader from "@/features/task/components/TaskHeader"
 const DailyPlanDetail = () => {
 
   const [openTaskEdit, setOpenTaskEdit] = useState<string>();
+  const [openTaskCreate, setOpenTaskCreate] = useState<boolean>(false)
   const { id } = useParams()
   if(!id) return;
   const {data} = useDailyPlan(id as string);
   if(!data) return;
+  console.log("NEAREST ===>")
+  console.log(data?.tasks[data.tasks.length - 1].endTime)
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
+
+      <TaskCreate 
+        open={openTaskCreate}
+        setOpen={setOpenTaskCreate}
+        nearestEndDate={data?.tasks[data.tasks.length - 1].endTime}
+        dailyPlanId={id as string}
+      />
       {/* HEADER */}
       <TaskHeader 
         data={data}
+        setOpenTaskCreate={setOpenTaskCreate}
       />
 
       {/* TASK LIST */}

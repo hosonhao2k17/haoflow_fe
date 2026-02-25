@@ -36,7 +36,7 @@ const TaskStatusTab = ({
                             value={item}
                             className={getColorActiveTaskStatus(item)}
                         >
-                            {isPending ? <>{item} <Spinner /></> : item} 
+                            {item}
                             
                         </TabsTrigger>
                     ))

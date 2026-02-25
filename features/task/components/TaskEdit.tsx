@@ -13,6 +13,8 @@ import { EditDailyPlan } from "@/features/daily-plan/interfaces/edit-daily-plan.
 import { useUpdateTask } from "../task.hook";
 import { UpdateTask } from "../interfaces/update-task.interface";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { Save } from "lucide-react";
 
 
 interface Props {
@@ -118,7 +120,7 @@ const TaskEdit = ({
                             <SelectLabel>Chọn danh mục</SelectLabel>
                             {
                                 data?.items.map((item: TaskCategory) => (
-                                    <SelectItem value={item.id}>{item.title}</SelectItem>
+                                    <SelectItem key={item.id} value={item.id}>{item.title}</SelectItem>
                                 )) 
                             }
                         </SelectGroup>
@@ -151,6 +153,13 @@ const TaskEdit = ({
                     onClick={handleUpdate}
                   >
                     Lưu
+                    {
+                      updateTaskMutation.isPending
+                      ?
+                      <Spinner />
+                      : 
+                      <Save />
+                    }
                   </Button>
                 </div>
               </div>
