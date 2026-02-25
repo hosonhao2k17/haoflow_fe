@@ -35,6 +35,7 @@ const TaskStatusTab = ({
                             disabled={isPending}
                             value={item}
                             className={getColorActiveTaskStatus(item)}
+                            key={item}
                         >
                             {item}
                             

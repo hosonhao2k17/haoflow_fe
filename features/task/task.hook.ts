@@ -8,8 +8,12 @@ import { Task } from "./interfaces/task.interface"
 
 export const useCreateTask = () => {
 
+    const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (dto: Createtask) => createTask(dto)
+        mutationFn: (dto: Createtask) => createTask(dto),
+        onSuccess: (data: Task) => {
+            queryClient.invalidateQueries({queryKey:  ["dailyPlan",data.dailyPlanId]})
+        }
     })
 }
 

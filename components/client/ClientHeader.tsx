@@ -38,7 +38,7 @@ const ClientHeader = () => {
             <div>
               <p className="text-xs opacity-70">Số dư hiện tại</p>
               <p className="text-sm font-semibold">
-                {remainingMoney.toLocaleString()} đ
+                12.000.000 đ
               </p>
             </div>
           </div>

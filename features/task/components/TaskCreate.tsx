@@ -9,7 +9,7 @@ import TaskSelectPriority from "./TaskSelectPriority";
 import { TaskPriority } from "@/common/constants/app.constant";
 import { Button } from "@/components/ui/button";
 import { CalendarPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Createtask } from "../interfaces/create-task.interface";
 import { useCreateDailyPlan } from "@/features/daily-plan/daly-plan.hook";
 import { useCreateTask } from "../task.hook";
@@ -30,21 +30,30 @@ const TaskCreate = ({
     nearestEndDate = '00:00:00',
     dailyPlanId
 }: Props) => {
-
     const useCreateTaskMutation = useCreateTask()
-    const [form, setForm] = useState<Createtask>({
+    const dfState = {
         todo: "",
-        description: "",
         priority: TaskPriority.MEDIUM,
-        startTime: nearestEndDate.slice(0,5),
-        endTime: nearestEndDate.slice(0,5),
+        startTime: nearestEndDate,
+        endTime: nearestEndDate,
         categoryId: "",
         dailyPlanId
-    });
+    }
+    const [form, setForm] = useState<Createtask>(dfState);
+    useEffect(() => {
+    if (nearestEndDate) {
+        setForm(prev => ({
+        ...prev,
+        startTime: nearestEndDate.slice(0, 5),
+        endTime: nearestEndDate.slice(0, 5),
+        }))
+    }
+    }, [nearestEndDate])
     const handleCreate = () => {
         useCreateTaskMutation.mutate(form, {
             onSuccess: (val) => {
                 toast.success("Tạo kế hoạch thành công")
+                setForm(dfState)
                 setOpen(false)
             },
             onError: (err: any) => {
@@ -64,7 +73,8 @@ const TaskCreate = ({
                 <FieldGroup>
                     <Field>
                         <FieldLabel>Tiêu đề</FieldLabel>
-                        <Input 
+                        <Input
+                            disabled={useCreateTaskMutation.isPending} 
                             placeholder="Nhập tiêu đề"
                             onChange={(e) => setForm({...form, todo: e.target.value})}
                         />
@@ -72,6 +82,7 @@ const TaskCreate = ({
                     <Field>
                         <FieldLabel>Mô tả: </FieldLabel>
                         <Textarea 
+                            disabled={useCreateTaskMutation.isPending} 
                             placeholder="Nhập mô tả"
                             onChange={(e) => setForm({...form, description: e.target.value})}
                         />
@@ -80,6 +91,7 @@ const TaskCreate = ({
                         <Field>
                             <FieldLabel>Giờ bắt đầu</FieldLabel>
                             <Input
+                                disabled={useCreateTaskMutation.isPending} 
                                 type="time" 
                                 value={form.startTime}
                                 onChange={(e) => setForm({...form, startTime: e.target.value.slice(0,5)})}
@@ -88,6 +100,7 @@ const TaskCreate = ({
                         <Field>
                             <FieldLabel>Giờ kết thúc</FieldLabel>
                             <Input
+                                disabled={useCreateTaskMutation.isPending} 
                                 type="time"
                                 value={form.endTime} 
                                 onChange={(e) => setForm({...form, endTime: e.target.value.slice(0,5)})}
@@ -99,7 +112,7 @@ const TaskCreate = ({
                         
                         <Field>
                             <FieldLabel>Danh mục: </FieldLabel>
-                            <Select onValueChange={(val) => setForm({...form, categoryId: val})}>
+                            <Select disabled={useCreateTaskMutation.isPending}  onValueChange={(val) => setForm({...form, categoryId: val})}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Chọn danh mục" />
                                 </SelectTrigger>
@@ -118,13 +131,17 @@ const TaskCreate = ({
                         <Field>
                             <FieldLabel>Độ ưu tiên: </FieldLabel>
                             <TaskSelectPriority 
-                            handleValueChange={(val) => setForm({...form, endTime: val})}
+                            handleValueChange={(val) => setForm({...form, priority: val})}
                             defaultValue={TaskPriority.MEDIUM}
                         />
                         </Field>
                     </div>
                 </FieldGroup>
-                <Button onClick={handleCreate} className="uppercase">
+                <Button 
+                    disabled={useCreateTaskMutation.isPending}  
+                    onClick={handleCreate} 
+                    className="uppercase"
+                >
                     Tạo nhiệm vụ
                     <CalendarPlus />
                 </Button>

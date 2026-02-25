@@ -49,7 +49,7 @@ const TaskCard = ({
                   defaultStatus={task.status}
                 />
 
-                <div>
+                <div className="flex flex-col justify-center">
                   <h3
                     className={cn(
                       "font-medium",
@@ -66,7 +66,7 @@ const TaskCard = ({
                         "line-through text-muted-foreground"
                   )}
                   >
-                    {task.description}
+                    {task.description ? task.description : "Chưa có mô tả..."}
                   </p>
 
                   <div className="text-xs items-center text-muted-foreground mt-2 flex gap-5">

@@ -25,6 +25,7 @@ import TaskHeader from "@/features/task/components/TaskHeader"
 import TaskCreate from "@/features/task/components/TaskCreate"
 import TaskHeaderSkeleton from "@/features/task/components/Skeletons/TaskHeaderSkeleton"
 import TaskListSkeleton from "@/features/task/components/Skeletons/TaskListSkeleton"
+import TaskEmpty from "@/features/task/components/TaskEmpty"
 
 
 
@@ -42,7 +43,7 @@ const DailyPlanDetail = () => {
       <TaskCreate 
         open={openTaskCreate}
         setOpen={setOpenTaskCreate}
-        nearestEndDate={data?.tasks[data.tasks.length - 1].endTime}
+        nearestEndDate={data?.tasks[data.tasks.length - 1]?.endTime}
         dailyPlanId={id as string}
       />
       
@@ -63,10 +64,14 @@ const DailyPlanDetail = () => {
         isPending
         ?
         <TaskListSkeleton />
+        :data?.tasks.length === 0
+        ?
+        <TaskEmpty />
         :
         <div className="grid grid-cols-2 gap-5 items-start">
           
           {
+          
           data?.tasks.map((task: Task, index: number) => (
             <div
               key={task.id}

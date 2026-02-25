@@ -8,8 +8,8 @@ const TaskListSkeleton = () => {
     return (
         <div className="grid grid-cols-2 gap-5 items-start">
             {
-                Array.from({length: 10}).map((item) => (
-                    <div className="flex gap-3 border shadow-xl p-3 h-28 rounded-xl">
+                Array.from({length: 10}).map((item, i) => (
+                    <div key={i} className="flex gap-3 border shadow-xl p-3 h-28 rounded-xl">
                         <Skeleton className="w-18 h-full"/>
                         <div className="flex flex-col gap-3 w-full">
                             <Skeleton className="bg-primary w-60 h-5"/>
