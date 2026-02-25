@@ -1,6 +1,6 @@
 import { TaskPriority } from "@/common/constants/app.constant"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
-import getColorPriority from "@/lib/priority";
+import {getColorPriority} from "@/lib/color";
 
 
 

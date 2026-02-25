@@ -11,4 +11,5 @@ export interface Task {
   orderIndex: number
   status: TaskStatus
   category?: TaskCategory
+  dailyPlanId?: string;
 }
