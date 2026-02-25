@@ -1,11 +1,11 @@
-import { TaskStatus } from "@/common/constants/app.constant";
+import { TaskPriority, TaskStatus } from "@/common/constants/app.constant";
 import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface";
 
 export interface Task {
   id: string
   todo: string
   description?: string;
-  priority: string;
+  priority: TaskPriority;
   startTime: string
   endTime: string
   orderIndex: number

@@ -36,6 +36,14 @@ export enum TaskStatus {
     SKIPPED = "skipped"
 }
 
+export enum TaskPriority {
+    OPTIONAL = 'optional',
+    LOW = 'low',
+    MEDIUM = 'medium',
+    HIGH = 'high',
+    CRITICAL = 'critical'
+}
+
 export enum CruMode {
     CREATE = 'create',
     READ = 'read',
