@@ -25,7 +25,7 @@ const TaskSelectPriority = ({
                     <SelectLabel>Chọn độ ưu tiên</SelectLabel>
                     {
                         Object.values(TaskPriority).map((item) => (
-                            <SelectItem className={getColorPriority(item)} value={item}>{item}</SelectItem>
+                            <SelectItem key={item} className={getColorPriority(item)} value={item}>{item}</SelectItem>
                         ))
                     }
                 </SelectGroup>

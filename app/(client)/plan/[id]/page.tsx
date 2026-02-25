@@ -55,6 +55,7 @@ const DailyPlanDetail = () => {
               <TaskEdit 
                 setOpenTaskEdit={setOpenTaskEdit}
                 task={task}
+                dailyPlanId={id as string}
               />
             ) 
             : 
