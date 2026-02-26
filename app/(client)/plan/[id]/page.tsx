@@ -53,7 +53,7 @@ const DailyPlanDetail = () => {
     if (!tasks?.items.length) return <TaskEmpty />
 
     return (
-      <div className="grid grid-cols-2 gap-5 items-start">
+      <div className="grid grid-cols-3 gap-5 items-start">
         {tasks.items.map((task: Task, index: number) => (
           <div
             key={task.id}

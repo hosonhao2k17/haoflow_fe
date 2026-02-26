@@ -16,7 +16,7 @@ const TaskSelectPriority = ({
 
 
     return (
-        <Select onValueChange={handleValueChange}  defaultValue={defaultValue}>
+        <Select onValueChange={handleValueChange}   defaultValue={defaultValue}>
             <SelectTrigger>
                 <SelectValue placeholder="Chọn độ ưu tiên"  />
             </SelectTrigger>

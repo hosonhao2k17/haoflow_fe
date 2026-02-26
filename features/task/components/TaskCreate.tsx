@@ -1,153 +1,207 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface";
-import { useTaskCategories } from "@/features/category/task-category.hook";
-import TaskSelectPriority from "./TaskSelectPriority";
-import { TaskPriority } from "@/common/constants/app.constant";
-import { Button } from "@/components/ui/button";
-import { CalendarPlus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Createtask } from "../interfaces/create-task.interface";
-import { useCreateDailyPlan } from "@/features/daily-plan/daly-plan.hook";
-import { useCreateTask } from "../task.hook";
-import { toast } from "sonner";
+"use client"
 
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface"
+import { useTaskCategories } from "@/features/category/task-category.hook"
+import TaskSelectPriority from "./TaskSelectPriority"
+import { TaskPriority } from "@/common/constants/app.constant"
+import { Button } from "@/components/ui/button"
+import { CalendarPlus, Clock, Tag, Flame } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Createtask } from "../interfaces/create-task.interface"
+import { useCreateTask } from "../task.hook"
+import { toast } from "sonner"
+import { Spinner } from "@/components/ui/spinner"
+import { cn } from "@/lib/utils"
 
 interface Props {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    nearestEndDate?: string;
-    dailyPlanId: string;
+  open: boolean
+  setOpen: (open: boolean) => void
+  nearestEndDate?: string
+  dailyPlanId: string
 }
 
 const TaskCreate = ({
-    open,
-    setOpen,
-    nearestEndDate = '00:00:00',
-    dailyPlanId
+  open,
+  setOpen,
+  nearestEndDate = "00:00:00",
+  dailyPlanId,
 }: Props) => {
-    const useCreateTaskMutation = useCreateTask()
-    const dfState = {
-        todo: "",
-        priority: TaskPriority.MEDIUM,
-        startTime: nearestEndDate,
-        endTime: nearestEndDate,
-        categoryId: "",
-        dailyPlanId
-    }
-    const [form, setForm] = useState<Createtask>(dfState);
-    useEffect(() => {
+  const createTaskMutation = useCreateTask()
+  const { data } = useTaskCategories({})
+
+  const dfState: Createtask = {
+    todo: "",
+    priority: TaskPriority.MEDIUM,
+    startTime: nearestEndDate.slice(0, 5),
+    endTime: nearestEndDate.slice(0, 5),
+    categoryId: "",
+    dailyPlanId,
+  }
+
+  const [form, setForm] = useState<Createtask>(dfState)
+
+  useEffect(() => {
     if (nearestEndDate) {
-        setForm(prev => ({
+      setForm((prev) => ({
         ...prev,
         startTime: nearestEndDate.slice(0, 5),
         endTime: nearestEndDate.slice(0, 5),
-        }))
+      }))
     }
-    }, [nearestEndDate])
-    const handleCreate = () => {
-        useCreateTaskMutation.mutate(form, {
-            onSuccess: (val) => {
-                toast.success("Tạo kế hoạch thành công")
-                setForm(dfState)
-                setOpen(false)
-            },
-            onError: (err: any) => {
-                console.log(err.response.data)
-                toast.error("Tạo kế hoạch thất bại")
-            }
-        } )
-    }
-    const {data} = useTaskCategories({})
-    return (
-        <Dialog
-            open={open}
-            onOpenChange={setOpen}
+  }, [nearestEndDate])
+
+  const patch = (key: keyof Createtask, value: string) =>
+    setForm((prev) => ({ ...prev, [key]: value }))
+
+  const handleCreate = () => {
+    createTaskMutation.mutate(form, {
+      onSuccess: () => {
+        toast.success("Tạo nhiệm vụ thành công")
+        setForm(dfState)
+        setOpen(false)
+      },
+      onError: (err: any) => {
+        console.log(err.response.data)
+        toast.error("Tạo nhiệm vụ thất bại")
+      },
+    })
+  }
+
+  const disabled = createTaskMutation.isPending
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-base font-semibold">Tạo nhiệm vụ mới</DialogTitle>
+          <DialogDescription className="text-xs">
+            Điền thông tin để thêm nhiệm vụ vào kế hoạch hôm nay
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          {/* Todo */}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">Tiêu đề</Label>
+            <Input
+              disabled={disabled}
+              placeholder="Nhập tiêu đề nhiệm vụ..."
+              className="text-sm"
+              onChange={(e) => patch("todo", e.target.value)}
+            />
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">Mô tả</Label>
+            <Textarea
+              disabled={disabled}
+              placeholder="Nhập mô tả (tuỳ chọn)..."
+              className="text-sm resize-none"
+              rows={2}
+              onChange={(e) => patch("description", e.target.value)}
+            />
+          </div>
+
+          {/* Time */}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" /> Thời gian
+            </Label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <span className="text-[11px] text-muted-foreground">Bắt đầu</span>
+                <Input
+                  disabled={disabled}
+                  type="time"
+                  value={form.startTime}
+                  className="text-sm"
+                  onChange={(e) => patch("startTime", e.target.value.slice(0, 5))}
+                />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[11px] text-muted-foreground">Kết thúc</span>
+                <Input
+                  disabled={disabled}
+                  type="time"
+                  value={form.endTime}
+                  className="text-sm"
+                  onChange={(e) => patch("endTime", e.target.value.slice(0, 5))}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Category + Priority */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5" /> Danh mục
+              </Label>
+              <Select disabled={disabled} onValueChange={(val) => patch("categoryId", val)}>
+                <SelectTrigger className="text-sm">
+                  <SelectValue placeholder="Chọn danh mục" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Danh mục</SelectLabel>
+                    {data?.items.map((item: TaskCategory) => (
+                      <SelectItem key={item.id} value={item.id}>
+                        {item.title}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5" /> Độ ưu tiên
+              </Label>
+              <TaskSelectPriority
+                handleValueChange={(val) => patch("priority", val)}
+                defaultValue={TaskPriority.MEDIUM}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Submit */}
+        <Button
+          disabled={disabled}
+          onClick={handleCreate}
+          className="w-full mt-1 gap-2"
         >
-            <DialogContent>
-                <DialogTitle>Tạo nhiệm vụ</DialogTitle>
-                <FieldGroup>
-                    <Field>
-                        <FieldLabel>Tiêu đề</FieldLabel>
-                        <Input
-                            disabled={useCreateTaskMutation.isPending} 
-                            placeholder="Nhập tiêu đề"
-                            onChange={(e) => setForm({...form, todo: e.target.value})}
-                        />
-                    </Field>
-                    <Field>
-                        <FieldLabel>Mô tả: </FieldLabel>
-                        <Textarea 
-                            disabled={useCreateTaskMutation.isPending} 
-                            placeholder="Nhập mô tả"
-                            onChange={(e) => setForm({...form, description: e.target.value})}
-                        />
-                    </Field>
-                    <div className="flex gap-5">
-                        <Field>
-                            <FieldLabel>Giờ bắt đầu</FieldLabel>
-                            <Input
-                                disabled={useCreateTaskMutation.isPending} 
-                                type="time" 
-                                value={form.startTime}
-                                onChange={(e) => setForm({...form, startTime: e.target.value.slice(0,5)})}
-                            />
-                        </Field>
-                        <Field>
-                            <FieldLabel>Giờ kết thúc</FieldLabel>
-                            <Input
-                                disabled={useCreateTaskMutation.isPending} 
-                                type="time"
-                                value={form.endTime} 
-                                onChange={(e) => setForm({...form, endTime: e.target.value.slice(0,5)})}
-                                
-                            />
-                        </Field>
-                    </div>
-                    <div className="flex gap-5">
-                        
-                        <Field>
-                            <FieldLabel>Danh mục: </FieldLabel>
-                            <Select disabled={useCreateTaskMutation.isPending}  onValueChange={(val) => setForm({...form, categoryId: val})}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Chọn danh mục" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Chọn danh mục</SelectLabel>
-                                        {
-                                            data?.items.map((item: TaskCategory) => (
-                                                <SelectItem value={item.id}>{item.title}</SelectItem>
-                                            ))
-                                        }
-                                        </SelectGroup>
-                                    </SelectContent>
-                            </Select>
-                        </Field>
-                        <Field>
-                            <FieldLabel>Độ ưu tiên: </FieldLabel>
-                            <TaskSelectPriority 
-                            handleValueChange={(val) => setForm({...form, priority: val})}
-                            defaultValue={TaskPriority.MEDIUM}
-                        />
-                        </Field>
-                    </div>
-                </FieldGroup>
-                <Button 
-                    disabled={useCreateTaskMutation.isPending}  
-                    onClick={handleCreate} 
-                    className="uppercase"
-                >
-                    Tạo nhiệm vụ
-                    <CalendarPlus />
-                </Button>
-            </DialogContent>
-        </Dialog>
-    )
+          {disabled ? (
+            <Spinner className="w-4 h-4" />
+          ) : (
+            <CalendarPlus className="w-4 h-4" />
+          )}
+          Tạo nhiệm vụ
+        </Button>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
-export default TaskCreate 
+export default TaskCreate

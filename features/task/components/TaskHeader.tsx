@@ -1,81 +1,101 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface"
-import { formatDate } from "@/lib/date"
-import { Angry, Bot, Clock, Pencil, Plus, Smile } from "lucide-react"
+import { formatDate, getWeekdayVN } from "@/lib/date"
+import { Bot, Calendar, Clock, Plus, Smile, Frown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface Props {
-    data: DailyPlan;
-    setOpenTaskCreate: (open: boolean) => void;
+  data: DailyPlan
+  setOpenTaskCreate: (open: boolean) => void
 }
 
-const TaskHeader = ({
-    data,
-    setOpenTaskCreate
-}: Props) => {
+const TaskHeader = ({ data, setOpenTaskCreate }: Props) => {
+  const { progressPercent, completedTasks, totalTask } = data.summary
+  const isHappy = progressPercent >= 50
 
+  return (
+    <div className="rounded-2xl border bg-card overflow-hidden">
+      {/* Progress bar at very top */}
+      <div className="h-1 w-full bg-muted">
+        <div
+          className="h-full bg-primary transition-all duration-700 ease-out"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
 
-    return (
-        <div className="bg-white rounded-2xl border shadow p-6 space-y-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-2xl font-semibold">
+      <div className="p-6 space-y-5">
+        {/* Title row */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1 flex-1 min-w-0">
+            <h1 className="text-xl font-bold tracking-tight text-card-foreground truncate">
               {data.title}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              {data.description}
-            </p>
+            {data.description && (
+              <p className="text-sm text-muted-foreground line-clamp-1">
+                {data.description}
+              </p>
+            )}
           </div>
 
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+          <div className="flex gap-2 shrink-0">
+            <Button
+              variant="outline"
               size="sm"
+              className="h-8 text-xs gap-1.5"
               onClick={() => setOpenTaskCreate(true)}
             >
-              <Plus className="w-4 h-4" />
-              Thêm
+              <Plus className="w-3.5 h-3.5" />
+              Thêm task
             </Button>
-            <Button variant="outline" size="sm">
-              <Bot className="w-4 h-4" />
+            <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5">
+              <Bot className="w-3.5 h-3.5" />
               AI
             </Button>
           </div>
-          
         </div>
 
-        <div className="text-xs text-muted-foreground flex gap-6">
-          <span>Ngày: {formatDate(data.date)}</span>
-          <span>
-            Tạo vào: {formatDate(data.createdAt)}
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            {data.startTime.slice(0,5)} -{" "}
-            {data.endTime.slice(0,5)}
-          </span>
-        </div>
-
-        <div className="">
-          <div className="flex justify-between text-xs mb-1">
-            <span>
-              {data.summary.completedTasks}/{data.summary.totalTask} Công việc đã hoàn thành
-            </span>
-            <span className="flex gap-2 items-center text-primary font-bold">
-              {data.summary.progressPercent}%
-              {
-                data.summary.progressPercent < 50
-                ?
-                <Angry />
-                :
-                <Smile />
-              }
-            </span>
+        {/* Meta row */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-lg">
+            <Calendar className="w-3.5 h-3.5" />
+            <span>{getWeekdayVN(data.date)}</span>
           </div>
-          <Progress value={data.summary.progressPercent} />
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-lg">
+            <Calendar className="w-3.5 h-3.5" />
+            <span>{formatDate(data.date)}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-lg">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{data.startTime.slice(0, 5)} – {data.endTime.slice(0, 5)}</span>
+          </div>
+        </div>
+
+        {/* Progress row */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              <span className="font-semibold text-card-foreground">{completedTasks}</span>
+              /{totalTask} công việc hoàn thành
+            </span>
+            <div className={cn(
+              "flex items-center gap-1.5 text-xs font-bold",
+              isHappy ? "text-emerald-500" : "text-rose-500"
+            )}>
+              <span>{progressPercent}%</span>
+              {isHappy
+                ? <Smile className="w-4 h-4" />
+                : <Frown className="w-4 h-4" />
+              }
+            </div>
+          </div>
+          <Progress value={progressPercent} className="h-2" />
         </div>
       </div>
-    )
+    </div>
+  )
 }
 
-export default TaskHeader 
+export default TaskHeader

@@ -3,6 +3,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getColorActiveTaskStatus, getColorTaskStatus } from "@/lib/color";
 import { cn } from "@/lib/utils";
+import { Check, ListTodo, X } from "lucide-react";
 
 
 interface Props {
@@ -37,7 +38,17 @@ const TaskStatusTab = ({
                             className={getColorActiveTaskStatus(item)}
                             key={item}
                         >
-                            {item}
+                            {
+                                item === TaskStatus.DONE
+                                ? 
+                                <Check />
+                                : item === TaskStatus.TODO 
+                                ?
+                                <ListTodo />
+                                :
+                                <X />
+
+                            }
                             
                         </TabsTrigger>
                     ))
