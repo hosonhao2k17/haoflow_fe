@@ -14,12 +14,16 @@ interface Props {
     task: Task,
     index: number,
     setOpenTaskEdit: (open: string) => void;
+    setOpenTaskRemove: (open: boolean) => void;
+    setTask: (task: Task) => void;
 }
 
 const TaskCard = ({
     task,
     index,
     setOpenTaskEdit,
+    setOpenTaskRemove,
+    setTask
 }: Props) => {
 
   const updateTaskMutation = useUpdateTask()
@@ -39,6 +43,7 @@ const TaskCard = ({
       }
     )
   }
+
   
   return (
       <div className={
@@ -66,7 +71,7 @@ const TaskCard = ({
             </h3>
 
             <p className={cn(
-              "text-sm text-muted-foreground mt-1",
+              "text-sm text-muted-foreground overflow-hidden max-h-10 mt-1",
               task.status === TaskStatus.SKIPPED &&
                   "line-through text-muted-foreground"
             )}
@@ -104,7 +109,14 @@ const TaskCard = ({
             <Pencil className="w-4 h-4" />
           </Button>
 
-          <Button size="icon" variant="ghost">
+          <Button 
+            size="icon" 
+            variant="ghost"
+            onClick={() => {
+              setOpenTaskRemove(true)
+              setTask(task)
+            }}
+          >
             <Trash2 className="w-4 h-4 text-red-500" />
           </Button>
         </div>

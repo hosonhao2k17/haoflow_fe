@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Createtask } from "./interfaces/create-task.interface"
-import { createTask, updateTask } from "./task.api"
+import { createTask, removeTask, updateTask } from "./task.api"
 import { UpdateTask } from "./interfaces/update-task.interface"
 import { IdPayload } from "@/common/interfaces/id-payload.interface"
 import { Task } from "./interfaces/task.interface"
@@ -25,5 +25,13 @@ export const useUpdateTask = () => {
         onSuccess: (data: Task) => {
             queryClient.invalidateQueries({queryKey:  ["dailyPlan",data.dailyPlanId]})
         }
+    })
+}
+
+export const useRemoveTask = () => {
+    
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: (id: string) => removeTask(id)
     })
 }

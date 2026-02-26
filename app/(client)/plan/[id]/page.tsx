@@ -13,21 +13,48 @@ import TaskCreate from "@/features/task/components/TaskCreate"
 import TaskHeaderSkeleton from "@/features/task/components/Skeletons/TaskHeaderSkeleton"
 import TaskListSkeleton from "@/features/task/components/Skeletons/TaskListSkeleton"
 import TaskEmpty from "@/features/task/components/TaskEmpty"
+import { AlertDialogDestructive } from "@/components/ui/aler-dialog"
+import { useRemoveTask } from "@/features/task/task.hook"
+import { toast } from "sonner"
 
 
 
 
 const DailyPlanDetail = () => {
 
+  const [openTaskRemove, setOpenTaskRemove] = useState<boolean>(false);
   const [openTaskEdit, setOpenTaskEdit] = useState<string>();
   const [openTaskCreate, setOpenTaskCreate] = useState<boolean>(false)
   const { id } = useParams()
   if(!id) return;
   const {data, isPending} = useDailyPlan(id as string);
-  const currentTask: Task = data.currentTask;
+  const currentTask: Task = data?.currentTask;
+
+  const removeTaskMutation = useRemoveTask()
+
+  const [task, setTask] = useState<Task>();
+  const handleRemove = () => {
+    if(task) {
+      removeTaskMutation.mutate(task.id, {
+        onSuccess: () => {
+          toast.success("Xóa task thành công")
+        }
+      })
+    } else {
+      toast.error("Không thể tìm thấy task")
+    }
+  }
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
 
+      <AlertDialogDestructive 
+        open={openTaskRemove}
+        setOpen={setOpenTaskRemove}
+        onConfirm={handleRemove}
+        title="Xóa task"
+        content="Bạn có muốn xóa task này không"
+      />
       <TaskCreate 
         open={openTaskCreate}
         setOpen={setOpenTaskCreate}
@@ -66,7 +93,7 @@ const DailyPlanDetail = () => {
               className={
                 cn(
                   "bg-white w-full rounded-xl p-4 hover:shadow-md transition",
-                  currentTask.id === task.id ? "shadow-primary shadow-2xl border border-primary" : " border"
+                  currentTask?.id === task.id ? "shadow-primary shadow-2xl border border-primary" : " border"
                 )
               }
             >
@@ -85,6 +112,8 @@ const DailyPlanDetail = () => {
               (
                 
                 <TaskCard 
+                  setOpenTaskRemove={setOpenTaskRemove}
+                  setTask={setTask}
                   task={task}
                   index={index}
                   setOpenTaskEdit={setOpenTaskEdit}
