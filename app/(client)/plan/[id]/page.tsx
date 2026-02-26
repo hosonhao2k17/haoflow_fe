@@ -2,19 +2,6 @@
 
 import { useState } from "react"
 import { useParams } from "next/navigation"
-import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
-import {
-  Clock,
-  CheckCircle2,
-  Circle,
-  Trash2,
-  Pencil,
-  ArrowUp,
-  ArrowDown,
-  Move,
-  Plus,
-} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useDailyPlan } from "@/features/daily-plan/daly-plan.hook"
 import { Task } from "@/features/task/interfaces/task.interface"
@@ -37,6 +24,7 @@ const DailyPlanDetail = () => {
   const { id } = useParams()
   if(!id) return;
   const {data, isPending} = useDailyPlan(id as string);
+  const currentTask: Task = data.currentTask;
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
 
@@ -75,7 +63,12 @@ const DailyPlanDetail = () => {
           data?.tasks.map((task: Task, index: number) => (
             <div
               key={task.id}
-              className="bg-white w-full shadow-xl border rounded-xl p-4 hover:shadow-md transition"
+              className={
+                cn(
+                  "bg-white w-full rounded-xl p-4 hover:shadow-md transition",
+                  currentTask.id === task.id ? "shadow-primary shadow-2xl border border-primary" : " border"
+                )
+              }
             >
               {
               openTaskEdit === task.id 

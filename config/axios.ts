@@ -27,9 +27,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    if (error.response?.status === 401) {
-    }
+    
 
-    return Promise.reject(error)
+    return Promise.reject(error?.response.data)
   }
 )

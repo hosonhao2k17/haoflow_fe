@@ -41,8 +41,8 @@ const LoginForm = () => {
                     router.replace("/admin/users")
                 },
                 onError: (err: any) => {
-                    toast.error(err.response.data.message)
-                    setFieldErrors(mapFieldErrors(err.response.data))
+                    console.log(err)
+                    setFieldErrors(mapFieldErrors(err))
                     
                 }
             }

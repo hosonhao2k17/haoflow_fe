@@ -41,7 +41,7 @@ const DailyPlanSchedule = ({
           const total = plan.summary.totalTask
           const done = plan.summary.completedTasks
 
-          const progress = Math.round((done / total) * 100)
+          const progress = plan.summary.progressPercent
 
           return (
             <div

@@ -19,7 +19,7 @@ interface Props {
 const TaskCard = ({
     task,
     index,
-    setOpenTaskEdit
+    setOpenTaskEdit,
 }: Props) => {
 
   const updateTaskMutation = useUpdateTask()
@@ -41,69 +41,74 @@ const TaskCard = ({
   }
   
   return (
-      <div className="flex justify-between max-h-30 relative items-start">
-              <div className="flex gap-4">
-                <TaskStatusTab
-                  isPending={updateTaskMutation.isPending}
-                  handleChangeValue={handleChangeStatus}
-                  defaultStatus={task.status}
-                />
+      <div className={
+        cn(
+          "flex justify-between max-h-30 relative items-start",
+          
+        )
+      }>
+        <div className="flex gap-4">
+          <TaskStatusTab
+            isPending={updateTaskMutation.isPending}
+            handleChangeValue={handleChangeStatus}
+            defaultStatus={task.status}
+          />
 
-                <div className="flex flex-col justify-center">
-                  <h3
-                    className={cn(
-                      "font-medium",
-                      task.status === TaskStatus.SKIPPED &&
-                        "line-through text-muted-foreground"
-                    )}
-                  >
-                    {task.todo}
-                  </h3>
+          <div className="flex flex-col justify-center">
+            <h3
+              className={cn(
+                "font-medium",
+                task.status === TaskStatus.SKIPPED &&
+                  "line-through text-muted-foreground"
+              )}
+            >
+              {task.todo}
+            </h3>
 
-                  <p className={cn(
-                    "text-sm text-muted-foreground mt-1",
-                    task.status === TaskStatus.SKIPPED &&
-                        "line-through text-muted-foreground"
-                  )}
-                  >
-                    {task.description ? task.description : "Chưa có mô tả..."}
-                  </p>
+            <p className={cn(
+              "text-sm text-muted-foreground mt-1",
+              task.status === TaskStatus.SKIPPED &&
+                  "line-through text-muted-foreground"
+            )}
+            >
+              {task.description ? task.description : "Chưa có mô tả..."}
+            </p>
 
-                  <div className="text-xs items-center text-muted-foreground mt-2 flex gap-5">
-                    <p>
-                      {task.startTime.slice(0,5)} - {task.endTime.slice(0,5)}
-                    </p>
-                    <p>
-                      Danh mục: <span className="text-primary font-bold">
-                        {task.category
-                          ? task.category.title
-                          : "Chưa có"}
-                      </span>
-                    </p>
-                    <p>
-                      Mức độ ưu tiên: <Badge className={getColorPriority(task.priority)}>{task.priority}</Badge>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex absolute gap-1 right-0">
-                <Button size="sm" className="rounded-full" variant="outline">
-                  {index + 1}
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => setOpenTaskEdit(task.id)}
-                >
-                  <Pencil className="w-4 h-4" />
-                </Button>
-
-                <Button size="icon" variant="ghost">
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                </Button>
-              </div>
+            <div className="text-xs items-center text-muted-foreground mt-2 flex gap-5">
+              <p>
+                {task.startTime.slice(0,5)} - {task.endTime.slice(0,5)}
+              </p>
+              <p>
+                Danh mục: <span className="text-primary font-bold">
+                  {task.category
+                    ? task.category.title
+                    : "Chưa có"}
+                </span>
+              </p>
+              <p>
+                Mức độ ưu tiên: <Badge className={getColorPriority(task.priority)}>{task.priority}</Badge>
+              </p>
             </div>
+          </div>
+        </div>
+
+        <div className="flex absolute gap-1 right-0">
+          <Button size="sm" className="rounded-full" variant="outline">
+            {index + 1}
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => setOpenTaskEdit(task.id)}
+          >
+            <Pencil className="w-4 h-4" />
+          </Button>
+
+          <Button size="icon" variant="ghost">
+            <Trash2 className="w-4 h-4 text-red-500" />
+          </Button>
+        </div>
+      </div>
   )
 }
 

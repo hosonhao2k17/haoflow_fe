@@ -41,8 +41,8 @@ const DailyPlanForm = ({
     const dfState = {
         title: "",
         description: "",
-        startTime: "",
-        endTime: "",
+        startTime: "05:00",
+        endTime: "22:00",
         date: new Date().toISOString().split("T")[0]
     }
     const [form, setForm] = useState<CreateDailyPlan | EditDailyPlan>(dfState);
@@ -69,12 +69,10 @@ const DailyPlanForm = ({
     const handleCreate = () => {
         createDailyPlanMutation.mutate(form as CreateDailyPlan,{
             onSuccess: () => {
-                toast.success("Tạo thành công")
                 setForm(dfState);
                 setOpen(false)
             },
-            onError: (error: any) => {
-                toast.error("Tạo thất bại")
+            onError: () => {
                 setForm(dfState)
                 
             }
@@ -89,8 +87,7 @@ const DailyPlanForm = ({
                 setOpen(false)
             },
             onError: (error: any) => {
-                toast.error("Cập nhật thất bại")
-                console.log(error.response.data)
+                
             }
         })
     }
