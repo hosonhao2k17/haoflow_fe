@@ -1,9 +1,16 @@
 import { api } from "@/config/axios";
 import { Createtask } from "./interfaces/create-task.interface";
 import { UpdateTask } from "./interfaces/update-task.interface";
+import { QueryTask } from "./interfaces/query-task.interface";
 
 
 
+export const getTasks = async (queryDto: QueryTask) => {
+    const res = await api.get('tasks',{
+        params: queryDto
+    });
+    return res.data;
+}
 
 export const createTask = async (createDto: Createtask) => {
     const res = await api.post('tasks',createDto);
