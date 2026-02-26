@@ -16,6 +16,7 @@ interface Props {
     setOpenTaskEdit: (open: string) => void;
     setOpenTaskRemove: (open: boolean) => void;
     setTask: (task: Task) => void;
+    setOpenTaskDetail: (open: boolean) => void;
 }
 
 const TaskCard = ({
@@ -23,7 +24,8 @@ const TaskCard = ({
     index,
     setOpenTaskEdit,
     setOpenTaskRemove,
-    setTask
+    setTask,
+    setOpenTaskDetail
 }: Props) => {
 
   const updateTaskMutation = useUpdateTask()
@@ -98,7 +100,15 @@ const TaskCard = ({
         </div>
 
         <div className="flex absolute gap-1 right-0">
-          <Button size="sm" className="rounded-full" variant="outline">
+          <Button 
+            size="sm" 
+            className="rounded-full" 
+            variant="outline"
+            onClick={() => {
+              setTask(task)
+              setOpenTaskDetail(true)
+            }}
+          >
             {index + 1}
           </Button>
           <Button

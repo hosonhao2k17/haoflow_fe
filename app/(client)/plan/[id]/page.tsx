@@ -16,6 +16,7 @@ import { AlertDialogDestructive } from "@/components/ui/aler-dialog"
 import { useRemoveTask, useTasks } from "@/features/task/task.hook"
 import { toast } from "sonner"
 import { getCurrentTask } from "@/lib/task"
+import TaskDetail from "@/features/task/components/TaskDetail"
 
 const DailyPlanDetail = () => {
   const { id } = useParams() as { id: string }
@@ -25,6 +26,7 @@ const DailyPlanDetail = () => {
   const [openTaskRemove, setOpenTaskRemove] = useState(false)
   const [openTaskEdit, setOpenTaskEdit] = useState<string>()
   const [openTaskCreate, setOpenTaskCreate] = useState(false)
+  const [openTaskDetail, setOpenTaskDetail] = useState<boolean>(false)
 
   const { data, isPending } = useDailyPlan(id)
   const { data: tasks, isPending: pendingTask } = useTasks({ dailyPlanId: id })
@@ -69,6 +71,7 @@ const DailyPlanDetail = () => {
                 task={task}
                 index={index}
                 setOpenTaskEdit={setOpenTaskEdit}
+                setOpenTaskDetail={setOpenTaskDetail}
               />
             )}
           </div>
@@ -92,6 +95,12 @@ const DailyPlanDetail = () => {
         setOpen={setOpenTaskCreate}
         nearestEndDate={tasks?.items[tasks?.items.length - 1]?.endTime}
         dailyPlanId={id}
+      />
+
+      <TaskDetail 
+        open={openTaskDetail}
+        setOpen={setOpenTaskDetail}
+        task={task}
       />
 
       {

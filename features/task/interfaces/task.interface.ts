@@ -8,7 +8,6 @@ export interface Task {
   priority: TaskPriority;
   startTime: string
   endTime: string
-  orderIndex: number
   status: TaskStatus
   category?: TaskCategory
   dailyPlanId?: string;

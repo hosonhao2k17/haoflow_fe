@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface"
 import { formatDate } from "@/lib/date"
-import { Angry, Clock, Pencil, Plus, Smile } from "lucide-react"
+import { Angry, Bot, Clock, Pencil, Plus, Smile } from "lucide-react"
 
 interface Props {
     data: DailyPlan;
@@ -37,8 +37,8 @@ const TaskHeader = ({
               Thêm
             </Button>
             <Button variant="outline" size="sm">
-              <Pencil className="w-4 h-4" />
-              Sửa
+              <Bot className="w-4 h-4" />
+              AI
             </Button>
           </div>
           
