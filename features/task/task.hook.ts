@@ -13,7 +13,7 @@ export const useCreateTask = () => {
     return useMutation({
         mutationFn: (dto: Createtask) => createTask(dto),
         onSuccess: (data: Task) => {
-            queryClient.invalidateQueries({queryKey:  ["tasks",data.dailyPlanId]})
+            queryClient.invalidateQueries({queryKey:  ["tasks"]})
         }
     })
 }

@@ -87,3 +87,19 @@ export const getRangeWeek = (date: Date = new Date()) => {
     endDate: endDate.toString(),
   }
 }
+
+export const getNumberWeek = (
+  startDate: Date,
+  endDate: Date = new Date()
+): number => {
+  const start = new Date(startDate)
+  start.setHours(0, 0, 0, 0)
+
+  const end = new Date(endDate)
+  end.setHours(0, 0, 0, 0)
+
+  const diffMs = end.getTime() - start.getTime()
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+
+  return Math.floor(diffDays / 7) + 1
+}

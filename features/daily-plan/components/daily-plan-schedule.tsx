@@ -1,25 +1,22 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-import { Clock, CheckCircle2, Calendar, Ban, Circle, Pencil, Trash } from "lucide-react"
+import { Clock, Calendar, Pencil, Trash, ArrowRight, CheckCircle2, Layers } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useDailyPlans } from "../daly-plan.hook"
-import { formatDate, formatHour, getWeekdayVN, isToday } from "@/lib/date"
+import { formatDate, getWeekdayVN, isToday } from "@/lib/date"
 import { DailyPlan } from "../interfaces/daily-plan.interface"
-import { CruMode, TaskStatus } from "@/common/constants/app.constant"
+import { CruMode } from "@/common/constants/app.constant"
 import DailyPlanScheduleSkeleton from "./skeletons/daily-plan-schedule.skeleton"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 
-
 interface Props {
-  dailyPlans: DailyPlan[];
-  isLoading: boolean;
-  setOpen: (open: boolean) => void;
-  setMode: (mode: CruMode) => void;
-  setDailyPlan: (dailyPlan: DailyPlan) => void;
-  setOpenRemove: (open: boolean) => void;
+  dailyPlans: DailyPlan[]
+  isLoading: boolean
+  setOpen: (open: boolean) => void
+  setMode: (mode: CruMode) => void
+  setDailyPlan: (dailyPlan: DailyPlan) => void
+  setOpenRemove: (open: boolean) => void
 }
 
 const DailyPlanSchedule = ({
@@ -28,139 +25,137 @@ const DailyPlanSchedule = ({
   setOpen,
   setMode,
   setDailyPlan,
-  setOpenRemove
+  setOpenRemove,
 }: Props) => {
+  if (isLoading) return <DailyPlanScheduleSkeleton />
 
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      {dailyPlans.map((plan: DailyPlan) => {
+        const { totalTask, completedTasks, progressPercent } = plan.summary
+        const today = isToday(plan.date.toString())
 
-  return isLoading
-        ? 
-        <DailyPlanScheduleSkeleton />
-        :
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {dailyPlans.map((plan: DailyPlan) => {
-          const total = plan.summary.totalTask
-          const done = plan.summary.completedTasks
+        return (
+          <div
+            key={plan.id}
+            className={cn(
+              "group relative flex flex-col rounded-2xl border bg-card overflow-hidden",
+              "hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300",
+              today && "border-primary shadow-lg shadow-primary/15"
+            )}
+          >
+            {/* Top accent bar */}
+            <div className={cn(
+              "h-1 w-full",
+              today ? "bg-primary" : "bg-muted"
+            )}>
+              <div
+                className="h-full bg-primary transition-all duration-700"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
 
-          const progress = plan.summary.progressPercent
+            <div className="flex flex-col flex-1 p-5 gap-4">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-widest text-primary">
+                      {getWeekdayVN(plan.date.toString())}
+                    </span>
+                    {today && (
+                      <span className="text-[10px] font-semibold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                        Hôm nay
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="font-bold text-base text-card-foreground leading-snug line-clamp-1">
+                    {plan.title}
+                  </h2>
+                </div>
 
-          return (
-            <div
-              key={plan.id}
-              className={cn(
-                "bg-white rounded-2xl hover:shadow-2xl hover:shadow-primary border shadow-lg  transition-all p-5 flex flex-col",
-                isToday(plan.date.toString()) && "shadow-2xl shadow-primary border-primary"
-              )}
-            >
-              {/* DAY LABEL */}
-              <div className="flex justify-between">
-                <p className="text-lg font-semibold uppercase text-primary">
-                  {getWeekdayVN(plan.date.toString())}
-                </p>
-                <div>
-                  <Button 
+                {/* Actions */}
+                <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="w-7 h-7 rounded-lg"
                     onClick={() => {
-                      
                       setDailyPlan(plan)
                       setMode(CruMode.UPDATE)
                       setOpen(true)
-                    }} 
-                    size="sm" 
-                    className="text-primary"  
-                    variant="ghost"
+                    }}
                   >
-                    <Pencil />
+                    <Pencil className="w-3.5 h-3.5" />
                   </Button>
                   <Button
-                    size="sm" 
-                    className="text-red-500"  
+                    size="icon"
                     variant="ghost"
+                    className="w-7 h-7 rounded-lg hover:bg-destructive/10"
                     onClick={() => {
                       setDailyPlan(plan)
                       setOpenRemove(true)
-                      
                     }}
                   >
-                    <Trash />
+                    <Trash className="w-3.5 h-3.5 text-destructive" />
                   </Button>
                 </div>
               </div>
-              <Separator className="h-3 bg-primary"/>
-              {/* TITLE */}
-              <h2 className="font-semibold text-lg mt-1">
-                {plan.title}
-              </h2>
-              {/* DESCRIPTION */}
-              <p className="text-xs text-muted-foreground mt-1">
-                {plan.description}
-              </p>
 
-              {/* CREATED AT */}
-              <p className="text-[11px] text-muted-foreground mt-2">
-                Ngày thực hiện: {formatDate(plan.date)}
-              </p>
+              {/* Description */}
+              {plan.description && (
+                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed -mt-1">
+                  {plan.description}
+                </p>
+              )}
 
-              {/* TIME BLOCK */}
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-4">
-                <Clock className="w-4 h-4" />
-                  {plan.startTime.slice(0,5)} - {plan.endTime.slice(0,5 )}
+              {/* Meta */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground bg-muted/50 px-2 py-1 rounded-lg">
+                  <Calendar className="w-3 h-3" />
+                  {formatDate(plan.date)}
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground bg-muted/50 px-2 py-1 rounded-lg">
+                  <Clock className="w-3 h-3" />
+                  {plan.startTime.slice(0, 5)} – {plan.endTime.slice(0, 5)}
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground bg-muted/50 px-2 py-1 rounded-lg">
+                  <Layers className="w-3 h-3" />
+                  {totalTask} tasks
+                </div>
               </div>
 
-              {/* PROGRESS */}
-              <div className="mt-4">
-                <div className="flex justify-between text-xs mb-1">
-                  <span>
-                    {done}/{total} tasks hoàn thành
+              {/* Progress */}
+              <div className="space-y-1.5 mt-auto">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] text-muted-foreground">
+                    <span className="font-semibold text-card-foreground">{completedTasks}</span>/{totalTask} hoàn thành
                   </span>
-                  <span>{progress}%</span>
+                  <span className={cn(
+                    "text-[11px] font-bold flex items-center gap-1",
+                    progressPercent === 100 ? "text-emerald-500" : "text-primary"
+                  )}>
+                    {progressPercent === 100 && <CheckCircle2 className="w-3 h-3" />}
+                    {progressPercent}%
+                  </span>
                 </div>
-                <Progress value={progress} />
+                <Progress value={progressPercent} className="h-1.5" />
               </div>
 
-              {/* TASKK */}
-              <div className="mt-4">
-                <div
-                  className={cn(
-                    "space-y-2 overflow-hidden",
-                    total > 3 &&
-                      "max-h-36 [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)]"
-                  )}
-                >
-                  {plan.tasks.map((task) => (
-                      <div
-                        key={task.id}
-                        className="flex justify-between items-center text-sm bg-gray-50 rounded-lg px-3 py-2"
-                      >
-                        <div className="min-w-0">
-                          <p className="font-medium truncate">
-                            {task.todo}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatHour(task.startTime)} - {formatHour(task.endTime)}
-                          </p>
-                        </div>
-
-                        {task.status === TaskStatus.SKIPPED 
-                          ? 
-                          <Ban className="w-4 h-4 text-red-500 shrink-0" />
-                          :
-                          <Circle className="w-4 h-4 text-primary shrink-0"/>
-                        }
-                      </div>
-                    ))}
-                </div>
-
-                
-                  <Link href={`/plan/${plan.id}`} className="text-xs text-center text-muted-foreground mt-2 cursor-pointer">
-                    Xem chi tiết →
-                  </Link>
-                
-              </div>
+              {/* Footer link */}
+              <Link
+                href={`/plan/${plan.id}`}
+                className="flex items-center justify-between w-full pt-3 border-t border-border text-xs font-medium text-muted-foreground hover:text-primary transition-colors group/link"
+              >
+                <span>Xem chi tiết</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-1" />
+              </Link>
             </div>
-            
-          )
-        })}
-      </div>
-     
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default DailyPlanSchedule

@@ -12,6 +12,9 @@ import {
   ListTodo,
   FolderKanban,
   Sparkles,
+  Coins,
+  Bitcoin,
+  BanknoteArrowDown,
 } from "lucide-react"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -46,7 +49,19 @@ const menus = [
     ],
   },
   {
-    name: "Journal",
+    name: "Tài chính",
+    href: '/finance',
+    icon: Bitcoin,
+    childrens: [
+      {
+        name: "Chi tiêu",
+        href: '/finance',
+        icon: BanknoteArrowDown,
+      }
+    ]
+  },
+  {
+    name: "Nhật ký",
     href: "/journal",
     icon: BookType,
   },

@@ -76,16 +76,16 @@ const TaskCard = ({
               </h3>
             </div>
 
-            {task.description && (
+            
               <p
                 className={cn(
-                  "text-xs text-muted-foreground line-clamp-2 leading-relaxed",
+                  "text-xs text-muted-foreground line-clamp-3 leading-relaxed",
                   isSkipped && "line-through"
                 )}
               >
                 {task.description ? task.description : "Không có mô tả...."}
               </p>
-            )}
+            
           </div>
         </div>
 

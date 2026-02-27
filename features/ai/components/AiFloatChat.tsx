@@ -14,7 +14,7 @@ const AiFloatChat = ({
 
     return (
         <Button 
-            className="fixed rounded-full bottom-8 right-8"
+            className="fixed rounded-full z-10 bottom-8 right-8"
             size="lg"
             onClick={() => setOpen(true)}
         >
