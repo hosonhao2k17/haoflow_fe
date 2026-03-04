@@ -18,6 +18,10 @@ import {
   BanknoteArrowUp,
   Landmark,
   ChartSpline,
+  Wallet,
+  ArrowLeftRight,
+  Captions,
+  LandmarkIcon,
 } from "lucide-react"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -57,24 +61,24 @@ const menus = [
     icon: Bitcoin,
     childrens: [
       {
-        name: "Chi tiêu",
-        href: '/consume',
-        icon: BanknoteArrowDown,
+        name: "Tài khoản",
+        href: '/finance/account',
+        icon: Wallet,
       },
       {
-        name: "Thu nhập",
-        href: '/income',
-        icon: BanknoteArrowUp
+        name: "Danh mục giao dịch",
+        href: '/finance/transaction-category',
+        icon: Captions
+      },
+      {
+        name: "Giao dịch",
+        href: '/finance/transaction',
+        icon: ArrowLeftRight
       },
       {
         name: "Ngân sách",
-        href: '/Budget',
-        icon: Landmark
-      },
-      {
-        name: "Giá trị ròng",
         href: "net-worth-tracking",
-        icon: ChartSpline
+        icon: LandmarkIcon
       }
     ]
   },
