@@ -2,8 +2,9 @@ import { api } from "@/config/axios";
 import { QueryAccount } from "./interfaces/query-account.interface";
 import { CreateAccount } from "./interfaces/create-account.interface";
 import { UpdateAccount } from "./interfaces/update-account.interface";
+import { Account } from "./interfaces/account.interface";
 
-export const getAccounts = async (query: QueryAccount) => {
+export const getAccounts = async (query: QueryAccount): Promise<{items: Account[], pagination: any}> => {
     const res = await api.get('accounts', { params: query });
     return res.data;
 };

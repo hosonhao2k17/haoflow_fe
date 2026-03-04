@@ -1,7 +1,14 @@
+import { formatVnd } from "@/lib/format";
 import { Eye } from "lucide-react"
 
 
-const AccountSummary = () => {
+
+interface Props {
+  totalBalance: number;
+  totalActive: number;
+}
+
+const AccountSummary = ({totalBalance, totalActive}: Props) => {
     
 
     return (
@@ -21,18 +28,22 @@ const AccountSummary = () => {
             </div>
 
             <p className="text-4xl font-bold text-foreground tracking-tight mb-4 transition-all">
-                10.000.000 VND
+                {formatVnd(totalBalance)}
             </p>
 
             <div className="flex items-center gap-5">
               <div>
                 <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">Tài sản</p>
-                <p className="text-sm font-bold text-primary" >3.000.000 VND</p>
+                <p className="text-sm font-bold text-primary" >
+                  {formatVnd(totalBalance)}
+                </p>
               </div>
               <div className="w-px h-8 bg-border" />
               <div>
                 <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">Nợ</p>
-                <p className="text-sm font-bold text-destructive" >0</p>
+                <p className="text-sm font-bold text-destructive" >
+                  {formatVnd(0)}
+                </p>
               </div>
             </div>
           </div>
@@ -41,11 +52,11 @@ const AccountSummary = () => {
           <div className="flex flex-col gap-4">
             <div className="flex-1 bg-card border border-border rounded-2xl px-5 py-4 flex flex-col justify-between">
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Tài khoản</p>
-              <p className="text-3xl font-bold text-foreground">{10}</p>
+              <p className="text-3xl font-bold text-foreground">{totalActive}</p>
             </div>
             <div className="flex-1 bg-card border border-border rounded-2xl px-5 py-4 flex flex-col justify-between">
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Hoạt động</p>
-              <p className="text-3xl font-bold text-primary">{20}</p>
+              <p className="text-3xl font-bold text-primary">{totalActive}</p>
             </div>
           </div>
         </div>

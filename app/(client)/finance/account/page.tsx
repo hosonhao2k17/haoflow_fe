@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import AccountFilterTab from "@/features/account/components/AccountFilterTab";
 import { useAccounts } from "@/features/account/account.hook";
 import { Account } from "@/features/account/interfaces/account.interface";
+import { AccountStatus } from "@/common/constants/finance.constant";
 
 
 
@@ -15,15 +16,23 @@ const AccountPage = () => {
 
     const {data} = useAccounts({})
 
+    const accounts: Account[] = data?.items ?? []
+    const totalBalance = accounts.reduce((total, item) => total + item.balance ,0)
+    const totalActive = accounts.filter((item) => item.status === AccountStatus.ACTIVE).length 
     return (
         <div className="min-h-screen">
             <div className="max-w-6xl p-5">
 
                 {/* Header */}
-                <AccountHeader />
+                <AccountHeader 
+                
+                />
 
                 {/* Summary */}
-                <AccountSummary />
+                <AccountSummary 
+                    totalBalance={totalBalance}
+                    totalActive={totalActive}
+                />
 
                 {/* Filter tabs */}
                 <AccountFilterTab />
