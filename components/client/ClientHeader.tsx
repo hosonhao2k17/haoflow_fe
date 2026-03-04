@@ -5,6 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 // ─── Stat Chip ────────────────────────────────────────────────────────────────
 
@@ -97,7 +98,7 @@ const ClientHeader = () => {
           <Separator orientation="vertical" className="h-8 bg-white/15" />
 
           {/* User */}
-          <div className="flex items-center gap-2.5">
+          <Link href="/profiles" className="flex items-center gap-2.5">
             <Avatar className="w-8 h-8 ring-2 ring-emerald-400/60">
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback className="text-xs bg-white/20">HN</AvatarFallback>
@@ -109,7 +110,7 @@ const ClientHeader = () => {
                 Active
               </p>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </header>

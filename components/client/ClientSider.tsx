@@ -15,6 +15,9 @@ import {
   Coins,
   Bitcoin,
   BanknoteArrowDown,
+  BanknoteArrowUp,
+  Landmark,
+  ChartSpline,
 } from "lucide-react"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -55,8 +58,23 @@ const menus = [
     childrens: [
       {
         name: "Chi tiêu",
-        href: '/finance',
+        href: '/consume',
         icon: BanknoteArrowDown,
+      },
+      {
+        name: "Thu nhập",
+        href: '/income',
+        icon: BanknoteArrowUp
+      },
+      {
+        name: "Ngân sách",
+        href: '/Budget',
+        icon: Landmark
+      },
+      {
+        name: "Giá trị ròng",
+        href: "net-worth-tracking",
+        icon: ChartSpline
       }
     ]
   },

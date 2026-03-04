@@ -18,12 +18,12 @@ const task = () => {
 
     const [startDate, setStartDate] = useState<string>(getRangeWeek().startDate);
     const [endDate, setEndDate] = useState<string>(getRangeWeek().endDate);
-
+    
     const [open, setOpen] = useState<boolean>(false);
     const [openRemove, setOpenRemove] = useState<boolean>(false);
     const [cruMode, setCruMode] = useState<CruMode>(CruMode.CREATE);
     const [dailyPlan, setDailyPlan] = useState<DailyPlan>();
-    const {data, isLoading} = useDailyPlans({
+    const {data, isLoading, error} = useDailyPlans({
         startDate,
         endDate
     })

@@ -1,193 +1,159 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Cake, Eye, EyeOff, Lock, Mail, User, UserPlus } from "lucide-react"
-import { useState } from "react"
-import { Register } from "../interfaces/register.interface"
-import { useRegister } from "../auth.hook"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select, SelectContent, SelectGroup,
+  SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
-import { toast } from "sonner"
+import { useState } from "react"
+import { useRegister } from "../auth.hook"
+import { Register } from "../interfaces/register.interface"
 import { Gender } from "@/common/constants/app.constant"
 import { mapFieldErrors } from "@/lib/map-field-error"
+import { toast } from "sonner"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
+const RegisterForm = () => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const registerMutation = useRegister()
 
-const RegisterForm  = () => {
+  const defaultUser: Register = { fullName: "", email: "", password: "" }
+  const [user, setUser] = useState<Register>(defaultUser)
+  const patch = (key: keyof Register, value: any) => setUser((prev) => ({ ...prev, [key]: value }))
 
-    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const defaultUser = {
-        fullName: "",
-        email: "",
-        password: ""
-        
-    }
-    const [user, setUser] = useState<Register>(defaultUser)
-    const registerMutation = useRegister()
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault()
+    registerMutation.mutate(user, {
+      onSuccess: () => {
+        toast.success("Đăng ký thành công! Vui lòng kiểm tra email.")
+        setUser(defaultUser)
+      },
+      onError: (error: any) => {
+        toast.error("Đăng ký thất bại")
+        if (error.response?.data) setFieldErrors(mapFieldErrors(error.response.data))
+        setUser(defaultUser)
+      },
+    })
+  }
 
-    const handleRegister = (e: any) => {
-        e.preventDefault()
-        registerMutation.mutate(user,{
-            onSuccess: () => {
-                toast.success("Đăng ký thành công vui lòng kiểm tra email");
-                setUser(defaultUser)
-            },
-            onError: (error: any) => {
-                toast.error("Đăng ký thất bại")
-                if(error.response.data) {
-                    setFieldErrors(mapFieldErrors(error.response.data))
-                }
-                setUser(defaultUser)
-            }
-        })
-    }
-    
-    return (
-        <form 
-            className="space-y-6"
-            onSubmit={handleRegister}
-        >
-            {/* fullName  */}
-            <Field>
-                <FieldLabel className="text-primary">Họ và tên</FieldLabel>
-                <InputGroup>
-                    <InputGroupInput
-                        placeholder="Nhập họ và tên của bạn..."
-                        value={user?.fullName}
-                        onChange={(e) => setUser({...user, fullName: e.target.value})}
-                        disabled={registerMutation.isPending}
-                        className="h-11"
-                    />
+  const disabled = registerMutation.isPending
 
-                    <InputGroupAddon align="inline-end">
-                        <User className="w-4 h-4 text-muted-foreground" />
-                    </InputGroupAddon>
-                </InputGroup>
+  return (
+    <form className="space-y-4" onSubmit={handleRegister}>
+      {/* Full name */}
+      <div className="space-y-1.5">
+        <Label className="text-xs font-medium">Họ và tên</Label>
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Nguyễn Văn A"
+            value={user.fullName}
+            onChange={(e) => patch("fullName", e.target.value)}
+            disabled={disabled}
+            className={cn("pl-9 h-10 text-sm", fieldErrors.fullName && "border-destructive")}
+          />
+        </div>
+        {fieldErrors.fullName && <p className="text-xs text-destructive">{fieldErrors.fullName}</p>}
+      </div>
 
-                {fieldErrors.fullName && (
-                    <FieldError className="mt-2 text-sm text-red-500">
-                    {fieldErrors.fullName}
-                    </FieldError>
-                )}
-            </Field>
-            {/* email */}
-            <Field>
-                <FieldLabel className="text-primary">Email</FieldLabel>
-                <InputGroup>
-                    <InputGroupInput
-                        placeholder="Nhập email của bạn..."
-                        value={user?.email}
-                        onChange={(e) => setUser({...user, email: e.target.value})}
-                        disabled={registerMutation.isPending}
-                        className="h-11"
-                    />
+      {/* Email */}
+      <div className="space-y-1.5">
+        <Label className="text-xs font-medium">Email</Label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="email"
+            placeholder="you@example.com"
+            value={user.email}
+            onChange={(e) => patch("email", e.target.value)}
+            disabled={disabled}
+            className={cn("pl-9 h-10 text-sm", fieldErrors.email && "border-destructive")}
+          />
+        </div>
+        {fieldErrors.email && <p className="text-xs text-destructive">{fieldErrors.email}</p>}
+      </div>
 
-                    <InputGroupAddon align="inline-end">
-                        <Mail className="w-4 h-4 text-muted-foreground" />
-                    </InputGroupAddon>
-                </InputGroup>
+      {/* Password */}
+      <div className="space-y-1.5">
+        <Label className="text-xs font-medium">Mật khẩu</Label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type={showPassword ? "text" : "password"}
+            placeholder="••••••••"
+            value={user.password}
+            onChange={(e) => patch("password", e.target.value)}
+            disabled={disabled}
+            className={cn("pl-9 pr-10 h-10 text-sm", fieldErrors.password && "border-destructive")}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((p) => !p)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+          >
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
+        </div>
+        {fieldErrors.password && <p className="text-xs text-destructive">{fieldErrors.password}</p>}
+      </div>
 
-                {fieldErrors.email && (
-                    <FieldError className="mt-2 text-sm text-red-500">
-                    {fieldErrors.email}
-                    </FieldError>
-                )}
-            </Field>
-            {/* password  */}
-            <Field>
-                <FieldLabel className="text-primary">Mật khẩu</FieldLabel>
+      {/* Gender + Birthdate */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs font-medium">Giới tính</Label>
+          <Select
+            onValueChange={(value: Gender) => patch("gender", value)}
+            value={user.gender ?? ""}
+          >
+            <SelectTrigger className={cn("h-10 text-sm", fieldErrors.gender && "border-destructive")}>
+              <SelectValue placeholder="Chọn..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="male">Nam</SelectItem>
+                <SelectItem value="female">Nữ</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          {fieldErrors.gender && <p className="text-xs text-destructive">{fieldErrors.gender}</p>}
+        </div>
 
-                <InputGroup>
-                    <InputGroupInput
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Nhập mật khẩu của bạn..."
-                    value={user.password}
-                    onChange={(e) => setUser({...user, password: e.target.value})}
-                    disabled={registerMutation.isPending}
-                    className="h-11"
-                    />
+        <div className="space-y-1.5">
+          <Label className="text-xs font-medium">Ngày sinh</Label>
+          <div className="relative">
+            <Cake className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              type="date"
+              onChange={(e) => patch("birthDate", new Date(e.target.value))}
+              disabled={disabled}
+              className={cn("pl-9 h-10 text-sm", fieldErrors.birthDate && "border-destructive")}
+            />
+          </div>
+          {fieldErrors.birthDate && <p className="text-xs text-destructive">{fieldErrors.birthDate}</p>}
+        </div>
+      </div>
 
-                    <InputGroupAddon align="inline-end" className=" cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
-                        {showPassword ? (
-                            <Eye className="w-4 h-4 " />
-                        ) : (
-                            <EyeOff className="w-4 h-4 "/>
-                        )}
-                    </InputGroupAddon>
-                </InputGroup>
+      {/* Submit */}
+      <Button type="submit" disabled={disabled} className="w-full h-10 gap-2">
+        {disabled ? <Spinner className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+        Đăng ký
+      </Button>
 
-                {fieldErrors.password && (
-                    <FieldError className="mt-2 text-sm text-red-500">
-                    {fieldErrors.password}
-                    </FieldError>
-                )}
-            </Field>
-            <div className="flex justify-between gap-4">
-                <Field>
-                    <FieldLabel className="text-primary">Giới tính</FieldLabel>
-                    <Select 
-                        onValueChange={(value: Gender) => setUser({...user, gender: value})}
-                        value={user.gender ?? ""}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Chọn giới tính"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="male">nam</SelectItem>
-                                <SelectItem value="female">nữ</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                    {fieldErrors.gender && (
-                        <FieldError className="mt-2 text-sm text-red-500">
-                        {fieldErrors.gender}
-                        </FieldError>
-                    )}
-                </Field>
-                <Field>
-                    <FieldLabel className="text-primary">Ngày sinh</FieldLabel>
-                    <InputGroup>
-                        <InputGroupInput
-                            placeholder="Chọn ngày sinh..."
-                            //value={formatDateForInput(user?.birthDate?.toString() as string)}
-                            onChange={(e) => setUser({...user, birthDate: new Date(e.target.value)})}
-                            disabled={registerMutation.isPending}
-                            className="h-11"
-                            type="date"
-                            
-                        />
-
-                        <InputGroupAddon align="inline-end">
-                            <Cake />
-                        </InputGroupAddon>
-                    </InputGroup>
-
-                    {fieldErrors.birthDate && (
-                        <FieldError className="mt-2 text-sm text-red-500">
-                        {fieldErrors.birthDate}
-                        </FieldError>
-                    )}
-                </Field>
-                
-            </div>
-            <div className="flex justify-between">
-                Bạn đã có tài khoản ? <Link href="/login" className="text-primary underline"> Đăng nhập</Link>
-            </div>
-            <Button
-                type="submit"
-                disabled={registerMutation.isPending}
-                className="w-full h-11 flex items-center justify-center gap-2"
-                >
-                {registerMutation.isPending ? <Spinner /> : <UserPlus className="w-4 h-4" />}
-                Đăng ký
-            </Button>
-        </form>
-    )
+      {/* Login link */}
+      <p className="text-center text-xs text-muted-foreground">
+        Đã có tài khoản?{" "}
+        <Link href="/login" className="text-primary font-medium hover:underline">
+          Đăng nhập
+        </Link>
+      </p>
+    </form>
+  )
 }
 
 export default RegisterForm

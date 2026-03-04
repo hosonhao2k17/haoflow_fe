@@ -40,7 +40,6 @@ const DailyPlanForm = ({
 
     const dfState = {
         title: "",
-        description: "",
         startTime: "05:00",
         endTime: "22:00",
         date: new Date().toISOString().split("T")[0]
@@ -67,12 +66,14 @@ const DailyPlanForm = ({
         ? createDailyPlanMutation.isPending
         : editDailyPlanMutation.isPending;
     const handleCreate = () => {
+        console.log(form)
         createDailyPlanMutation.mutate(form as CreateDailyPlan,{
             onSuccess: () => {
                 setForm(dfState);
                 setOpen(false)
             },
-            onError: () => {
+            onError: (err: any) => {
+                console.log(err.response.data)
                 setForm(dfState)
                 
             }

@@ -80,7 +80,7 @@ const TaskCreate = ({
         setOpen(false)
       },
       onError: (err: any) => {
-        console.log(err.response.data)
+        console.log(err.response)
         toast.error("Tạo nhiệm vụ thất bại")
       },
     })

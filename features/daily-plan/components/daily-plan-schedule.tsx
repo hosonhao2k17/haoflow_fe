@@ -28,12 +28,12 @@ const DailyPlanSchedule = ({
   setOpenRemove,
 }: Props) => {
   if (isLoading) return <DailyPlanScheduleSkeleton />
-
+  console.log(dailyPlans)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-      {dailyPlans.map((plan: DailyPlan) => {
+      {dailyPlans?.map((plan: DailyPlan) => {
         const { totalTask, completedTasks, progressPercent } = plan.summary
-        const today = isToday(plan.date.toString())
+        const today = isToday(plan?.date)
 
         return (
           <div
@@ -61,7 +61,7 @@ const DailyPlanSchedule = ({
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold uppercase tracking-widest text-primary">
-                      {getWeekdayVN(plan.date.toString())}
+                      {getWeekdayVN(plan.date)}
                     </span>
                     {today && (
                       <span className="text-[10px] font-semibold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
