@@ -32,7 +32,7 @@ const LoginForm = () => {
         onSuccess: (data) => {
           toast.success("Đăng nhập thành công")
           setAuth({ accessToken: data?.accessToken as string, expiresIn: data?.expiresIn as number })
-          router.replace("/admin/users")
+          router.replace("/")
         },
         onError: (err: any) => {
           setFieldErrors(mapFieldErrors(err))

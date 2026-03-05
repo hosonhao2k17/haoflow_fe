@@ -15,9 +15,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="">
           <ReactQueryProvider>
-            <Providers>
-              {children}
-            </Providers>
+            {children}
           </ReactQueryProvider>
         <Toaster position="top-right" richColors/>
       </body>
