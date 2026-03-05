@@ -8,6 +8,8 @@ import AccountFilterTab from "@/features/account/components/AccountFilterTab";
 import { useAccounts } from "@/features/account/account.hook";
 import { Account } from "@/features/account/interfaces/account.interface";
 import { AccountStatus } from "@/common/constants/finance.constant";
+import { useState } from "react";
+import AccountCreate from "@/features/account/components/AccountCreate";
 
 
 
@@ -15,6 +17,7 @@ const AccountPage = () => {
   
 
     const {data} = useAccounts({})
+    const [openCreate, setOpenCreate] = useState<boolean>(false);
 
     const accounts: Account[] = data?.items ?? []
     const totalBalance = accounts.reduce((total, item) => total + item.balance ,0)
@@ -25,7 +28,7 @@ const AccountPage = () => {
 
                 {/* Header */}
                 <AccountHeader 
-                
+                    setOpenCreate={setOpenCreate}
                 />
 
                 {/* Summary */}
@@ -59,6 +62,12 @@ const AccountPage = () => {
                 </div>
 
             </div>
+
+            {/* Dialog  */}
+            <AccountCreate 
+                open={openCreate}
+                setOpen={setOpenCreate}
+            />
         </div>
     );
 };
