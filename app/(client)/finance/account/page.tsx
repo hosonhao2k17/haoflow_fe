@@ -10,6 +10,7 @@ import { Account } from "@/features/account/interfaces/account.interface";
 import { AccountStatus } from "@/common/constants/finance.constant";
 import { useState } from "react";
 import AccountCreate from "@/features/account/components/AccountCreate";
+import AccountUpdate from "@/features/account/components/AccountUpdate";
 
 
 
@@ -18,6 +19,8 @@ const AccountPage = () => {
 
     const {data} = useAccounts({})
     const [openCreate, setOpenCreate] = useState<boolean>(false);
+    const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+    const [account, setAccount] = useState<Account>();
 
     const accounts: Account[] = data?.items ?? []
     const totalBalance = accounts.reduce((total, item) => total + item.balance ,0)
@@ -46,6 +49,8 @@ const AccountPage = () => {
                         data?.items.map((item: Account) => (
                             <AccountCard  
                                 account={item}
+                                setAccount={setAccount}
+                                setOpenUpdate={setOpenUpdate}
                             />
                         ))
                     }
@@ -67,6 +72,11 @@ const AccountPage = () => {
             <AccountCreate 
                 open={openCreate}
                 setOpen={setOpenCreate}
+            />
+            <AccountUpdate 
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+                account={account}
             />
         </div>
     );

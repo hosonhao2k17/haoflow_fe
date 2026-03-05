@@ -3,14 +3,17 @@ import { Pencil, Trash2, TrendingUp } from "lucide-react";
 import { Account } from "../interfaces/account.interface";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { formatVnd } from "@/lib/format";
+import { AccountFormValue } from "../interfaces/account-form-value.interface";
 
 
 interface Props {
     account: Account
+    setAccount: (account: Account) => void;
+    setOpenUpdate: (open: boolean) => void;
 }
 
 
-const AccountCard = ({account}: Props) => {
+const AccountCard = ({account, setAccount, setOpenUpdate}: Props) => {
 
 
     return (
@@ -29,8 +32,13 @@ const AccountCard = ({account}: Props) => {
         {/* Actions — visible on hover */}
         <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button 
-            className="w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-            <Pencil size={11} />
+                className="w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                <Pencil size={11} 
+                onClick={() => {
+                    setAccount(account)
+                    setOpenUpdate(true)
+                }}
+            />
             </button>
             <button 
             className="w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors cursor-pointer">

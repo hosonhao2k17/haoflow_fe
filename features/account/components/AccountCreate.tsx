@@ -38,6 +38,7 @@ const AccountCreate = ({ open, setOpen }: Props) => {
       onSuccess: (data) => {
         toast.success("Tạo tài khoản thành công");
         setOpen(false)
+        setAccount(defaultValue)
       }
     })
   }
