@@ -12,3 +12,10 @@ export enum AccountStatus {
     INACTIVE = 'inactive',
     
 }
+
+export enum TransactionCategoryType {
+    INCOME = 'income',
+    EXPENSE = 'expense',
+    TRANSFER = 'transfer',
+    INVESTMENT = 'investment'
+}

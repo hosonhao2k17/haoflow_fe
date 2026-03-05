@@ -78,6 +78,7 @@ const AccountPage = () => {
                 setOpen={setOpenUpdate}
                 account={account}
             />
+            
         </div>
     );
 };
