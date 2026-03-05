@@ -40,7 +40,7 @@ const menus = [
     childrens: [
       {
         name: "Kế hoạch hằng ngày",
-        href: "/plan/task",
+        href: "/plan/daily-plan",
         icon: ListTodo,
       },
       {

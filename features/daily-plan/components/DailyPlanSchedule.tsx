@@ -9,6 +9,7 @@ import { CruMode } from "@/common/constants/app.constant"
 import DailyPlanScheduleSkeleton from "./skeletons/daily-plan-schedule.skeleton"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import DailyPlanPlus from "./DailyPlanPlus"
 
 interface Props {
   dailyPlans: DailyPlan[]
@@ -28,7 +29,6 @@ const DailyPlanSchedule = ({
   setOpenRemove,
 }: Props) => {
   if (isLoading) return <DailyPlanScheduleSkeleton />
-  console.log(dailyPlans)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
       {dailyPlans?.map((plan: DailyPlan) => {
@@ -154,6 +154,12 @@ const DailyPlanSchedule = ({
           </div>
         )
       })}
+      {/* daily plan plus  */}
+      {
+        dailyPlans.length < 7
+        &&
+        <DailyPlanPlus setOpenCreate={setOpen}/>
+      }
     </div>
   )
 }

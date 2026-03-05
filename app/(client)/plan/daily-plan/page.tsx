@@ -2,8 +2,9 @@
 
 import { CruMode } from "@/common/constants/app.constant"
 import { AlertDialogDestructive } from "@/components/ui/aler-dialog"
-import DailyPlanForm from "@/features/daily-plan/components/daily-plan-form"
-import DailyPlanSchedule from "@/features/daily-plan/components/daily-plan-schedule"
+import { DailyPlanEmpty } from "@/features/daily-plan/components/DailyPlanEmpty"
+import DailyPlanForm from "@/features/daily-plan/components/DailyPlanForm"
+import DailyPlanSchedule from "@/features/daily-plan/components/DailyPlanSchedule"
 import DailyPlanTool from "@/features/daily-plan/components/DailyPlanTool"
 import { useDailyPlans, useRemoveDailyPlan } from "@/features/daily-plan/daly-plan.hook"
 import { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface"
@@ -14,7 +15,7 @@ import { toast } from "sonner"
 
 
 
-const task = () => {
+const DailyPlanPage = () => {
 
     const [startDate, setStartDate] = useState<string>(getRangeWeek().startDate);
     const [endDate, setEndDate] = useState<string>(getRangeWeek().endDate);
@@ -59,14 +60,22 @@ const task = () => {
                         Kế hoạch hằng tuần
                         <Calendar />
                     </h1>
-                    <DailyPlanSchedule 
-                        dailyPlans={data?.items}
-                        isLoading={isLoading}
-                        setOpenRemove={setOpenRemove}
-                        setOpen={setOpen}
-                        setMode={setCruMode}
-                        setDailyPlan={setDailyPlan}
-                    />
+                    {
+                        data?.items.length === 0
+                        ?
+                        <DailyPlanEmpty 
+                            setOpenCreate={setOpen}
+                        />
+                        :
+                        <DailyPlanSchedule 
+                            dailyPlans={data?.items}
+                            isLoading={isLoading}
+                            setOpenRemove={setOpenRemove}
+                            setOpen={setOpen}
+                            setMode={setCruMode}
+                            setDailyPlan={setDailyPlan}
+                        />
+                    }
                 </div>
                 
             </div>
@@ -87,4 +96,4 @@ const task = () => {
     )
 }
 
-export default task
+export default DailyPlanPage
