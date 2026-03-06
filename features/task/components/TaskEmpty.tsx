@@ -8,9 +8,9 @@ const TaskEmpty = () => {
 
 
     return (
-        <Empty>
+        <Empty className="border-primary border">
             <EmptyHeader>
-                <EmptyMedia variant="icon">
+                <EmptyMedia>
                     <BookCheck />
                 </EmptyMedia>
                 <EmptyTitle>Chưa có nhiệm vụ nào</EmptyTitle>

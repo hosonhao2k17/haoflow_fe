@@ -12,6 +12,13 @@ export const getTasks = async (queryDto: QueryTask) => {
     return res.data;
 }
 
+export const aiSuggest = async (prompt: string) => {
+    const res = await api.post(`tasks/ai/suggest`,{
+        prompt
+    });
+    return res.data;
+}
+
 export const createTask = async (createDto: Createtask) => {
     const res = await api.post('tasks',createDto);
     return res.data;

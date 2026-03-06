@@ -118,7 +118,7 @@ const TaskCard = ({
         </div>
 
         {/* Category */}
-        <div className="flex items-center gap-1 text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-md">
+        <div className="flex max-w-30  items-center gap-1 text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-md">
           <Tag className="w-3 h-3" />
           <span className={cn(task.category ? "text-primary font-medium" : "")}>
             {task.category ? task.category.title : "Chưa có"}

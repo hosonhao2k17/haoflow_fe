@@ -17,11 +17,13 @@ import { useRemoveTask, useTasks } from "@/features/task/task.hook"
 import { toast } from "sonner"
 import { getCurrentTask } from "@/lib/task"
 import TaskDetail from "@/features/task/components/TaskDetail"
+import TaskAi from "@/features/task/components/TaskAi"
 
 const DailyPlanDetail = () => {
   const { id } = useParams() as { id: string }
   if (!id) return null
 
+  const [openTaskAi, setOpenTaskAi] = useState(false)
   const [task, setTask] = useState<Task>()
   const [openTaskRemove, setOpenTaskRemove] = useState(false)
   const [openTaskEdit, setOpenTaskEdit] = useState<string>()
@@ -111,9 +113,13 @@ const DailyPlanDetail = () => {
         <TaskHeader 
           data={data} 
           setOpenTaskCreate={setOpenTaskCreate} 
+          setOpenTaskAi={setOpenTaskAi}
           />
       }
-
+      <TaskAi 
+        open={openTaskAi}
+        setOpen={setOpenTaskAi}
+      />
       {renderTaskList()}
     </div>
   )

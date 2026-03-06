@@ -155,8 +155,15 @@ const DailyPlanTool = ({
           }}
         >
           <CalendarPlus className="w-3.5 h-3.5" />
-          Thêm kế hoạch
+          Thêm 
         </Button>
+        <Button 
+          size='sm'
+          className="h-9 gap-1.5 text-xs"
+        >
+          Thêm mẫu
+        </Button>
+        
       </div>
     </div>
   )

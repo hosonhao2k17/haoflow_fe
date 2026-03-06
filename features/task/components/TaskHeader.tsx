@@ -9,10 +9,11 @@ import { cn } from "@/lib/utils"
 
 interface Props {
   data: DailyPlan
-  setOpenTaskCreate: (open: boolean) => void
+  setOpenTaskCreate: (open: boolean) => void;
+  setOpenTaskAi: (open: boolean) => void;
 }
 
-const TaskHeader = ({ data, setOpenTaskCreate }: Props) => {
+const TaskHeader = ({ data, setOpenTaskCreate, setOpenTaskAi }: Props) => {
   const { progressPercent, completedTasks, totalTask } = data.summary
   const isHappy = progressPercent >= 50
 
@@ -50,7 +51,12 @@ const TaskHeader = ({ data, setOpenTaskCreate }: Props) => {
               <Plus className="w-3.5 h-3.5" />
               Thêm task
             </Button>
-            <Button variant="outline" size="sm" className="h-8 text-xs gap-1.5">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-8 text-xs gap-1.5"
+              onClick={() => setOpenTaskAi(true)}
+            >
               <Bot className="w-3.5 h-3.5" />
               AI
             </Button>
