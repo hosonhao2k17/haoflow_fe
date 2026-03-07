@@ -117,6 +117,7 @@ const DailyPlanDetail = () => {
           />
       }
       <TaskAi 
+        dailyPlanId={id}
         open={openTaskAi}
         setOpen={setOpenTaskAi}
       />

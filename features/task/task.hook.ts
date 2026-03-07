@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Createtask } from "./interfaces/create-task.interface"
-import { aiSuggest, createTask, getTasks, removeTask, updateTask } from "./task.api"
+import { aiSuggest, createMultiTask, createTask, getTasks, removeTask, updateTask } from "./task.api"
 import { UpdateTask } from "./interfaces/update-task.interface"
 import { IdPayload } from "@/common/interfaces/id-payload.interface"
 import { Task } from "./interfaces/task.interface"
 import { QueryTask } from "./interfaces/query-task.interface"
+import { CreateMultiTask } from "./interfaces/create-multi-task.interface"
 
 
 export const useCreateTask = () => {
@@ -18,14 +19,22 @@ export const useCreateTask = () => {
     })
 }
 
-export const useAiSuggest = () => {
+export const useCreateMultiTask = () => {
 
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (prompt: string) => aiSuggest(prompt),
+        mutationFn: (dto: CreateMultiTask) => createMultiTask(dto),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey:  ["tasks"]})
         }
+        
+    })
+}
+
+export const useAiSuggest = () => {
+
+    return useMutation({
+        mutationFn: (prompt: string) => aiSuggest(prompt)
     })
 }
 

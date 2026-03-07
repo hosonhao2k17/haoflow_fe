@@ -23,6 +23,8 @@ import { UpdateTask } from "../interfaces/update-task.interface"
 import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
 import { Save, X, Clock, Tag } from "lucide-react"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 interface Props {
   task: Task
@@ -44,7 +46,7 @@ const TaskEdit = ({ task, setOpenTaskEdit, dailyPlanId }: Props) => {
     dailyPlanId,
   })
 
-  const patch = (key: keyof UpdateTask, value: string) =>
+  const patch = (key: keyof UpdateTask, value: any) =>
     setForm((prev) => ({ ...prev, [key]: value }))
 
   const handleUpdate = () => {
@@ -85,6 +87,13 @@ const TaskEdit = ({ task, setOpenTaskEdit, dailyPlanId }: Props) => {
         className="text-sm resize-none"
         onChange={(e) => patch("description", e.target.value)}
       />
+      <div className="flex gap-2">
+        <Label>Báo thức: </Label>
+        <Switch 
+          checked={form.isAlarm}
+          onCheckedChange={(checked) => patch("isAlarm", checked)}
+        />
+      </div>
 
       {/* Time + Category + Priority */}
       <div className="grid grid-cols-2 gap-2">

@@ -31,6 +31,7 @@ import { useCreateTask } from "../task.hook"
 import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
+import { Switch } from "@/components/ui/switch"
 
 interface Props {
   open: boolean
@@ -54,6 +55,7 @@ const TaskCreate = ({
     startTime: nearestEndDate.slice(0, 5),
     endTime: nearestEndDate.slice(0, 5),
     categoryId: "",
+    isAlarm: false,
     dailyPlanId,
   }
 
@@ -69,7 +71,7 @@ const TaskCreate = ({
     }
   }, [nearestEndDate])
 
-  const patch = (key: keyof Createtask, value: string) =>
+  const patch = (key: keyof Createtask, value: any) =>
     setForm((prev) => ({ ...prev, [key]: value }))
 
   const handleCreate = () => {
@@ -121,7 +123,14 @@ const TaskCreate = ({
               onChange={(e) => patch("description", e.target.value)}
             />
           </div>
-
+          {/* alarm */}
+          <div className="space-y-1.5">
+            <Label>Báo thức</Label>
+            <Switch 
+              checked={form.isAlarm}
+              onCheckedChange={(checked) => patch("isAlarm", checked)}
+            />
+          </div>
           {/* Time */}
           <div className="space-y-1.5">
             <Label className="text-xs font-medium flex items-center gap-1.5">

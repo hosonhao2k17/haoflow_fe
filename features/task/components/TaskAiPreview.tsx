@@ -12,6 +12,9 @@ import { Trash2, Clock } from "lucide-react";
 import { TaskPriority, TaskStatus } from "@/common/constants/app.constant";
 import { Task } from "../interfaces/task.interface";
 import { useState } from "react";
+import { MultiTask } from "../interfaces/create-multi-task.interface";
+import { useTaskCategories } from "@/features/category/task-category.hook";
+import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface";
 
 const PRIORITY_STYLE: Record<string, string> = {
     LOW:    "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
@@ -28,13 +31,14 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 interface Props {
-    task: Task;
+    task: MultiTask;
     index?: number;
 }
 
 const TaskAiPreview = ({ task, index = 1 }: Props) => {
-    const [form, setForm] = useState<Task>(task);
+    const [form, setForm] = useState<MultiTask>(task);
 
+    const {data} = useTaskCategories({})
     return (
         <div className="group relative rounded-2xl border border-primary/15 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/30 transition-all duration-200 overflow-hidden">
 
@@ -48,6 +52,7 @@ const TaskAiPreview = ({ task, index = 1 }: Props) => {
                     </span>
 
                     <Input
+                        
                         value={form.todo}
                         onChange={(e) => setForm({ ...form, todo: e.target.value })}
                         placeholder="Tên task..."
@@ -85,18 +90,19 @@ const TaskAiPreview = ({ task, index = 1 }: Props) => {
                             ))}
                         </SelectContent>
                     </Select>
-
                     <Select
-                        defaultValue={form.status}
-                        onValueChange={(v) => setForm({ ...form, status: v as Task["status"] })}
+                        defaultValue={form.categoryId}
+                        onValueChange={(v) => setForm({ ...form, categoryId: v})}
                     >
-                        <SelectTrigger className={`h-8 text-xs font-medium border rounded-xl px-3 focus:ring-1 focus:ring-primary/30 transition-colors ${STATUS_STYLE[form.status] ?? "bg-primary/5 text-foreground border-primary/20"}`}>
+                        <SelectTrigger className={`h-8 text-xs font-medium border rounded-xl px-3 focus:ring-1 focus:ring-primary/30 transition-colors ${PRIORITY_STYLE[form.priority] ?? "bg-primary/5 text-foreground border-primary/20"}`}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            {Object.values(TaskStatus).map((s) => (
-                                <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
-                            ))}
+                            {
+                                data?.items.map((item: TaskCategory) => (
+                                    <SelectItem key={item.id} value={item.id} className="text-xs">{item.title}</SelectItem>
+                                ))
+                            }
                         </SelectContent>
                     </Select>
 

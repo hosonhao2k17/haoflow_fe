@@ -9,6 +9,6 @@ export interface Task {
   startTime: string
   endTime: string
   status: TaskStatus
+  isAlarm: boolean;
   category?: TaskCategory
-  dailyPlanId?: string;
 }
