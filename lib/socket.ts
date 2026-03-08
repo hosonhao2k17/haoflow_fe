@@ -15,15 +15,16 @@ export const getSocket = (): Socket => {
   }
 
   if (!socket) {
+    console.log(token)
     currentToken = token;
     socket = io(SOCKET_URL, {
       autoConnect: false,
       transports: ['polling', 'websocket'], 
       extraHeaders: {
-        Authorization: token ? `Bearer ${token}` : '',
+        Authorization: `Bearer ${token}`,
       },
       auth: {
-        token: token ? `Bearer ${token}` : null,
+        token: `${token}`,
       },
     });
   }
