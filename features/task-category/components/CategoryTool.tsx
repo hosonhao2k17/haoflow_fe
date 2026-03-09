@@ -94,7 +94,11 @@ const CategoryTool = ({setKeyword, setLimit, setOpenCreate}: Props) => {
       <div className="w-px h-6 bg-border" />
 
       {/* Add */}
-      <Button size="sm" className="h-9 gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90">
+      <Button 
+        size="sm" 
+        className="h-9 gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90"
+        onClick={() => setOpenCreate(true)}
+      >
         <Plus className="w-3.5 h-3.5" />
         Thêm mới
       </Button>

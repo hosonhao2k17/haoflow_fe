@@ -2,6 +2,7 @@
 
 import CategoryTool from "@/features/task-category/components/CategoryTool"
 import TaskCategoryCard from "@/features/task-category/components/TaskCategoryCard"
+import TaskCategoryCreate from "@/features/task-category/components/TaskCategoryCreate"
 import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface"
 import { useTaskCategories } from "@/features/task-category/task-category.hook"
 import { useState } from "react"
@@ -33,6 +34,10 @@ const Category = () => {
           ))
         }
       </div>
+      <TaskCategoryCreate 
+        open={openCreate}
+        setOpen={setOpenCreate}
+      />
     </div>
   )
 }
