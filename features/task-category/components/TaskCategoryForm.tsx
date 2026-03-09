@@ -1,11 +1,12 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { FolderOpen, Link2, Type, AlignLeft, Palette, ImagePlus, X } from "lucide-react"
 import { TaskCategoryFormValue } from "../interfaces/task-category-form.interface"
+import { useUpload } from "@/features/upload/upload.hook"
 
 
 const Field = ({
@@ -33,22 +34,31 @@ interface Props {
 
 
 const TaskCategoryForm = ({ taskCategory, onChange }: Props) => {
-  const fileRef = useRef<HTMLInputElement>(null)
+  const [file, setFile] = useState<File>();
 
   const set = (key: keyof TaskCategoryFormValue, value: string | undefined) =>
     onChange({ ...taskCategory, [key]: value })
 
+ 
+  const upload = useUpload()
+  const fileRef = useRef<HTMLInputElement>(null)  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const url = URL.createObjectURL(file)
-    set("icon", url)
+    const selected = e.target.files?.[0]
+    if (!selected) return
+    setFile(selected)
+    handleUpdate(selected) 
   }
 
-  const clearIcon = () => {
-    set("icon", undefined)
-    if (fileRef.current) fileRef.current.value = ""
+  const handleUpdate = (selectedFile: File) => { 
+    upload.mutate(selectedFile, {
+      onSuccess: ({ url }) => {
+        set("icon", url)
+      },
+    })
   }
+
+ 
 
   return (
     <div className="flex flex-col gap-5">
@@ -103,7 +113,11 @@ const TaskCategoryForm = ({ taskCategory, onChange }: Props) => {
             {taskCategory.icon && (
               <button
                 type="button"
-                onClick={clearIcon}
+                onClick={() => {
+                  set("icon", undefined)
+                  setFile(undefined)
+                  if (fileRef.current) fileRef.current.value = "" 
+                }}
                 className="w-full flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-destructive transition-colors duration-150"
               >
                 <X className="w-3 h-3" />

@@ -3,6 +3,8 @@ import TaskCategoryForm from "./TaskCategoryForm";
 import { TaskCategory } from "../interfaces/task-catgegory.interface";
 import { useEffect, useState } from "react";
 import { TaskCategoryFormValue } from "../interfaces/task-category-form.interface";
+import { useUpdateTaskCategory } from "../task-category.hook";
+import { toast } from "sonner";
 
 interface Props {
     open: boolean;
@@ -29,6 +31,18 @@ const TaskCategoryUpdate = ({ open, setOpen, taskCategory }: Props) => {
             icon: taskCategory.icon,
         });
     }, [taskCategory]);
+
+    const updateTaskCategory = useUpdateTaskCategory()
+
+    const handleUpdate = () => {
+        updateTaskCategory.mutate({id: taskCategory.id, dto: category}, {
+            onSuccess: () => {
+                toast.success("Cập nhật thành công")
+                setOpen(false)
+            }
+        } )
+        
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -86,6 +100,7 @@ const TaskCategoryUpdate = ({ open, setOpen, taskCategory }: Props) => {
                             Hủy
                         </button>
                         <button
+                            onClick={handleUpdate}
                             className="flex-[2] py-2.5 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:brightness-110 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
                         >
                             <svg
