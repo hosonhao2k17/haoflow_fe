@@ -4,10 +4,12 @@ import { TaskCategory } from "../interfaces/task-catgegory.interface"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface Props {
-    category: TaskCategory
+    category: TaskCategory;
+    setOpenUpdate: (open: boolean) => void;
+    setCategory: (val: TaskCategory) => void;
 }
 
-const TaskCategoryCard = ({category}: Props) => {
+const TaskCategoryCard = ({category, setOpenUpdate, setCategory}: Props) => {
 
 
     return (
@@ -57,16 +59,21 @@ const TaskCategoryCard = ({category}: Props) => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-36" align="end">
                             <DropdownMenuGroup>
-                                <DropdownMenuItem className="cursor-pointer text-sm">
+                                <DropdownMenuItem 
+                                    className="cursor-pointer text-sm"
+                                    onClick={() => {
+                                        setOpenUpdate(true)
+                                        setCategory(category)
+                                    }}
+                                >
                                     <Pencil className="w-3.5 h-3.5 mr-2" />
                                     Chỉnh sửa
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                className="text-destructive focus:text-destructive cursor-pointer text-sm"
-                            
+                                    className="text-destructive focus:text-destructive cursor-pointer text-sm"
                                 >
-                                <Trash2 className="w-3.5 h-3.5 mr-2" />
-                                Xóa
+                                    <Trash2 className="w-3.5 h-3.5 mr-2" />
+                                    Xóa
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             </DropdownMenuContent>

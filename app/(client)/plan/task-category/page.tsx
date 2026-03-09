@@ -3,6 +3,7 @@
 import CategoryTool from "@/features/task-category/components/CategoryTool"
 import TaskCategoryCard from "@/features/task-category/components/TaskCategoryCard"
 import TaskCategoryCreate from "@/features/task-category/components/TaskCategoryCreate"
+import TaskCategoryUpdate from "@/features/task-category/components/TaskCategoryUpdate"
 import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface"
 import { useTaskCategories } from "@/features/task-category/task-category.hook"
 import { useState } from "react"
@@ -11,6 +12,8 @@ const Category = () => {
   const [keyword, setKeyword] = useState<string>();
   const [limit, setLimit] = useState<number>(20);
   const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [category, setCategory] = useState<TaskCategory>();
   const { data } = useTaskCategories({
     keyword, 
     limit
@@ -29,7 +32,9 @@ const Category = () => {
         {
           data?.items.map((category: TaskCategory) => (
             <TaskCategoryCard 
+              setOpenUpdate={setOpenUpdate}
               category={category}
+              setCategory={setCategory}
             />
           ))
         }
@@ -37,6 +42,11 @@ const Category = () => {
       <TaskCategoryCreate 
         open={openCreate}
         setOpen={setOpenCreate}
+      />
+      <TaskCategoryUpdate 
+        taskCategory={category}
+        open={openUpdate}
+        setOpen={setOpenUpdate}
       />
     </div>
   )
