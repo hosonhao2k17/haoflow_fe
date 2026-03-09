@@ -13,8 +13,8 @@ import { TaskPriority, TaskStatus } from "@/common/constants/app.constant";
 import { Task } from "../interfaces/task.interface";
 import { useState } from "react";
 import { MultiTask } from "../interfaces/create-multi-task.interface";
-import { useTaskCategories } from "@/features/category/task-category.hook";
-import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface";
+import { useTaskCategories } from "@/features/task-category/task-category.hook";
+import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface";
 
 const PRIORITY_STYLE: Record<string, string> = {
     LOW:    "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",

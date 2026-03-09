@@ -19,8 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface"
-import { useTaskCategories } from "@/features/category/task-category.hook"
+import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface"
+import { useTaskCategories } from "@/features/task-category/task-category.hook"
 import TaskSelectPriority from "./TaskSelectPriority"
 import { TaskPriority } from "@/common/constants/app.constant"
 import { Button } from "@/components/ui/button"

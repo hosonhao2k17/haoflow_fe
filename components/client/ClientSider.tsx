@@ -45,7 +45,7 @@ const menus = [
       },
       {
         name: "Danh mục",
-        href: "/plan/category",
+        href: "/plan/task-category",
         icon: FolderKanban,
       },
       {

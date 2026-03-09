@@ -6,6 +6,7 @@ export interface TaskCategory extends Base {
     id: string;
     title: string;
     description?: string;
-    thumbnail?: string;
-
+    color?: string;
+    icon?: string;
+    totalTask: number
 }

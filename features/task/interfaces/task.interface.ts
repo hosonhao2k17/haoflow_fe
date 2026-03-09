@@ -1,5 +1,5 @@
 import { TaskPriority, TaskStatus } from "@/common/constants/app.constant";
-import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface";
+import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface";
 
 export interface Task {
   id: string

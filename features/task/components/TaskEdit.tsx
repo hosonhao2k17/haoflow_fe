@@ -4,7 +4,7 @@ import { Task } from "../interfaces/task.interface"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useTaskCategories } from "@/features/category/task-category.hook"
+import { useTaskCategories } from "@/features/task-category/task-category.hook"
 import {
   Select,
   SelectContent,
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { TaskCategory } from "@/features/category/interfaces/task-catgegory.interface"
+import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface"
 import { TaskPriority } from "@/common/constants/app.constant"
 import TaskSelectPriority from "./TaskSelectPriority"
 import { useState } from "react"
