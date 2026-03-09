@@ -15,7 +15,6 @@ export const getSocket = (): Socket => {
   }
 
   if (!socket) {
-    console.log(token)
     currentToken = token;
     socket = io(SOCKET_URL, {
       autoConnect: false,

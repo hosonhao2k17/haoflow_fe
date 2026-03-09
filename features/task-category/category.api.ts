@@ -26,3 +26,7 @@ export const updateTaskCategory = async (id: string, dto: UpdateTaskCategory) =>
     const res = await api.patch(`task-categories/${id}`,dto);
     return res.data
 }
+
+export const removeTaskCategory = async (id: string) => {
+    await api.delete(`task-categories/${id}`)
+}

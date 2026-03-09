@@ -35,6 +35,7 @@ api.interceptors.response.use(
 
       window.location.href = "/login"
     }
+    console.log(error?.response.data)
     return Promise.reject(error?.response.data)
   }
 )

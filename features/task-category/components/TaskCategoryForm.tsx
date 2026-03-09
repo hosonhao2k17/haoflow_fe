@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label"
 import { FolderOpen, Link2, Type, AlignLeft, Palette, ImagePlus, X } from "lucide-react"
 import { TaskCategoryFormValue } from "../interfaces/task-category-form.interface"
 
-// ─── Field wrapper ────────────────────────────────────────────────────────────
 
 const Field = ({
   label,
@@ -27,14 +26,11 @@ const Field = ({
   </div>
 )
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 interface Props {
   taskCategory: TaskCategoryFormValue
   onChange: (value: TaskCategoryFormValue) => void
 }
 
-// ─── TaskCategoryForm ─────────────────────────────────────────────────────────
 
 const TaskCategoryForm = ({ taskCategory, onChange }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null)

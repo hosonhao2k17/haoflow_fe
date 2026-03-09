@@ -6,11 +6,12 @@ import { useState } from "react"
 import { TaskCategoryFormValue } from "../interfaces/task-category-form.interface"
 import { FolderPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useCreateTaskCategory } from "../task-category.hook"
+import { toast } from "sonner"
 
 interface Props {
   open: boolean
   setOpen: (open: boolean) => void
-  onCreated?: (value: TaskCategoryFormValue) => void
 }
 
 const DEFAULT_STATE: TaskCategoryFormValue = {
@@ -20,11 +21,19 @@ const DEFAULT_STATE: TaskCategoryFormValue = {
   icon: undefined,
 }
 
-const TaskCategoryCreate = ({ open, setOpen, onCreated }: Props) => {
+const TaskCategoryCreate = ({ open, setOpen }: Props) => {
   const [category, setCategory] = useState<TaskCategoryFormValue>(DEFAULT_STATE)
 
+  const categoryCreate = useCreateTaskCategory();
 
-
+  const handleSubmit = () => {
+    categoryCreate.mutate(category, {
+      onSuccess: () => {
+        toast.success("Tạo thành công");
+        setOpen(false)
+      }
+    })
+  }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md p-0 overflow-hidden gap-0">
@@ -38,6 +47,7 @@ const TaskCategoryCreate = ({ open, setOpen, onCreated }: Props) => {
         </DialogHeader>
 
         <div className="px-6 py-5">
+          {/* form here  */}
           <TaskCategoryForm
             onChange={setCategory}
             taskCategory={category}
@@ -48,7 +58,9 @@ const TaskCategoryCreate = ({ open, setOpen, onCreated }: Props) => {
           <Button variant="outline" >
             Hủy
           </Button>
-          <Button>
+          <Button
+            onClick={handleSubmit}
+          >
             Thêm
           </Button>
         </DialogFooter>
