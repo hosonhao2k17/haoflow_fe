@@ -2,15 +2,18 @@ import { cn } from "@/lib/utils"
 import { ArrowUpRight, CheckSquare, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { TaskCategory } from "../interfaces/task-catgegory.interface"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useRemoveTaskCategory, useTaskCategories } from "../task-category.hook";
 
 interface Props {
     category: TaskCategory;
     setOpenUpdate: (open: boolean) => void;
     setCategory: (val: TaskCategory) => void;
+    setOpenRemove: (open: boolean) => void;
 }
 
-const TaskCategoryCard = ({category, setOpenUpdate, setCategory}: Props) => {
+const TaskCategoryCard = ({category, setOpenUpdate, setCategory, setOpenRemove}: Props) => {
 
+    
 
     return (
         <article
@@ -71,6 +74,10 @@ const TaskCategoryCard = ({category, setOpenUpdate, setCategory}: Props) => {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     className="text-destructive focus:text-destructive cursor-pointer text-sm"
+                                    onClick={() => {
+                                        setOpenRemove(true)
+                                        setCategory(category)
+                                    }}
                                 >
                                     <Trash2 className="w-3.5 h-3.5 mr-2" />
                                     Xóa

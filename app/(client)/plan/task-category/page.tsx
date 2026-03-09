@@ -1,24 +1,37 @@
 "use client"
 
+import AlertRemoveDialog from "@/components/common/AlertRemoveDialog"
 import CategoryTool from "@/features/task-category/components/CategoryTool"
 import TaskCategoryCard from "@/features/task-category/components/TaskCategoryCard"
 import TaskCategoryCreate from "@/features/task-category/components/TaskCategoryCreate"
 import TaskCategoryUpdate from "@/features/task-category/components/TaskCategoryUpdate"
 import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface"
-import { useTaskCategories } from "@/features/task-category/task-category.hook"
+import { useRemoveTaskCategory, useTaskCategories } from "@/features/task-category/task-category.hook"
 import { useState } from "react"
+import { toast } from "sonner"
 
 const Category = () => {
   const [keyword, setKeyword] = useState<string>();
   const [limit, setLimit] = useState<number>(20);
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [openRemove, setOpenRemove] = useState<boolean>(false);
+  
   const [category, setCategory] = useState<TaskCategory>();
   const { data } = useTaskCategories({
     keyword, 
     limit
   })
 
+  const removeTaskCategory = useRemoveTaskCategory();
+
+  const handleRemove = () => {
+    removeTaskCategory.mutate(category?.id as string, {
+      onSuccess: () => {
+        toast.success("Xóa thành công")
+      }
+    })
+  }
 
 
   return (
@@ -32,9 +45,11 @@ const Category = () => {
         {
           data?.items.map((category: TaskCategory) => (
             <TaskCategoryCard 
+              key={category.id}
               setOpenUpdate={setOpenUpdate}
               category={category}
               setCategory={setCategory}
+              setOpenRemove={setOpenRemove}
             />
           ))
         }
@@ -47,6 +62,12 @@ const Category = () => {
         taskCategory={category}
         open={openUpdate}
         setOpen={setOpenUpdate}
+      />
+      <AlertRemoveDialog 
+        openConfirm={openRemove}
+        setOpenConfirm={setOpenRemove}
+        title={category?.title as string}
+        handleRemove={handleRemove}
       />
     </div>
   )
