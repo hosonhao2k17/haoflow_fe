@@ -22,6 +22,8 @@ import {
   ArrowLeftRight,
   Captions,
   LandmarkIcon,
+  TrendingUpDown,
+  ChartNoAxesCombined,
 } from "lucide-react"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -49,10 +51,10 @@ const menus = [
         icon: FolderKanban,
       },
       {
-        name: "AI Phân Tích",
-        href: "/daily-plans/ai",
-        icon: Sparkles,
-      },
+        name: "Tổng quan",
+        href: "/plan/overview",
+        icon: ChartNoAxesCombined
+      }
     ],
   },
   {
@@ -79,7 +81,12 @@ const menus = [
         name: "Ngân sách",
         href: "net-worth-tracking",
         icon: LandmarkIcon
-      }
+      }, 
+      {
+        name: "P&L",
+        href: '/finance/profit-lost',
+        icon: TrendingUpDown
+      },
     ]
   },
   {
