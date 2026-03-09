@@ -41,7 +41,7 @@ const TaskCategoryCard = ({category, setOpenUpdate, setCategory, setOpenRemove}:
                             style={category.color ? { boxShadow: `0 0 0 2px ${category.color}40` } : undefined}
                         >
                             <img
-                                src={category.icon}
+                                src={category.icon ?? 'https://t4.ftcdn.net/jpg/03/85/95/63/360_F_385956366_Zih7xDcSLqDxiJRYUfG5ZHNoFCSLMRjm.jpg'}
                                 alt={category.title}
                                 className="w-7 h-7 object-contain"
                             />
