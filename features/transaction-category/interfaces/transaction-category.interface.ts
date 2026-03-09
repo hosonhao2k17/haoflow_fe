@@ -1,7 +1,8 @@
 import { TransactionCategoryType } from "@/common/constants/finance.constant";
+import { Base } from "@/common/interfaces/base.interface";
 
 
-export interface TransactionCategory {
+export interface TransactionCategory extends Base {
 
     id: string;
     title: string;
