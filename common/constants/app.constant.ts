@@ -56,3 +56,9 @@ export enum TransactionType {
     EXPENSE = 'expense',
     TRANSFER = 'transfer'
 }
+
+export enum TransactionSource {
+    MANUAL = 'manual',
+    OCR = 'ocr',
+    IMPORT = 'import'
+}
