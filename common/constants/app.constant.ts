@@ -49,3 +49,10 @@ export enum CruMode {
     READ = 'read',
     UPDATE = 'update'
 }
+
+
+export enum TransactionType {
+    INCOME = 'income',
+    EXPENSE = 'expense',
+    TRANSFER = 'transfer'
+}
