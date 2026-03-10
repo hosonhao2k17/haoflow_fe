@@ -10,6 +10,12 @@ import {
 import TransactionCategoryForm from "./TransactionCategoryForm";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { TransactionCategoryFormValue } from "../interfaces/transaction-category-form.interface";
+import { TransactionCategoryType } from "@/common/constants/finance.constant";
+import { useCreateTransactionCategory } from "../transaction-category.hook";
+import { toast } from "sonner";
+import { createTransactionCategory } from "../transaction-category.api";
 
 
 interface Props {
@@ -18,6 +24,24 @@ interface Props {
 }
 
 const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
+
+  const defaultState: TransactionCategoryFormValue = {
+    title: "",
+    type: TransactionCategoryType.EXPENSE
+  }
+  const [category, setCategory] = useState<TransactionCategoryFormValue>(defaultState);
+
+  const createTransactionCategory = useCreateTransactionCategory();
+  const handleCreate = () => {
+    createTransactionCategory.mutate(category,{
+      onSuccess: () => {
+        toast.success("Thêm trạng thái thành công")
+        setOpen(false)
+      }
+    })
+
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[480px] p-0 gap-0 overflow-hidden rounded-2xl border border-border/50 shadow-2xl">
@@ -36,7 +60,11 @@ const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
           </DialogDescription>
         </DialogHeader>
 
-        <TransactionCategoryForm />
+        <TransactionCategoryForm 
+          onChange={setCategory}
+          category={category}
+          isPending={createTransactionCategory.isPending}
+        />
         <Separator className="opacity-50" />
         <DialogFooter >
           <div className="flex gap-3 m-3">
@@ -48,6 +76,7 @@ const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
               Hủy
             </Button>
             <Button
+              onClick={handleCreate}
               type="submit"
               className="flex-[2] rounded-xl h-10 bg-primary text-white font-semibold shadow-lg shadow-violet-500/25 transition-all hover:shadow-violet-500/40"
             >

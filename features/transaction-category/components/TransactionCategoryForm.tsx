@@ -1,7 +1,5 @@
-// TransactionCategoryForm.jsx
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Select,
@@ -14,11 +12,16 @@ import { TrendingDown, TrendingUp, FolderTree, Tag, Palette, Smile } from "lucid
 import IconPicker from "@/components/common/IconPicker";
 import ColorPicker from "@/components/common/ColorPicker";
 import { ElementType, ReactNode } from "react";
+import { TransactionCategoryFormValue } from "../interfaces/transaction-category-form.interface";
+import { TransactionCategoryType } from "@/common/constants/finance.constant";
+import { cn } from "@/lib/utils";
+import { useTransactionCategories } from "../transaction-category.hook";
+import { TransactionCategory } from "../interfaces/transaction-category.interface";
 
 interface FieldProps {
-  icon: ElementType,
+  icon: ElementType;
   label: string;
-  children: ReactNode
+  children: ReactNode;
 }
 
 function FieldSection({ icon: Icon, label, children }: FieldProps) {
@@ -35,33 +38,56 @@ function FieldSection({ icon: Icon, label, children }: FieldProps) {
   );
 }
 
-const TransactionCategoryForm = () => {
+interface Props {
+  onChange: (value: TransactionCategoryFormValue) => void;
+  category: TransactionCategoryFormValue;
+  isPending?: boolean
+}
 
-  
+const TransactionCategoryForm = ({ onChange, category, isPending = false }: Props) => {
+  const update = (partial: Partial<TransactionCategoryFormValue>) =>
+    onChange({ ...category, ...partial });
 
+  const {data} = useTransactionCategories()
 
   return (
     <div className="px-6 py-5 flex flex-col gap-5">
 
+      {/* Title */}
       <FieldSection icon={Tag} label="Tiêu đề">
         <Input
+          value={category.title ?? ""}
+          onChange={(e) => update({ title: e.target.value })}
           placeholder="vd: Đồ ăn, lương, đồ dùng cá nhân..."
-          className="h-10 rounded-xl bg-muted/50 border-border/60 focus-visible:primary focus-visible:border-primary placeholder:text-muted-foreground/40"
+          className="h-10 rounded-xl bg-muted/50 border-border/60 focus-visible:ring-primary focus-visible:border-primary placeholder:text-muted-foreground/40"
         />
       </FieldSection>
 
+      {/* Type */}
       <FieldSection icon={TrendingDown} label="Loại nào">
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
-            className="flex items-center justify-center gap-2 h-10 rounded-xl border border-rose-500/40 bg-rose-500/8 text-rose-500 text-sm font-medium transition-all hover:bg-rose-500/15 ring-2 ring-rose-500/20"
+            onClick={() => update({ type: TransactionCategoryType.EXPENSE })}
+            className={cn(
+              "flex items-center justify-center gap-2 h-10 rounded-xl border text-sm font-medium transition-all",
+              category.type === TransactionCategoryType.EXPENSE
+                ? "border-rose-500/40 bg-rose-500/10 text-rose-500 ring-2 ring-rose-500/20"
+                : "border-border/60 bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
+            )}
           >
             <TrendingDown className="w-4 h-4" />
             Chi phí
           </button>
           <button
             type="button"
-            className="flex items-center justify-center gap-2 h-10 rounded-xl border border-border/60 bg-muted/40 text-muted-foreground text-sm font-medium transition-all hover:bg-muted hover:text-foreground"
+            onClick={() => update({ type: TransactionCategoryType.INCOME })}
+            className={cn(
+              "flex items-center justify-center gap-2 h-10 rounded-xl border text-sm font-medium transition-all",
+              category.type === TransactionCategoryType.INCOME
+                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-500 ring-2 ring-emerald-500/20"
+                : "border-border/60 bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
+            )}
           >
             <TrendingUp className="w-4 h-4" />
             Thu nhập
@@ -71,31 +97,43 @@ const TransactionCategoryForm = () => {
 
       {/* Parent Category */}
       <FieldSection icon={FolderTree} label="Danh mục cha">
-        <Select>
-          <SelectTrigger className="h-10 rounded-xl bg-muted/50 border-border/60 focus-visible:primary focus-visible:border-primary text-sm">
-            <SelectValue placeholder="None — top-level category" />
+        <Select
+          value={category.parentId ?? ""}
+          onValueChange={(val) => update({ parentId: val })}
+        >
+          <SelectTrigger className="h-10 rounded-xl bg-muted/50 border-border/60 text-sm">
+            <SelectValue placeholder="Chọn một danh mục gốc" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="none" className="text-muted-foreground italic">
-              None — top-level category
-            </SelectItem>
+            {
+              data?.items.map((cat: TransactionCategory) => (
+                <SelectItem key={cat.id} value={cat.id} className="text-muted-foreground italic">
+                  {cat.title}
+                </SelectItem>
+              ))
+            }
           </SelectContent>
         </Select>
       </FieldSection>
 
       <Separator className="opacity-50" />
 
-      {/* Icon Picker — slot for custom component */}
+      {/* Icon */}
       <FieldSection icon={Smile} label="Icon">
-        <div className="min-h-[44px] rounded-xl border border-dashed border-border/60 bg-muted/30 flex items-center justify-center text-xs text-muted-foreground/50 italic">
-          <IconPicker />
-        </div>
+        <IconPicker
+          value={category.icon ?? ""}
+          onChange={(icon) => update({ icon })}
+        />
       </FieldSection>
 
       {/* Color */}
       <FieldSection icon={Palette} label="Màu sắc">
-        <ColorPicker />
+        <ColorPicker
+          value={category.color ?? "#8b5cf6"}
+          onChange={(color) => update({ color })}
+        />
       </FieldSection>
+
     </div>
   );
 };
