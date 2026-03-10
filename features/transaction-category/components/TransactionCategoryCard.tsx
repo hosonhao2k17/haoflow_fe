@@ -9,6 +9,7 @@ interface Props {
   setCategory: (category: TransactionCategory) => void;
   setOpenCreate: (open: boolean) => void;
   setParentId: (id: string) => void;
+  setOpenRemove: (open: boolean) => void;
 }
 
 const CHILD_LIMIT = 3;
@@ -19,6 +20,7 @@ const TransactionCategoryCard = ({
   setCategory,
   setOpenCreate,
   setParentId,
+  setOpenRemove
 }: Props) => {
   const hasMore = cat.childrens.length > CHILD_LIMIT;
   const visibleChildren = cat.childrens.slice(0, CHILD_LIMIT);
@@ -63,7 +65,9 @@ const TransactionCategoryCard = ({
           >
             <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
           </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted border border-border hover:bg-destructive/10 hover:border-destructive/30 transition-colors">
+          <button 
+            onClick={() => { setOpenRemove(true); setCategory(cat); }}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted border border-border hover:bg-destructive/10 hover:border-destructive/30 transition-colors">
             <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
           </button>
         </div>

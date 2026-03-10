@@ -1,12 +1,14 @@
 "use client"
 
 import { TransactionCategoryType } from "@/common/constants/finance.constant";
+import AlertRemoveDialog from "@/components/common/AlertRemoveDialog";
 import TransactionCategoryCard from "@/features/transaction-category/components/TransactionCategoryCard";
 import TransactionCategoryCreate from "@/features/transaction-category/components/TransactionCategoryCreate";
 import TransactionCategoryUpdate from "@/features/transaction-category/components/TransactionCategoryUpdate";
 import { TransactionCategory } from "@/features/transaction-category/interfaces/transaction-category.interface";
-import { useTransactionCategories } from "@/features/transaction-category/transaction-category.hook";
+import { useDeleteTransactionCategory, useTransactionCategories } from "@/features/transaction-category/transaction-category.hook";
 import { useState } from "react";
+import { toast } from "sonner";
 
 
 
@@ -17,8 +19,20 @@ const TransactionCategoryPage = () => {
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
   const [category, setCategory] = useState<TransactionCategory>();
   const [parentId, setParentId] = useState<string>();
+  const [openRemove, setOpenRemove] = useState<boolean>(false);
   const {data} = useTransactionCategories()
 
+  const removeTransactionCategory = useDeleteTransactionCategory()
+  const handleRemove = () => {
+    if(!category) {
+      return;
+    }
+    removeTransactionCategory.mutate(category.id, {
+      onSuccess: () => {
+        toast.success("Xóa thành công")
+      }
+    })
+  }
   return (
   <div className="min-h-screen bg-background text-foreground px-8 py-8">
 
@@ -74,6 +88,7 @@ const TransactionCategoryPage = () => {
           setCategory={setCategory}
           setOpenCreate={setOpenCreate}
           setParentId={setParentId}
+          setOpenRemove={setOpenRemove}
       />)}
     </div>
 
@@ -87,6 +102,12 @@ const TransactionCategoryPage = () => {
       open={openUpdate}
       setOpen={setOpenUpdate}
       transactionCategory={category}
+    />
+    <AlertRemoveDialog 
+      title="Xóa bỏ danh mục"
+      openConfirm={openRemove}
+      setOpenConfirm={setOpenRemove}
+      handleRemove={handleRemove}
     />
   </div>
 )
