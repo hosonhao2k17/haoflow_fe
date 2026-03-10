@@ -2,14 +2,17 @@
 
 import { TransactionCategoryType } from "@/common/constants/finance.constant";
 import TransactionCategoryCard from "@/features/transaction-category/components/TransactionCategoryCard";
+import TransactionCategoryCreate from "@/features/transaction-category/components/TransactionCategoryCreate";
 import { TransactionCategory } from "@/features/transaction-category/interfaces/transaction-category.interface";
 import { useTransactionCategories } from "@/features/transaction-category/transaction-category.hook";
+import { useState } from "react";
 
 
 
 
 const TransactionCategoryPage = () => {
 
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
   const {data} = useTransactionCategories()
 
   return (
@@ -25,11 +28,14 @@ const TransactionCategoryPage = () => {
           Danh mục<br />Giao dịch
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5 font-light">
-          Organize your income & expenses
+          Danh mục giao dịch 
         </p>
       </div>
-      <button className="flex items-center gap-2 bg-primary text-primary-foreground rounded-2xl px-5 py-3 text-sm font-medium hover:-translate-y-0.5 hover:opacity-90 transition-all mt-2">
-        <span className="text-lg leading-none">＋</span> New Category
+      <button 
+        onClick={() => setOpenCreate(true)}
+        className="flex items-center gap-2 bg-primary text-primary-foreground rounded-2xl px-5 py-3 text-sm font-medium hover:-translate-y-0.5 hover:opacity-90 transition-all mt-2"
+      >
+        <span className="text-lg leading-none">＋</span> Thêm danh mục
       </button>
     </div>
 
@@ -50,7 +56,7 @@ const TransactionCategoryPage = () => {
       ))}
       <div className="ml-auto flex items-center gap-2.5 bg-muted border border-border rounded-xl px-3.5 py-2 text-muted-foreground text-[13px]">
         <span>🔍</span>
-        <span>Search categories…</span>
+        <span>Tìm danh mục</span>
       </div>
     </div>
 
@@ -58,6 +64,12 @@ const TransactionCategoryPage = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {data?.items.map((cat: TransactionCategory) => <TransactionCategoryCard key={cat.id} cat={cat} />)}
     </div>
+
+    {/* dialog  */}
+    <TransactionCategoryCreate 
+      open={openCreate}
+      setOpen={setOpenCreate}
+    />
   </div>
 )
 }
