@@ -41,10 +41,11 @@ function FieldSection({ icon: Icon, label, children }: FieldProps) {
 interface Props {
   onChange: (value: TransactionCategoryFormValue) => void;
   category: TransactionCategoryFormValue;
-  isPending?: boolean
+  isPending?: boolean;
+  isCreateParent?: boolean;
 }
 
-const TransactionCategoryForm = ({ onChange, category, isPending = false }: Props) => {
+const TransactionCategoryForm = ({ onChange, category, isPending = false, isCreateParent = false }: Props) => {
   const update = (partial: Partial<TransactionCategoryFormValue>) =>
     onChange({ ...category, ...partial });
 
@@ -98,6 +99,7 @@ const TransactionCategoryForm = ({ onChange, category, isPending = false }: Prop
       {/* Parent Category */}
       <FieldSection icon={FolderTree} label="Danh mục cha">
         <Select
+          disabled={isCreateParent}
           value={category.parentId ?? ""}
           onValueChange={(val) => update({ parentId: val })}
         >

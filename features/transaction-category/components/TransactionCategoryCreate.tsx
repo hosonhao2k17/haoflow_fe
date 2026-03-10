@@ -10,26 +10,31 @@ import {
 import TransactionCategoryForm from "./TransactionCategoryForm";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TransactionCategoryFormValue } from "../interfaces/transaction-category-form.interface";
 import { TransactionCategoryType } from "@/common/constants/finance.constant";
 import { useCreateTransactionCategory } from "../transaction-category.hook";
 import { toast } from "sonner";
 import { createTransactionCategory } from "../transaction-category.api";
+import { Plus } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 
 
 interface Props {
     open: boolean;
     setOpen: (o: boolean) => void;
+    parentId?: string;
 }
 
-const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
+const TransactionCategoryCreate = ({ open, setOpen, parentId }: Props) => {
 
   const defaultState: TransactionCategoryFormValue = {
     title: "",
-    type: TransactionCategoryType.EXPENSE
+    type: TransactionCategoryType.EXPENSE,
+    parentId
   }
   const [category, setCategory] = useState<TransactionCategoryFormValue>(defaultState);
+  const [isCreateParent, setIsCreateParent] = useState<boolean>(false)
 
   const createTransactionCategory = useCreateTransactionCategory();
   const handleCreate = () => {
@@ -39,8 +44,18 @@ const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
         setOpen(false)
       }
     })
-
   }
+
+  useEffect(() => {
+    if(parentId) {
+      setCategory({
+        title: "",
+        type: TransactionCategoryType.EXPENSE,
+        parentId
+      })
+      setIsCreateParent(true)
+    }
+  },[parentId, isCreateParent])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -64,6 +79,7 @@ const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
           onChange={setCategory}
           category={category}
           isPending={createTransactionCategory.isPending}
+          isCreateParent={isCreateParent}
         />
         <Separator className="opacity-50" />
         <DialogFooter >
@@ -80,6 +96,14 @@ const TransactionCategoryCreate = ({ open, setOpen }: Props) => {
               type="submit"
               className="flex-[2] rounded-xl h-10 bg-primary text-white font-semibold shadow-lg shadow-violet-500/25 transition-all hover:shadow-violet-500/40"
             >
+              {
+                createTransactionCategory.isPending
+                ?
+                <Spinner />
+                :           
+                <Plus />
+              }
+
               Thêm
             </Button>
           </div>

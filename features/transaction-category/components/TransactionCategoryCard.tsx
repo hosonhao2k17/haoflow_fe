@@ -1,7 +1,20 @@
 import { TransactionCategoryType } from "@/common/constants/finance.constant";
 import { TransactionCategory } from "../interfaces/transaction-category.interface";
 
-const TransactionCategoryCard = ({ cat }: { cat: TransactionCategory }) => {
+
+
+interface Props {
+  cat: TransactionCategory;
+  setOpenUpdate: (open: boolean) => void;
+  setCategory: (category: TransactionCategory) => void;
+  setOpenCreate: (open: boolean) => void;
+  setParentId: (id: string) => void;
+}
+
+const TransactionCategoryCard = ({ cat, setOpenUpdate, setCategory, setOpenCreate, setParentId }: Props) => {
+
+
+
   return (
     <div className="group rounded-2xl overflow-hidden bg-card text-card-foreground border border-border hover:-translate-y-1 hover:shadow-2xl hover:border-primary/30 transition-all duration-300 cursor-pointer">
       {/* Header */}
@@ -21,11 +34,20 @@ const TransactionCategoryCard = ({ cat }: { cat: TransactionCategory }) => {
     </span>
         </div>
         <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          {["✏️", "🗑"].map((icon) => (
-            <button key={icon} className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted border border-border hover:bg-accent text-sm transition-colors">
-              {icon}
+          
+            <button 
+              onClick={() => {
+                setOpenUpdate(true)
+                setCategory(cat)
+              }}
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted border border-border hover:bg-accent text-sm transition-colors"
+            >
+              ✏️
             </button>
-          ))}
+            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted border border-border hover:bg-accent text-sm transition-colors">
+             🗑
+            </button>
+       
         </div>
       </div>
 
@@ -40,15 +62,21 @@ const TransactionCategoryCard = ({ cat }: { cat: TransactionCategory }) => {
             <span className="w-1.5 h-1.5 rounded-full opacity-70" style={{ background: child.color }} />
         </div>
         ))}
-        <button className="mt-1 w-full rounded-xl border border-dashed border-border py-2 text-xs text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors">
-          + Add subcategory
+        <button 
+          className="mt-1 w-full rounded-xl border border-dashed border-border py-2 text-xs text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors"
+          onClick={() => {
+            setOpenCreate(true)
+            setParentId(cat.id)
+          }}
+        >
+          + Thêm danh mục con
         </button>
       </div>
 
       {/* Footer */}
       <div className="flex items-center gap-2 px-5 pb-4 pt-1">
         <span className="w-2 h-2 rounded-full" style={{ background: cat.color }} />
-        <span className="text-xs text-muted-foreground">{cat.childrens.length} subcategories</span>
+        <span className="text-xs text-muted-foreground">{cat.childrens.length} Danh mục con</span>
       </div>
     </div>
   );

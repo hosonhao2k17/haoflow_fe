@@ -3,6 +3,7 @@
 import { TransactionCategoryType } from "@/common/constants/finance.constant";
 import TransactionCategoryCard from "@/features/transaction-category/components/TransactionCategoryCard";
 import TransactionCategoryCreate from "@/features/transaction-category/components/TransactionCategoryCreate";
+import TransactionCategoryUpdate from "@/features/transaction-category/components/TransactionCategoryUpdate";
 import { TransactionCategory } from "@/features/transaction-category/interfaces/transaction-category.interface";
 import { useTransactionCategories } from "@/features/transaction-category/transaction-category.hook";
 import { useState } from "react";
@@ -13,6 +14,9 @@ import { useState } from "react";
 const TransactionCategoryPage = () => {
 
   const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [category, setCategory] = useState<TransactionCategory>();
+  const [parentId, setParentId] = useState<string>();
   const {data} = useTransactionCategories()
 
   return (
@@ -62,13 +66,27 @@ const TransactionCategoryPage = () => {
 
     {/* Grid */}
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      {data?.items.map((cat: TransactionCategory) => <TransactionCategoryCard key={cat.id} cat={cat} />)}
+      {data?.items.map((cat: TransactionCategory) => 
+        <TransactionCategoryCard 
+          key={cat.id} 
+          cat={cat} 
+          setOpenUpdate={setOpenUpdate}
+          setCategory={setCategory}
+          setOpenCreate={setOpenCreate}
+          setParentId={setParentId}
+      />)}
     </div>
 
     {/* dialog  */}
     <TransactionCategoryCreate 
       open={openCreate}
       setOpen={setOpenCreate}
+      parentId={parentId}
+    />
+    <TransactionCategoryUpdate 
+      open={openUpdate}
+      setOpen={setOpenUpdate}
+      transactionCategory={category}
     />
   </div>
 )
