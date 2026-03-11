@@ -20,6 +20,7 @@ import TransactionDateRow from "@/features/transaction/components/TransactionDat
 import { useTransactions } from "@/features/transaction/transaction.hook";
 import { useState, useMemo, Fragment } from "react";
 import { format } from "date-fns";
+import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/TransactionRowSkeleton";
 
 
 interface AmountRange {
@@ -43,7 +44,7 @@ const TransactionPage = () => {
   const [accountId, setAccountId]     = useState<string>();
   const [rangeAmount, setRangeAmount] = useState<AmountRange>({});
 
-  const { data } = useTransactions({
+  const { data, isLoading } = useTransactions({
     merchant,
     type,
     source,
@@ -100,18 +101,26 @@ const TransactionPage = () => {
             </TableHeader>
 
             <TableBody>
-              {isEmpty ? (
-                <TransactionEmptyRow />
-              ) : (
-                Object.entries(grouped).map(([dateKey, txs]) => (
-                  <Fragment key={dateKey}>
-                    <TransactionDateRow date={new Date(dateKey)} count={txs.length} />
-                    {txs.map((tx) => (
-                      <TransactionRow key={tx.id} transaction={tx} />
-                    ))}
-                  </Fragment>
+              {
+                isLoading 
+                ? 
+                Array.from({length: 8}).map((item, i) => (
+                  <TransactionRowSkeleton key={i}/>
                 ))
-              )}
+                :
+                isEmpty ? (
+                  <TransactionEmptyRow />
+                ) : (
+                  Object.entries(grouped).map(([dateKey, txs]) => (
+                    <Fragment key={dateKey}>
+                      <TransactionDateRow date={new Date(dateKey)} count={txs.length} />
+                      {txs.map((tx) => (
+                        <TransactionRow key={tx.id} transaction={tx} />
+                      ))}
+                    </Fragment>
+                  ))
+                )
+              }
             </TableBody>
           </Table>
 
