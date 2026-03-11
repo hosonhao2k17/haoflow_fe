@@ -9,6 +9,9 @@ import { Search, SlidersHorizontal, CalendarIcon, ChevronLeft, ChevronRight, Che
 import { useState } from "react"
 import { format } from "date-fns"
 import { vi } from "date-fns/locale"
+import { useAccounts } from "@/features/account/account.hook"
+import { useTransactionCategories } from "@/features/transaction-category/transaction-category.hook"
+import { TransactionCategory } from "@/features/transaction-category/interfaces/transaction-category.interface"
 
 const TRANSACTION_SOURCE_LABELS: Record<TransactionSource, string> = {
   [TransactionSource.MANUAL]: "Thủ công",
@@ -22,10 +25,32 @@ const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
   [TransactionType.TRANSFER]: "Chuyển khoản",
 }
 
-const TransactionFilter = () => {
+interface Props {
+  setMerchant: (val: string | undefined) => void; 
+  setAccountId: (val: string | undefined) => void;
+  setType: (type: TransactionType | undefined) => void;
+  setSource: (source: TransactionSource | undefined) => void;
+  source: TransactionSource | undefined;
+  type: TransactionType | undefined;
+  setRangeAmount: (range: {minAmount?: number | undefined, maxAmount?: number | undefined}) => void;
+  rangeAmount: {minAmount?: number | undefined, maxAmount?: number | undefined}
+}
+
+
+const TransactionFilter = ({
+  setMerchant,
+  setAccountId,
+  setSource,
+  setType,
+  source,
+  type,
+  setRangeAmount,
+  rangeAmount
+}: Props) => {
+
+  const {data: account} = useAccounts({});
+  const {data: category} = useTransactionCategories();
   const [expanded, setExpanded] = useState(false)
-  const [activeSource, setActiveSource] = useState<TransactionSource | null>(null)
-  const [activeType, setActiveType] = useState<TransactionType | null>(null)
   const [dateFrom, setDateFrom] = useState<Date | null>(null)
   const [dateTo, setDateTo] = useState<Date | null>(null)
 
@@ -37,19 +62,34 @@ const TransactionFilter = () => {
         <div className="relative w-[220px] shrink-0">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input
+            onChange={(e) => setMerchant(e.target.value ? e.target.value : undefined)}
             placeholder="Tìm giao dịch, merchant..."
             className="pl-8 h-9 rounded-xl border-border/60 bg-white text-sm shadow-none"
           />
         </div>
 
         {/* Account select */}
-        <Select defaultValue="ALL">
+        <Select defaultValue="ALL" onValueChange={(val) => val === "ALL" ? setAccountId(undefined) : setAccountId(val)}>
           <SelectTrigger className="w-[185px] h-9 rounded-xl border-border/60 bg-white text-sm shadow-none gap-1.5 shrink-0">
             <SlidersHorizontal size={13} className="text-muted-foreground shrink-0" />
             <SelectValue placeholder="Tài khoản" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
             <SelectItem value="ALL">Tất cả tài khoản</SelectItem>
+            {
+              account?.items.map((item) => (
+                <SelectItem  
+                  key={item.id} 
+                  value={item.id}
+                  className="font-bold text-white"
+                  style={{
+                    backgroundColor: item.color ?? "#03002e"
+                  }}
+                >
+                  {item.title}
+                </SelectItem>
+              ))
+            }
           </SelectContent>
         </Select>
 
@@ -140,28 +180,28 @@ const TransactionFilter = () => {
           {/* Source filter */}
           <div className="flex items-center gap-1 p-1 bg-muted rounded-xl border border-border/40 shrink-0">
             <button
-              onClick={() => setActiveSource(null)}
+              onClick={() => setSource(undefined)}
               className={cn(
                 "px-3 h-7 rounded-lg text-xs font-semibold transition-all",
-                activeSource === null
+                source === undefined
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-white/80"
               )}
             >
               Tất cả
             </button>
-            {Object.values(TransactionSource).map((source) => (
+            {Object.values(TransactionSource).map((item) => (
               <button
-                key={source}
-                onClick={() => setActiveSource(activeSource === source ? null : source)}
+                key={item}
+                onClick={() => setSource(item)}
                 className={cn(
                   "px-3 h-7 rounded-lg text-xs font-semibold transition-all",
-                  activeSource === source
+                  source === item
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/80"
                 )}
               >
-                {TRANSACTION_SOURCE_LABELS[source]}
+                {TRANSACTION_SOURCE_LABELS[item]}
               </button>
             ))}
           </div>
@@ -169,28 +209,28 @@ const TransactionFilter = () => {
           {/* Type filter */}
           <div className="flex items-center gap-1 p-1 bg-muted rounded-xl border border-border/40 shrink-0">
             <button
-              onClick={() => setActiveType(null)}
+              onClick={() => setType(undefined)}
               className={cn(
                 "px-3 h-7 rounded-lg text-xs font-semibold transition-all",
-                activeType === null
+                type === undefined
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-white/80"
               )}
             >
               Tất cả
             </button>
-            {Object.values(TransactionType).map((type) => (
+            {Object.values(TransactionType).map((item) => (
               <button
-                key={type}
-                onClick={() => setActiveType(activeType === type ? null : type)}
+                key={item}
+                onClick={() => setType(item)}
                 className={cn(
                   "px-3 h-7 rounded-lg text-xs font-semibold transition-all",
-                  activeType === type
+                  type === item
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/80"
                 )}
               >
-                {TRANSACTION_TYPE_LABELS[type]}
+                {TRANSACTION_TYPE_LABELS[item]}
               </button>
             ))}
           </div>
@@ -203,13 +243,11 @@ const TransactionFilter = () => {
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="ALL">Tất cả danh mục</SelectItem>
-              <SelectItem value="food">Ăn uống</SelectItem>
-              <SelectItem value="transport">Di chuyển</SelectItem>
-              <SelectItem value="shopping">Mua sắm</SelectItem>
-              <SelectItem value="entertainment">Giải trí</SelectItem>
-              <SelectItem value="health">Sức khỏe</SelectItem>
-              <SelectItem value="education">Giáo dục</SelectItem>
-              <SelectItem value="other">Khác</SelectItem>
+              {
+                category?.items.map((item: TransactionCategory) => (
+                  <SelectItem value={item.id}>{item.title}</SelectItem>
+                ))
+              }
             </SelectContent>
           </Select>
 
@@ -230,6 +268,8 @@ const TransactionFilter = () => {
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">Tối thiểu</label>
                   <Input
+                    value={rangeAmount.minAmount}
+                    onChange={(e) => setRangeAmount({...rangeAmount, minAmount: Number(e.target.value)})}
                     type="number"
                     placeholder="0"
                     className="h-8 rounded-lg text-sm shadow-none border-border/60"
@@ -238,6 +278,8 @@ const TransactionFilter = () => {
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">Tối đa</label>
                   <Input
+                    value={rangeAmount.maxAmount}
+                    onChange={(e) => setRangeAmount({...rangeAmount, maxAmount: Number(e.target.value)})}
                     type="number"
                     placeholder="Không giới hạn"
                     className="h-8 rounded-lg text-sm shadow-none border-border/60"

@@ -65,10 +65,19 @@ const TransactionPage = () => {
   const [merchant, setMerchant] = useState<string>();
   const [type, setType] = useState<TransactionType>()
   const [source, setSource] = useState<TransactionSource>();
+  const [rangeAmount, setRangeAmount] = useState<{
+    minAmount?: number,
+    maxAmount?: number
+  }>({});
+  console.log(rangeAmount)
+  const [accountId, setAccountId] = useState<string>();
   const {data} = useTransactions({
     merchant,
     type,
-    source
+    source,
+    accountId,
+    minAmount: rangeAmount?.minAmount,
+    maxAmount: rangeAmount?.maxAmount
   });
 
 
@@ -90,6 +99,14 @@ const TransactionPage = () => {
         </div>
         {/* ── Filters ── */}
         <TransactionFilter 
+          setMerchant={setMerchant}
+          setAccountId={setAccountId}
+          setType={setType}
+          setSource={setSource}
+          source={source}
+          type={type}
+          setRangeAmount={setRangeAmount}
+          rangeAmount={rangeAmount}
         />
         {/* ── Table ── */}
         <Card className="shadow-none border border-border/60 rounded-2xl overflow-hidden">

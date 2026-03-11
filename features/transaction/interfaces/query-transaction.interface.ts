@@ -10,4 +10,7 @@ export interface QueryTransaction extends CursorPaginationDto {
     merchant?: string;
     transactionDate?: Date;
     source?: TransactionSource;
+    accountId?: string;
+    categoryId?: string;
+    
 }
