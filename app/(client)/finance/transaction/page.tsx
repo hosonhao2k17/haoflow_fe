@@ -1,104 +1,80 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ArrowDownLeft,
-  ArrowUpRight,
-  ArrowLeftRight,
-  Search,
-  RefreshCw,
-  TrendingUp,
-  TrendingDown,
-  Wallet,
-  CreditCard,
-  Building2,
-  ReceiptText,
-  SlidersHorizontal,
-  Plus,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
+import { Wallet, TrendingUp, TrendingDown, CreditCard } from "lucide-react";
 import { Transaction } from "@/features/transaction/interfaces/transaction.interface";
-import { Account } from "@/features/account/interfaces/account.interface";
-import { AccountType } from "@/common/constants/finance.constant";
 import { TransactionSource, TransactionType } from "@/common/constants/app.constant";
 import TransactionStatCard from "@/features/transaction/components/TransactionStatCard";
 import TransactionHeader from "@/features/transaction/components/TransactionHeader";
 import TransactionFilter from "@/features/transaction/components/TransactionFilter";
 import TransactionEmptyRow from "@/features/transaction/components/TransactionEmptyRow";
-import { useTransactions } from "@/features/transaction/transaction.hook";
 import TransactionRow from "@/features/transaction/components/TransactionRow";
-import { useState } from "react";
+import TransactionDateRow from "@/features/transaction/components/TransactionDateRow";
+import { useTransactions } from "@/features/transaction/transaction.hook";
+import { useState, useMemo, Fragment } from "react";
+import { format } from "date-fns";
 
 
-const labelDate = (d: string) => {
-  const today = new Date().toISOString().slice(0, 10);
-  const yest  = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-  if (d === today) return "Hôm nay";
-  if (d === yest)  return "Hôm qua";
-  return new Date(d).toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "long" });
-};
+interface AmountRange {
+  minAmount?: number;
+  maxAmount?: number;
+}
 
 
+const groupByDate = (items: Transaction[]): Record<string, Transaction[]> =>
+  items.reduce<Record<string, Transaction[]>>((acc, tx) => {
+    const key = format(new Date(tx.transactionDate), "yyyy-MM-dd");
+    (acc[key] ??= []).push(tx);
+    return acc;
+  }, {});
 
 
 const TransactionPage = () => {
+  const [merchant, setMerchant]       = useState<string>();
+  const [type, setType]               = useState<TransactionType>();
+  const [source, setSource]           = useState<TransactionSource>();
+  const [accountId, setAccountId]     = useState<string>();
+  const [rangeAmount, setRangeAmount] = useState<AmountRange>({});
 
-  const [merchant, setMerchant] = useState<string>();
-  const [type, setType] = useState<TransactionType>()
-  const [source, setSource] = useState<TransactionSource>();
-  const [rangeAmount, setRangeAmount] = useState<{
-    minAmount?: number,
-    maxAmount?: number
-  }>({});
-  console.log(rangeAmount)
-  const [accountId, setAccountId] = useState<string>();
-  const {data} = useTransactions({
+  const { data } = useTransactions({
     merchant,
     type,
     source,
     accountId,
-    minAmount: rangeAmount?.minAmount,
-    maxAmount: rangeAmount?.maxAmount
+    minAmount: rangeAmount.minAmount,
+    maxAmount: rangeAmount.maxAmount,
   });
 
+  const grouped = useMemo(
+    () => groupByDate(data?.items ?? []),
+    [data?.items],
+  );
 
-
+  const isEmpty = !data?.items.length;
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-
-      {/* ── Sticky header ── */}
+      {/* Sticky header */}
       <TransactionHeader />
-      <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
 
-        {/* ── Stat cards ── */}
+      <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
+        {/* Stat cards */}
         <div className="flex gap-3 flex-wrap">
           <TransactionStatCard label="Số dư"     value="0 ₫" sub="tháng này"    icon={Wallet}       trend="+12.4%" trendUp />
-          <TransactionStatCard label="Thu nhập"  value="0 ₫" sub="giao dịch"    icon={TrendingUp}   trend="+8%"   trendUp />
-          <TransactionStatCard label="Chi tiêu"  value="0 ₫" sub="giao dịch"    icon={TrendingDown} trend="-3%"   trendUp={false} />
+          <TransactionStatCard label="Thu nhập"  value="0 ₫" sub="giao dịch"    icon={TrendingUp}   trend="+8%"    trendUp />
+          <TransactionStatCard label="Chi tiêu"  value="0 ₫" sub="giao dịch"    icon={TrendingDown} trend="-3%"    trendUp={false} />
           <TransactionStatCard label="Tài khoản" value="0"   sub="đang kết nối" icon={CreditCard} />
         </div>
-        {/* ── Filters ── */}
-        <TransactionFilter 
+
+        {/* Filters */}
+        <TransactionFilter
           setMerchant={setMerchant}
           setAccountId={setAccountId}
           setType={setType}
@@ -108,7 +84,8 @@ const TransactionPage = () => {
           setRangeAmount={setRangeAmount}
           rangeAmount={rangeAmount}
         />
-        {/* ── Table ── */}
+
+        {/* Table */}
         <Card className="shadow-none border border-border/60 rounded-2xl overflow-hidden">
           <Table>
             <TableHeader>
@@ -123,25 +100,25 @@ const TransactionPage = () => {
             </TableHeader>
 
             <TableBody>
-              {
-                data?.items.length === 0 
-                ?
+              {isEmpty ? (
                 <TransactionEmptyRow />
-                :
-                data?.items.map((item: Transaction) => (
-                  <TransactionRow 
-                    transaction={item}
-                  />
+              ) : (
+                Object.entries(grouped).map(([dateKey, txs]) => (
+                  <Fragment key={dateKey}>
+                    <TransactionDateRow date={new Date(dateKey)} count={txs.length} />
+                    {txs.map((tx) => (
+                      <TransactionRow key={tx.id} transaction={tx} />
+                    ))}
+                  </Fragment>
                 ))
-              }
-          
+              )}
             </TableBody>
           </Table>
 
-          {/* Table footer */}
+          {/* Footer */}
           <div className="border-t border-border/40 bg-muted/20 px-5 py-2.5 flex items-center justify-between">
             <span className="text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">0</span> giao dịch
+              <span className="font-semibold text-foreground">{data?.items.length ?? 0}</span> giao dịch
             </span>
             <div className="flex items-center gap-4 text-xs">
               <span className="text-muted-foreground">
