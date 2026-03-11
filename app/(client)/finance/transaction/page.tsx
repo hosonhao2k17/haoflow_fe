@@ -42,6 +42,7 @@ const TransactionPage = () => {
   const [type, setType]               = useState<TransactionType>();
   const [source, setSource]           = useState<TransactionSource>();
   const [accountId, setAccountId]     = useState<string>();
+  const [categoryId, setCategoryId] = useState<string>();
   const [rangeAmount, setRangeAmount] = useState<AmountRange>({});
 
   const { data, isLoading } = useTransactions({
@@ -84,6 +85,7 @@ const TransactionPage = () => {
           type={type}
           setRangeAmount={setRangeAmount}
           rangeAmount={rangeAmount}
+          setCategoryId={setCategoryId}
         />
 
         {/* Table */}
