@@ -39,13 +39,14 @@ import { cn } from "@/lib/utils";
 import { Transaction } from "@/features/transaction/interfaces/transaction.interface";
 import { Account } from "@/features/account/interfaces/account.interface";
 import { AccountType } from "@/common/constants/finance.constant";
-import { TransactionType } from "@/common/constants/app.constant";
+import { TransactionSource, TransactionType } from "@/common/constants/app.constant";
 import TransactionStatCard from "@/features/transaction/components/TransactionStatCard";
 import TransactionHeader from "@/features/transaction/components/TransactionHeader";
 import TransactionFilter from "@/features/transaction/components/TransactionFilter";
 import TransactionEmptyRow from "@/features/transaction/components/TransactionEmptyRow";
 import { useTransactions } from "@/features/transaction/transaction.hook";
 import TransactionRow from "@/features/transaction/components/TransactionRow";
+import { useState } from "react";
 
 
 const labelDate = (d: string) => {
@@ -61,7 +62,14 @@ const labelDate = (d: string) => {
 
 const TransactionPage = () => {
 
-  const {data} = useTransactions({});
+  const [merchant, setMerchant] = useState<string>();
+  const [type, setType] = useState<TransactionType>()
+  const [source, setSource] = useState<TransactionSource>();
+  const {data} = useTransactions({
+    merchant,
+    type,
+    source
+  });
 
 
 
@@ -81,7 +89,8 @@ const TransactionPage = () => {
           <TransactionStatCard label="Tài khoản" value="0"   sub="đang kết nối" icon={CreditCard} />
         </div>
         {/* ── Filters ── */}
-        <TransactionFilter />
+        <TransactionFilter 
+        />
         {/* ── Table ── */}
         <Card className="shadow-none border border-border/60 rounded-2xl overflow-hidden">
           <Table>
