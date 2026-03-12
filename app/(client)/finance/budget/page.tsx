@@ -91,7 +91,6 @@ const BudgetPage = () => {
         {/* ── Filters ── */}
         <div className="space-y-3">
 
-          {/* Row 1: tabs + selects + amount toggle */}
           <div className="flex flex-wrap gap-2 items-center">
 
             {/* Period tabs */}
@@ -111,7 +110,6 @@ const BudgetPage = () => {
               ))}
             </div>
 
-            {/* Month picker */}
             <Select defaultValue="current">
               <SelectTrigger className="w-[180px] h-9 rounded-xl border-border/60 bg-white text-xs shadow-none">
                 <SelectValue placeholder="Chọn tháng" />
@@ -123,7 +121,6 @@ const BudgetPage = () => {
               </SelectContent>
             </Select>
 
-            {/* Status */}
             <Select defaultValue="ALL">
               <SelectTrigger className="w-[175px] h-9 rounded-xl border-border/60 bg-white text-xs shadow-none">
                 <SelectValue placeholder="Trạng thái" />
@@ -136,7 +133,6 @@ const BudgetPage = () => {
               </SelectContent>
             </Select>
 
-            {/* Amount filter toggle */}
             <Button
               variant="outline"
               size="sm"
@@ -147,7 +143,6 @@ const BudgetPage = () => {
             </Button>
           </div>
 
-          {/* Row 2: Amount range inputs */}
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs text-muted-foreground font-medium">Khoảng tiền:</span>
             <div className="relative">
@@ -197,8 +192,6 @@ const BudgetPage = () => {
             />
           ))
           }
-
-          {/* Add placeholder */}
           <button className="rounded-2xl border-2 border-dashed border-border bg-transparent cursor-pointer min-h-[168px] flex flex-col items-center justify-center gap-2.5 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all group">
             <div className="w-10 h-10 rounded-xl border-2 border-dashed border-current flex items-center justify-center group-hover:scale-110 transition-transform">
               <Plus size={18} />

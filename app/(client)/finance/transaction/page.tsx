@@ -19,7 +19,7 @@ import TransactionRow from "@/features/transaction/components/TransactionRow";
 import TransactionDateRow from "@/features/transaction/components/TransactionDateRow";
 import { useTransactions, useTransactionStats } from "@/features/transaction/transaction.hook";
 import { useState, useMemo, Fragment } from "react";
-import { format } from "date-fns";
+import { endOfMonth, endOfWeek, format, setDate, startOfMonth, startOfWeek } from "date-fns";
 import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/TransactionRowSkeleton";
 import { formatVnd } from "@/lib/format";
 
@@ -39,20 +39,26 @@ const groupByDate = (items: Transaction[]): Record<string, Transaction[]> =>
 
 
 const TransactionPage = () => {
-  const [merchant, setMerchant]       = useState<string>();
-  const [type, setType]               = useState<TransactionType>();
-  const [source, setSource]           = useState<TransactionSource>();
-  const [accountId, setAccountId]     = useState<string>();
+  const [merchant, setMerchant] = useState<string>();
+  const [type, setType] = useState<TransactionType>();
+  const [source, setSource] = useState<TransactionSource>();
+  const [accountId, setAccountId] = useState<string>();
   const [categoryId, setCategoryId] = useState<string>();
   const [rangeAmount, setRangeAmount] = useState<AmountRange>({});
+  const [dateFrom, setDateFrom] = useState<Date>(startOfMonth(new Date()));
+  const [dateTo, setDateTo] = useState<Date>(endOfMonth(new Date()));
 
   const { data, isLoading } = useTransactions({
     merchant,
     type,
     source,
     accountId,
+    categoryId,
     minAmount: rangeAmount.minAmount,
     maxAmount: rangeAmount.maxAmount,
+    dateFrom: dateFrom,
+    dateTo: dateTo
+
   });
 
   const {data:stats} = useTransactionStats()
@@ -61,7 +67,7 @@ const TransactionPage = () => {
     () => groupByDate(data?.items ?? []),
     [data?.items],
   );
-  console.log(stats)
+  console.log(grouped)
 
   const isEmpty = !data?.items.length;
 
@@ -79,7 +85,6 @@ const TransactionPage = () => {
           <TransactionStatCard label="Tài khoản" value={stats?.totalAccount}  sub="đang kết nối" icon={CreditCard} />
         </div>
 
-        {/* Filters */}
         <TransactionFilter
           setMerchant={setMerchant}
           setAccountId={setAccountId}
@@ -90,9 +95,12 @@ const TransactionPage = () => {
           setRangeAmount={setRangeAmount}
           rangeAmount={rangeAmount}
           setCategoryId={setCategoryId}
+          dateFrom={dateFrom}
+          setDateFrom={setDateFrom}
+          setDateTo={setDateTo}
+          dateTo={dateTo}
         />
 
-        {/* Table */}
         <Card className="shadow-none border border-border/60 rounded-2xl overflow-hidden">
           <Table>
             <TableHeader>
@@ -130,7 +138,6 @@ const TransactionPage = () => {
             </TableBody>
           </Table>
 
-          {/* Footer */}
           <div className="border-t border-border/40 bg-muted/20 px-5 py-2.5 flex items-center justify-between">
             <span className="text-xs text-muted-foreground">
               <span className="font-semibold text-foreground">{data?.items.length ?? 0}</span> giao dịch

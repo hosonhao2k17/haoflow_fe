@@ -36,15 +36,19 @@ interface AmountRange {
 }
 
 interface Props {
-  setMerchant:    (val: string | undefined) => void
-  setAccountId:   (val: string | undefined) => void
-  setType:        (val: TransactionType | undefined) => void
-  setSource:      (val: TransactionSource | undefined) => void
-  setCategoryId:  (val: string | undefined) => void
-  source:         TransactionSource | undefined
-  type:           TransactionType | undefined
+  setMerchant: (val: string | undefined) => void
+  setAccountId: (val: string | undefined) => void
+  setType: (val: TransactionType | undefined) => void
+  setSource: (val: TransactionSource | undefined) => void
+  setCategoryId: (val: string | undefined) => void
+  source: TransactionSource | undefined
+  type: TransactionType | undefined
   setRangeAmount: (range: AmountRange) => void
-  rangeAmount:    AmountRange
+  rangeAmount: AmountRange
+  setDateFrom: (dateFrom: Date) => void;
+  dateFrom: Date;
+  setDateTo: (dateTo: Date) => void;
+  dateTo: Date;
 }
 
 
@@ -58,13 +62,15 @@ const TransactionFilter = ({
   type,
   setRangeAmount,
   rangeAmount,
+  setDateFrom,
+  setDateTo,
+  dateFrom,
+  dateTo
 }: Props) => {
   const { data: accountData }  = useAccounts({})
   const { data: categoryData } = useTransactionCategories()
 
   const [expanded,    setExpanded]    = useState(false)
-  const [dateFrom,    setDateFrom]    = useState<Date | null>(null)
-  const [dateTo,      setDateTo]      = useState<Date | null>(null)
   const [accountId,   setLocalAccount]  = useState<string | undefined>()
   const [categoryId,  setLocalCategory] = useState<string | undefined>()
 
@@ -80,7 +86,6 @@ const TransactionFilter = ({
 
   return (
     <div className="flex flex-col gap-2">
-      {/* ── Row 1: always visible ── */}
       <div className="flex items-center gap-2">
         {/* Search */}
         <div className="relative w-[220px] shrink-0">
@@ -92,7 +97,6 @@ const TransactionFilter = ({
           />
         </div>
 
-        {/* Account picker */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -171,8 +175,8 @@ const TransactionFilter = ({
                 <p className="text-xs font-medium text-muted-foreground mb-1.5">Từ ngày</p>
                 <Calendar
                   mode="single"
-                  selected={dateFrom ?? undefined}
-                  onSelect={(d) => setDateFrom(d ?? null)}
+                  selected={dateFrom}
+                  onSelect={(d) => setDateFrom(d)}
                   locale={vi}
                   className="rounded-lg border border-border/40"
                 />
@@ -181,22 +185,14 @@ const TransactionFilter = ({
                 <p className="text-xs font-medium text-muted-foreground mb-1.5">Đến ngày</p>
                 <Calendar
                   mode="single"
-                  selected={dateTo ?? undefined}
-                  onSelect={(d) => setDateTo(d ?? null)}
+                  selected={dateTo}
+                  onSelect={(d) => setDateTo(d)}
                   disabled={(d) => !!dateFrom && d < dateFrom}
                   locale={vi}
                   className="rounded-lg border border-border/40"
                 />
               </div>
             </div>
-            {(dateFrom || dateTo) && (
-              <button
-                onClick={() => { setDateFrom(null); setDateTo(null) }}
-                className="mt-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Xóa bộ lọc ngày
-              </button>
-            )}
           </PopoverContent>
         </Popover>
 
