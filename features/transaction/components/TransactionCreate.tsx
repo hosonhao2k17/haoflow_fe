@@ -5,6 +5,9 @@ import TransactionForm from "./TransactionForm"
 import { useState } from "react";
 import { TransactionFormValue } from "../interfaces/transaction-form";
 import { TransactionType } from "@/common/constants/app.constant";
+import { useCreateTransaction } from "../transaction.hook";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 interface Props {
     open: boolean;
@@ -23,6 +26,17 @@ const TransactionCreate = ({open, setOpen}: Props) => {
         isRecurring: false
     }
     const [form, setForm] = useState<TransactionFormValue>(DEFAULT_STATE);
+    const {mutate, isPending} = useCreateTransaction()
+
+    const handleCreate = () => {
+        mutate(form, {
+            onSuccess: () => {
+                toast.success("Tạo thành công")
+                setOpen(false)
+                setForm(DEFAULT_STATE)
+            }
+        })
+    }
 
     return (
         <Dialog
@@ -45,8 +59,18 @@ const TransactionCreate = ({open, setOpen}: Props) => {
                 </div>
 
                 <div className="px-6 pb-5">
-                    <Button className="w-full h-10 rounded-xl font-medium">
-                        <ArrowLeftRight />
+                    <Button 
+                        disabled={isPending}
+                        className="w-full h-10 rounded-xl font-medium"
+                        onClick={handleCreate}
+                    >
+                        {
+                            isPending
+                            ?
+                            <Spinner />
+                            :
+                            <ArrowLeftRight />
+                        }
                         Thêm giao dịch
                     </Button>
                 </div>

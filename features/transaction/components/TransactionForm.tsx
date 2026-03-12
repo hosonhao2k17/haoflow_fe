@@ -15,19 +15,21 @@ import { useAccounts } from "@/features/account/account.hook"
 import { useTransactionCategories } from "@/features/transaction-category/transaction-category.hook"
 import { TransactionCategory } from "@/features/transaction-category/interfaces/transaction-category.interface"
 import { TransactionFormValue } from "../interfaces/transaction-form"
+import { amountToWords } from "@/lib/vnd"
 
 const TYPE_OPTIONS = [
-  { value: TransactionType.INCOME,   label: "Thu nhập",     icon: <ArrowDownCircle size={14} />, cls: "text-emerald-600 border-emerald-200 bg-emerald-50", active: "bg-emerald-500 text-white border-emerald-500" },
-  { value: TransactionType.EXPENSE,  label: "Chi tiêu",     icon: <ArrowUpCircle size={14} />,   cls: "text-rose-600 border-rose-200 bg-rose-50",         active: "bg-rose-500 text-white border-rose-500" },
-  { value: TransactionType.TRANSFER, label: "Chuyển khoản", icon: <ArrowLeftRight size={14} />,  cls: "text-blue-600 border-blue-200 bg-blue-50",         active: "bg-blue-500 text-white border-blue-500" },
+  { value: TransactionType.INCOME,   label: "Thu nhập",     icon: <ArrowDownCircle size={14} /> },
+  { value: TransactionType.EXPENSE,  label: "Chi tiêu",     icon: <ArrowUpCircle size={14} />   },
+  { value: TransactionType.TRANSFER, label: "Chuyển khoản", icon: <ArrowLeftRight size={14} />  },
 ]
 
 interface Props {
   form: TransactionFormValue
-  setForm: (val: TransactionFormValue) => void
+  setForm: (val: TransactionFormValue) => void;
+  isPending?: boolean;
 }
 
-const TransactionForm = ({ form, setForm }: Props) => {
+const TransactionForm = ({ form, setForm, isPending = false }: Props) => {
   const { data: account }  = useAccounts({})
   const { data: category } = useTransactionCategories()
 
@@ -40,12 +42,15 @@ const TransactionForm = ({ form, setForm }: Props) => {
       <div className="grid grid-cols-3 gap-2">
         {TYPE_OPTIONS.map(opt => (
           <button
+            disabled={isPending}
             key={opt.value}
             type="button"
             onClick={() => set("type", opt.value)}
             className={cn(
               "flex items-center justify-center gap-1.5 h-9 rounded-xl border text-sm font-medium transition-all",
-              form.type === opt.value ? opt.active : `${opt.cls} hover:opacity-75`
+              form.type === opt.value
+                ? "bg-primary text-primary-foreground border-primary"
+                : "text-foreground border-border/60 bg-white hover:bg-muted"
             )}
           >
             {opt.icon}
@@ -58,19 +63,28 @@ const TransactionForm = ({ form, setForm }: Props) => {
         <Label className="text-xs text-muted-foreground">Số tiền</Label>
         <div className="relative">
           <Input
-            type="number"
+            disabled={isPending}
+            type="text"
+            inputMode="numeric"
             placeholder="0"
-            value={form.amount ?? ""}
-            onChange={e => set("amount", e.target.value ? Number(e.target.value) : undefined)}
-            className="h-11 rounded-xl border-border/60 text-base font-medium pr-10 shadow-none"
+            value={form.amount != null ? form.amount.toLocaleString("vi-VN") : ""}
+            onChange={e => {
+              const raw = e.target.value.replace(/\./g, "").replace(/[^0-9]/g, "")
+              set("amount", raw ? Number(raw) : undefined)
+            }}
+            className="h-11 rounded-xl border-border/60 text-base font-medium pr-8 shadow-none"
           />
           <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">₫</span>
         </div>
+        {form.amount != null && form.amount > 0 && (
+          <p className="text-xs text-muted-foreground italic pl-1">{amountToWords(form.amount)}</p>
+        )}
       </div>
 
       <div className="space-y-1.5">
         <Label className="text-xs text-muted-foreground">Merchant / Người nhận</Label>
         <Input
+          disabled={isPending}
           placeholder="VD: Grab, Circle K..."
           value={form.merchant ?? ""}
           onChange={e => set("merchant", e.target.value || undefined)}
@@ -82,13 +96,14 @@ const TransactionForm = ({ form, setForm }: Props) => {
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Tài khoản</Label>
           <Select
+            disabled={isPending}
             value={form.accountId ?? "ALL"}
             onValueChange={val => set("accountId", val === "ALL" ? undefined : val)}
           >
             <SelectTrigger className="h-9 rounded-xl border-border/60 shadow-none text-sm">
               <SelectValue placeholder="Chọn tài khoản" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
+            <SelectContent  className="rounded-xl">
               <SelectItem value="ALL">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <X size={13} />
@@ -114,6 +129,7 @@ const TransactionForm = ({ form, setForm }: Props) => {
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Danh mục</Label>
           <Select
+            disabled={isPending}
             value={form.categoryId ?? "ALL"}
             onValueChange={val => set("categoryId", val === "ALL" ? undefined : val)}
           >
@@ -157,6 +173,7 @@ const TransactionForm = ({ form, setForm }: Props) => {
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2 rounded-xl" align="start">
               <Calendar
+                disabled={isPending}
                 mode="single"
                 selected={form.transactionDate ? new Date(form.transactionDate) : undefined}
                 onSelect={d => set("transactionDate", d ? d.toISOString() : undefined)}
@@ -173,6 +190,7 @@ const TransactionForm = ({ form, setForm }: Props) => {
             <p className="text-xs text-muted-foreground">Tự động lặp lại hàng tháng</p>
           </div>
           <Switch
+            disabled={isPending}
             checked={form.isRecurring ?? false}
             onCheckedChange={val => set("isRecurring", val)}
           />
@@ -185,6 +203,7 @@ const TransactionForm = ({ form, setForm }: Props) => {
         </Label>
         <Textarea
           placeholder="Thêm ghi chú..."
+          disabled={isPending}
           rows={2}
           value={form.description ?? ""}
           onChange={e => set("description", e.target.value || undefined)}
