@@ -2,6 +2,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button"
 import { ArrowLeftRight, PlusCircle } from "lucide-react"
 import TransactionForm from "./TransactionForm"
+import { useState } from "react";
+import { TransactionFormValue } from "../interfaces/transaction-form";
+import { TransactionType } from "@/common/constants/app.constant";
 
 interface Props {
     open: boolean;
@@ -10,6 +13,16 @@ interface Props {
 
 const TransactionCreate = ({open, setOpen}: Props) => {
 
+    const DEFAULT_STATE: TransactionFormValue = {
+        categoryId: "",
+        accountId: "",
+        type: TransactionType.EXPENSE,
+        amount: 0,
+        merchant: "",
+        transactionDate: new Date().toString(),
+        isRecurring: false
+    }
+    const [form, setForm] = useState<TransactionFormValue>(DEFAULT_STATE);
 
     return (
         <Dialog
@@ -25,11 +38,15 @@ const TransactionCreate = ({open, setOpen}: Props) => {
                 </DialogHeader>
 
                 <div className="px-6 py-5 overflow-y-auto max-h-[80vh]">
-                    <TransactionForm />
+                    <TransactionForm 
+                        form={form}
+                        setForm={setForm}
+                    />
                 </div>
 
                 <div className="px-6 pb-5">
                     <Button className="w-full h-10 rounded-xl font-medium">
+                        <ArrowLeftRight />
                         Thêm giao dịch
                     </Button>
                 </div>
