@@ -38,17 +38,23 @@ const getStatus = (pct: number, threshold: number) => {
   return   { label: "Trong ngân sách",icon: CheckCircle2,  cls: "text-emerald-600", bg: "bg-emerald-50", bar: "bg-emerald-500" };
 };
 
+interface Props {
+  budget: Budget;
+  spent: number;
+  onClick: () => void;
+  setOpenUpdate: (open: boolean) => void;
+  setBudget: (budget: Budget) => void;
+}
+
 const BudgetCard = ({
   budget,
   spent,
   onClick,
-}: {
-  budget: Budget;
-  spent: number;
-  onClick: () => void;
-}) => {
-  const pct        = Math.min(Math.round((spent / budget.amount) * 100), 100);
-  const status     = getStatus(pct, budget.alertThreshold);
+  setOpenUpdate,
+  setBudget
+}: Props) => {
+  const pct = Math.min(Math.round((spent / budget.amount) * 100), 100);
+  const status = getStatus(pct, budget.alertThreshold);
   const StatusIcon = status.icon;
 
   return (
@@ -69,7 +75,7 @@ const BudgetCard = ({
                 {budget.category?.title}
               </p>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                {periodLabel(budget.period)} · {fmtMonth(budget.startDate)}
+                {periodLabel(budget.period)} · {fmtMonth(new Date(budget.startDate))}
               </p>
             </div>
           </div>
@@ -102,7 +108,13 @@ const BudgetCard = ({
                 className="rounded-xl w-40 shadow-lg"
                 onClick={(e) => e.stopPropagation()}
               >
-                <DropdownMenuItem className="gap-2 text-xs cursor-pointer rounded-lg">
+                <DropdownMenuItem 
+                  className="gap-2 text-xs cursor-pointer rounded-lg"
+                  onClick={() => {
+                    setOpenUpdate(true)
+                    setBudget(budget)
+                  }}
+                >
                   <Pencil size={13} className="text-muted-foreground" />
                   Chỉnh sửa
                 </DropdownMenuItem>

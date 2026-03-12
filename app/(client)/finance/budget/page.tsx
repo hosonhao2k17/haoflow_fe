@@ -25,6 +25,7 @@ import { BudgetPeriod } from "@/common/constants/finance.constant";
 import { useBudgets } from "@/features/budget/budget.hook";
 import { useState } from "react";
 import BudgetCreate from "@/features/budget/components/BudgetCreate";
+import BudgetUpdate from "@/features/budget/components/BudgetUpdate";
 
 const PERIOD_TABS = [
   { label: "Tất cả",     value: "ALL"                },
@@ -36,6 +37,8 @@ const PERIOD_TABS = [
 const BudgetPage = () => {
 
   const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [budget, setBudget] = useState<Budget>();
   const {data} = useBudgets({})
 
 
@@ -175,6 +178,8 @@ const BudgetPage = () => {
               budget={budget}
               spent={budget.spentAmount}
               onClick={() => {}}
+              setBudget={setBudget}
+              setOpenUpdate={setOpenUpdate}
             />
           ))
           }
@@ -200,6 +205,12 @@ const BudgetPage = () => {
           open={openCreate}
           setOpen={setOpenCreate}
         />
+        <BudgetUpdate 
+          open={openUpdate}
+          setOpen={setOpenUpdate}
+          budget={budget}
+        />
+
       </div>
     </div>
   );
