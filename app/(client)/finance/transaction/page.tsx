@@ -23,6 +23,7 @@ import { endOfMonth, endOfWeek, format, setDate, startOfMonth, startOfWeek } fro
 import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/TransactionRowSkeleton";
 import { formatVnd } from "@/lib/format";
 import TransactionCreate from "@/features/transaction/components/TransactionCreate";
+import TransactionReceiptPreview from "@/features/transaction/components/TransactionReceiptPreview";
 
 
 interface AmountRange {
@@ -49,7 +50,8 @@ const TransactionPage = () => {
   const [dateFrom, setDateFrom] = useState<Date>(startOfMonth(new Date()));
   const [dateTo, setDateTo] = useState<Date>(endOfMonth(new Date()));
 
-  const [openCreate, setOpenCreate] = useState<boolean>(false)
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [openReceipt, setOpenReceipt] = useState<boolean>(false)
 
   const { data, isLoading } = useTransactions({
     merchant,
@@ -77,6 +79,7 @@ const TransactionPage = () => {
     <div className="min-h-screen bg-gray-50/50">
       <TransactionHeader 
         setOpen={setOpenCreate}
+        setOpenReceipt={setOpenReceipt}
       />
 
       <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
@@ -158,6 +161,10 @@ const TransactionPage = () => {
         <TransactionCreate 
           open={openCreate}
           setOpen={setOpenCreate}
+        />
+        <TransactionReceiptPreview
+          open={openReceipt}
+          setOpen={setOpenReceipt}
         />
       </div>
 

@@ -7,6 +7,7 @@ import {
   updateTransaction,
   deleteTransaction,
   getTransactionStats,
+  previewReceipt,
 } from "./transaction.api"
 
 import { QueryTransaction } from "./interfaces/query-transaction.interface"
@@ -18,6 +19,12 @@ export const useTransactionStats = () => {
   return useQuery({
     queryKey: ["transactions", "transaction-stats"],
     queryFn: () => getTransactionStats(),
+  })
+}
+
+export const useTransactionReviewReceipt = () => {
+  return useMutation({
+    mutationFn: (url: string) => previewReceipt(url)
   })
 }
 

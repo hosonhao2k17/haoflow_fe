@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Plus, ReceiptText } from "lucide-react";
+import { Camera, Plus, ReceiptText } from "lucide-react";
 
 
 interface Props {
   setOpen: (open: boolean) => void;
+  setOpenReceipt: (open: boolean) => void;
 }
-const TransactionHeader = ({setOpen}: Props) => {
+const TransactionHeader = ({setOpen, setOpenReceipt}: Props) => {
 
 
     return (
@@ -20,13 +21,23 @@ const TransactionHeader = ({setOpen}: Props) => {
               <p className="text-[10px] text-muted-foreground">Finance › Transactions</p>
             </div>
           </div>
-          <Button 
-            size="sm" 
-            className="rounded-xl gap-1.5 h-8 text-xs px-3"
-            onClick={() => setOpen(true)}
-          >
-            <Plus size={13} /> Thêm giao dịch
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              size="sm" 
+              className="rounded-xl gap-1.5 h-8 text-xs px-3"
+              onClick={() => setOpen(true)}
+            >
+              <Plus size={13} /> Thêm giao dịch
+            </Button>
+            <Button 
+              size="sm" 
+              className="rounded-xl gap-1.5 h-8 text-xs px-3"
+              onClick={() => setOpenReceipt(true)}
+            >
+              <Camera size={13} /> Nhập hóa đơn
+            </Button>
+          </div>
+          
         </div>
       </div>
     )

@@ -62,3 +62,9 @@ export enum TransactionSource {
     OCR = 'ocr',
     IMPORT = 'import'
 }
+
+export enum ReceiptStatus {
+    PENDING = 'pending',
+    DONE = 'done',
+    FAILED = 'failed'
+}

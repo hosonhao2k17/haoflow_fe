@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Switch } from "@/components/ui/switch"
@@ -143,19 +143,46 @@ const TransactionForm = ({ form, setForm, isPending = false }: Props) => {
                   Không chọn
                 </div>
               </SelectItem>
-              {category?.items.map((item: TransactionCategory) => (
-                <SelectItem key={item.id} value={item.id}>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-5 h-5 rounded-md flex items-center justify-center text-sm shrink-0"
-                      style={{ backgroundColor: `${item.color ?? "#e5e7eb"}25` }}
-                    >
-                      {item.icon}
-                    </span>
-                    {item.title}
-                  </div>
-                </SelectItem>
-              ))}
+              {category?.items.map((item: TransactionCategory) =>
+                item.childrens?.length ? (
+                  <SelectGroup key={item.id}>
+                    <SelectLabel className="flex items-center gap-1.5 text-xs text-muted-foreground py-1">
+                      <span
+                        className="w-4 h-4 rounded flex items-center justify-center text-xs shrink-0"
+                        style={{ backgroundColor: `${item.color ?? "#e5e7eb"}25` }}
+                      >
+                        {item.icon}
+                      </span>
+                      {item.title}
+                    </SelectLabel>
+                    {item.childrens?.map((child: TransactionCategory) => (
+                      <SelectItem key={child.id} value={child.id}>
+                        <div className="flex items-center gap-2 pl-1">
+                          <span
+                            className="w-5 h-5 rounded-md flex items-center justify-center text-sm shrink-0"
+                            style={{ backgroundColor: `${child.color ?? item.color ?? "#e5e7eb"}25` }}
+                          >
+                            {child.icon ?? item.icon}
+                          </span>
+                          {child.title}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ) : (
+                  <SelectItem key={item.id} value={item.id}>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-5 h-5 rounded-md flex items-center justify-center text-sm shrink-0"
+                        style={{ backgroundColor: `${item.color ?? "#e5e7eb"}25` }}
+                      >
+                        {item.icon}
+                      </span>
+                      {item.title}
+                    </div>
+                  </SelectItem>
+                )
+              )}
             </SelectContent>
           </Select>
         </div>

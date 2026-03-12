@@ -21,6 +21,13 @@ export const getTransactions = async (query: QueryTransaction) => {
 }
 
 
+export const previewReceipt = async (imageUrl: string) => {
+  const res = await api.post("transactions/receipt/preview",{
+    imageUrl
+  });
+  return res.data;
+}
+
 export const getTransactionById = async (id: string) => {
   const res = await api.get(`transactions/${id}`)
 
