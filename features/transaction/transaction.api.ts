@@ -3,6 +3,7 @@ import { api } from "@/config/axios"
 import { QueryTransaction } from "./interfaces/query-transaction.interface"
 import { Createtransaction } from "./interfaces/create-transaction.interface"
 import { UpdateTransaction } from "./interfaces/update-transaction.interface"
+import { CreateTransactionReceipt } from "./interfaces/create-transaction-receipt.interface"
 
 
 
@@ -32,6 +33,11 @@ export const getTransactionById = async (id: string) => {
   const res = await api.get(`transactions/${id}`)
 
   return res.data
+}
+
+export const createTransactionReceipt = async (dto: CreateTransactionReceipt) => {
+  const res = await api.post('transactions/receipt',dto);
+  return res.data;
 }
 
 

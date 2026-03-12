@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button"
 import { Camera, ImageIcon, ScanLine, Sparkles, Loader2, Save } from "lucide-react"
 import { useUpload } from "@/features/upload/upload.hook"
 import { useRef, useState } from "react"
-import { useTransactionReviewReceipt } from "../transaction.hook"
+import { useCreateTransactionReceipt, useTransactionReviewReceipt } from "../transaction.hook"
 import { TransactionFormValue } from "../interfaces/transaction-form"
 import TransactionForm from "./TransactionForm"
 import { AiResponse } from "@/common/interfaces/ai-response.interface"
 import { CreateTransactionReceipt } from "../interfaces/create-transaction-receipt.interface"
 import TransactionReceiptHover from "./TransactionReceiptHover"
+import { toast } from "sonner"
 
 interface Props {
   open:    boolean
@@ -19,9 +20,8 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
 
-  const [form, setForm] = useState<TransactionFormValue | undefined>()
-  const [summary, setSummary] = useState<string | undefined>()
-  const [receipt, setReceipt] = useState<CreateTransactionReceipt | undefined>()
+  const [form, setForm] = useState<CreateTransactionReceipt>()
+  const [summary, setSummary] = useState<string>()
 
   const upload = useUpload()
   const previewReceipt = useTransactionReviewReceipt()
@@ -31,13 +31,22 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
     upload.mutate(file, {
       onSuccess: ({ url }) => {
         previewReceipt.mutate(url, {
-          onSuccess: (res: AiResponse<TransactionFormValue>) => {
+          onSuccess: (res: AiResponse<CreateTransactionReceipt>) => {
             setForm(res.data)
-            setReceipt(res.data.receipt)
             setSummary(res.summary)
           },
         })
       },
+    })
+  }
+  const createTransactionReceipt = useCreateTransactionReceipt()
+  const handleCreate = () => {
+    if(!form) return;
+    const {isRecurring, ...result} = form;
+    createTransactionReceipt.mutate(result , {
+      onSuccess: () => {
+        toast.success("Thêm thành công")
+      }
     })
   }
 
@@ -50,7 +59,6 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
     if (!val) {
       setForm(undefined)
       setSummary(undefined)
-      setReceipt(undefined)
     }
     setOpen(val)
   }
@@ -124,9 +132,12 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
                 </div>
               )}
 
-              {receipt && <TransactionReceiptHover receipt={receipt} />}
+              {form.receipt && <TransactionReceiptHover receipt={form.receipt} />}
 
-              <TransactionForm form={form} setForm={setForm} />
+              <TransactionForm 
+                form={form} 
+                setForm={setForm} 
+              />
             </>
           )}
 
@@ -134,7 +145,10 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
 
         {form && (
           <div className="px-6 pb-5 pt-3 border-t border-border/40">
-            <Button className="w-full h-10 rounded-xl font-medium gap-2">
+            <Button 
+              className="w-full h-10 rounded-xl font-medium gap-2"
+              onClick={handleCreate}
+            >
               <Save size={14} />
               Lưu giao dịch
             </Button>

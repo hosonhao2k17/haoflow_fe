@@ -8,11 +8,13 @@ import {
   deleteTransaction,
   getTransactionStats,
   previewReceipt,
+  createTransactionReceipt,
 } from "./transaction.api"
 
 import { QueryTransaction } from "./interfaces/query-transaction.interface"
 import { Createtransaction } from "./interfaces/create-transaction.interface"
 import { UpdateTransaction } from "./interfaces/update-transaction.interface"
+import { CreateTransactionReceipt } from "./interfaces/create-transaction-receipt.interface"
 
 
 export const useTransactionStats = () => {
@@ -25,6 +27,19 @@ export const useTransactionStats = () => {
 export const useTransactionReviewReceipt = () => {
   return useMutation({
     mutationFn: (url: string) => previewReceipt(url)
+  })
+}
+
+export const useCreateTransactionReceipt = () => {
+
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (dto: CreateTransactionReceipt) => createTransactionReceipt(dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["transactions"]
+      })
+    }
   })
 }
 
