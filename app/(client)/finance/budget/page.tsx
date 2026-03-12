@@ -22,10 +22,12 @@ import BudgetStatCard from "@/features/budget/components/BudgetStatCard";
 import BudgetCard from "@/features/budget/components/BudgetCard";
 import { Budget } from "@/features/budget/interfaces/budget.interface";
 import { BudgetPeriod } from "@/common/constants/finance.constant";
-import { useBudgets } from "@/features/budget/budget.hook";
+import { useBudgets, useDeleteBudget } from "@/features/budget/budget.hook";
 import { useState } from "react";
 import BudgetCreate from "@/features/budget/components/BudgetCreate";
 import BudgetUpdate from "@/features/budget/components/BudgetUpdate";
+import AlertRemoveDialog from "@/components/common/AlertRemoveDialog";
+import { toast } from "sonner";
 
 const PERIOD_TABS = [
   { label: "Tất cả",     value: "ALL"                },
@@ -38,8 +40,19 @@ const BudgetPage = () => {
 
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [openRemove, setOpenRemove] = useState<boolean>(false);
   const [budget, setBudget] = useState<Budget>();
   const {data} = useBudgets({})
+
+  const {mutate} = useDeleteBudget()
+  const handleRemove = () => {
+    if(!budget) return;
+    mutate(budget.id, {
+      onSuccess: () => {
+        toast.success("Xóa thành công")
+      }
+    })
+  }
 
 
   return (
@@ -180,6 +193,7 @@ const BudgetPage = () => {
               onClick={() => {}}
               setBudget={setBudget}
               setOpenUpdate={setOpenUpdate}
+              setOpenRemove={setOpenRemove}
             />
           ))
           }
@@ -209,6 +223,12 @@ const BudgetPage = () => {
           open={openUpdate}
           setOpen={setOpenUpdate}
           budget={budget}
+        />
+        <AlertRemoveDialog 
+          title="Xóa ngân sách"
+          openConfirm={openRemove}
+          setOpenConfirm={setOpenRemove}
+          handleRemove={handleRemove}
         />
 
       </div>

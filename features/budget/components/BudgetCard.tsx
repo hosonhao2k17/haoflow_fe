@@ -44,6 +44,7 @@ interface Props {
   onClick: () => void;
   setOpenUpdate: (open: boolean) => void;
   setBudget: (budget: Budget) => void;
+  setOpenRemove: (open: boolean) => void;
 }
 
 const BudgetCard = ({
@@ -51,7 +52,8 @@ const BudgetCard = ({
   spent,
   onClick,
   setOpenUpdate,
-  setBudget
+  setBudget,
+  setOpenRemove
 }: Props) => {
   const pct = Math.min(Math.round((spent / budget.amount) * 100), 100);
   const status = getStatus(pct, budget.alertThreshold);
@@ -119,7 +121,13 @@ const BudgetCard = ({
                   Chỉnh sửa
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="gap-2 text-xs cursor-pointer rounded-lg text-rose-600 focus:text-rose-600 focus:bg-rose-50">
+                <DropdownMenuItem 
+                  className="gap-2 text-xs cursor-pointer rounded-lg text-rose-600 focus:text-rose-600 focus:bg-rose-50"
+                  onClick={() => {
+                    setOpenRemove(true)
+                    setBudget(budget)
+                  }}
+                >
                   <Trash2 size={13} />
                   Xoá ngân sách
                 </DropdownMenuItem>
