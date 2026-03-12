@@ -2,36 +2,53 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Budget } from "../interfaces/budget.interface";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { AlertTriangle, CheckCircle2, ChevronRight, XCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  XCircle,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { fmtShort } from "@/lib/format";
 import { BudgetPeriod } from "@/common/constants/finance.constant";
 import { fmtMonth } from "@/lib/date";
 import { Progress } from "@/components/ui/progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
-
-const periodLabel = (p: BudgetPeriod) => ({
-  [BudgetPeriod.MONTHLY]: "Hàng tháng",
-  [BudgetPeriod.WEEKLY]:  "Hàng tuần",
-  [BudgetPeriod.YEARLY]:  "Hàng năm",
-}[p] ?? p);
-
+const periodLabel = (p: BudgetPeriod) =>
+  ({
+    [BudgetPeriod.MONTHLY]: "Hàng tháng",
+    [BudgetPeriod.WEEKLY]:  "Hàng tuần",
+    [BudgetPeriod.YEARLY]:  "Hàng năm",
+  }[p] ?? p);
 
 const getStatus = (pct: number, threshold: number) => {
-  if (pct >= 100)       return { label: "Vượt ngân sách", icon: XCircle,       cls: "text-rose-600",   bg: "bg-rose-50",   bar: "bg-rose-500"   };
-  if (pct >= threshold) return { label: "Sắp vượt",       icon: AlertTriangle, cls: "text-amber-600",  bg: "bg-amber-50",  bar: "bg-amber-500"  };
-  return                       { label: "Trong ngân sách", icon: CheckCircle2,  cls: "text-emerald-600",bg: "bg-emerald-50",bar: "bg-emerald-500" };
+  if (pct >= 100)
+    return { label: "Vượt ngân sách", icon: XCircle,       cls: "text-rose-600",    bg: "bg-rose-50",    bar: "bg-rose-500"    };
+  if (pct >= threshold)
+    return { label: "Sắp vượt",       icon: AlertTriangle, cls: "text-amber-600",   bg: "bg-amber-50",   bar: "bg-amber-500"   };
+  return   { label: "Trong ngân sách",icon: CheckCircle2,  cls: "text-emerald-600", bg: "bg-emerald-50", bar: "bg-emerald-500" };
 };
 
-
 const BudgetCard = ({
-  budget, spent, onClick,
+  budget,
+  spent,
+  onClick,
 }: {
   budget: Budget;
-  spent: number;          
+  spent: number;
   onClick: () => void;
 }) => {
-  const pct    = Math.min(Math.round((spent / budget.amount) * 100), 100);
-  const status = getStatus(pct, budget.alertThreshold);
+  const pct        = Math.min(Math.round((spent / budget.amount) * 100), 100);
+  const status     = getStatus(pct, budget.alertThreshold);
   const StatusIcon = status.icon;
 
   return (
@@ -40,7 +57,8 @@ const BudgetCard = ({
       className="shadow-none border border-border/60 rounded-2xl hover:border-primary/30 hover:shadow-md transition-all duration-200 cursor-pointer group"
     >
       <CardContent className="p-5">
-        {/* Top row */}
+
+        {/* ── Top row ── */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-xl shrink-0">
@@ -55,19 +73,50 @@ const BudgetCard = ({
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 shrink-0">
+
+          {/* Badge + 3-dot menu */}
+          <div className="flex items-center gap-1 shrink-0">
             <Badge
               variant="outline"
-              className={cn("text-[11px] font-semibold px-2 py-0.5 rounded-full border gap-1", status.bg, status.cls, "border-current/20")}
+              className={cn(
+                "text-[11px] font-semibold px-2 py-0.5 rounded-full border gap-1",
+                status.bg, status.cls, "border-current/20"
+              )}
             >
               <StatusIcon size={10} />
               {status.label}
             </Badge>
-            <ChevronRight size={14} className="text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-7 h-7 rounded-lg text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <MoreHorizontal size={14} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="rounded-xl w-40 shadow-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DropdownMenuItem className="gap-2 text-xs cursor-pointer rounded-lg">
+                  <Pencil size={13} className="text-muted-foreground" />
+                  Chỉnh sửa
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="gap-2 text-xs cursor-pointer rounded-lg text-rose-600 focus:text-rose-600 focus:bg-rose-50">
+                  <Trash2 size={13} />
+                  Xoá ngân sách
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
-        {/* Progress */}
+        {/* ── Progress ── */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">
@@ -75,11 +124,7 @@ const BudgetCard = ({
             </span>
             <span className="font-bold text-foreground">{pct}%</span>
           </div>
-          <Progress
-            value={pct}
-            className="h-2 rounded-full bg-muted"
-            // bạn override indicator color qua CSS variable nếu cần
-          />
+          <Progress value={pct} className="h-2 rounded-full bg-muted" />
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
             <span>Ngân sách: <span className="font-semibold">{fmtShort(budget.amount)}</span></span>
             <span>Còn lại: <span className={cn("font-semibold", spent > budget.amount ? "text-rose-600" : "text-emerald-600")}>
@@ -88,7 +133,7 @@ const BudgetCard = ({
           </div>
         </div>
 
-        {/* Alert threshold */}
+        {/* ── Alert banners ── */}
         {pct >= budget.alertThreshold && pct < 100 && (
           <div className="mt-3 flex items-center gap-1.5 text-[11px] text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
             <AlertTriangle size={11} />
@@ -106,4 +151,4 @@ const BudgetCard = ({
   );
 };
 
-export default BudgetCard 
+export default BudgetCard;

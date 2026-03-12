@@ -11,4 +11,5 @@ export interface Budget extends Base {
     period: BudgetPeriod;
     month: Date;
     alertThreshold: number;
+    spentAmount: number;
 }
