@@ -176,7 +176,7 @@ const TransactionFilter = ({
                 <Calendar
                   mode="single"
                   selected={dateFrom}
-                  onSelect={(d) => setDateFrom(d)}
+                  onSelect={(d) => setDateFrom(d as Date)}
                   locale={vi}
                   className="rounded-lg border border-border/40"
                 />
@@ -186,7 +186,7 @@ const TransactionFilter = ({
                 <Calendar
                   mode="single"
                   selected={dateTo}
-                  onSelect={(d) => setDateTo(d)}
+                  onSelect={(d) => setDateTo(d as Date)}
                   disabled={(d) => !!dateFrom && d < dateFrom}
                   locale={vi}
                   className="rounded-lg border border-border/40"

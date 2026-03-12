@@ -2,7 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Plus, ReceiptText } from "lucide-react";
 
 
-const TransactionHeader = () => {
+interface Props {
+  setOpen: (open: boolean) => void;
+}
+const TransactionHeader = ({setOpen}: Props) => {
 
 
     return (
@@ -17,7 +20,11 @@ const TransactionHeader = () => {
               <p className="text-[10px] text-muted-foreground">Finance › Transactions</p>
             </div>
           </div>
-          <Button size="sm" className="rounded-xl gap-1.5 h-8 text-xs px-3">
+          <Button 
+            size="sm" 
+            className="rounded-xl gap-1.5 h-8 text-xs px-3"
+            onClick={() => setOpen(true)}
+          >
             <Plus size={13} /> Thêm giao dịch
           </Button>
         </div>

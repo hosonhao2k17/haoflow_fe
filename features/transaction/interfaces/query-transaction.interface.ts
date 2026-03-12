@@ -8,8 +8,8 @@ export interface QueryTransaction extends CursorPaginationDto {
     minAmount?: number;
     maxAmount?: number;
     merchant?: string;
-    dateFrom?: string;
-    dateTo?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
     source?: TransactionSource;
     accountId?: string;
     categoryId?: string;

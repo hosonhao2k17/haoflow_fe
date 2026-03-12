@@ -22,6 +22,7 @@ import { useState, useMemo, Fragment } from "react";
 import { endOfMonth, endOfWeek, format, setDate, startOfMonth, startOfWeek } from "date-fns";
 import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/TransactionRowSkeleton";
 import { formatVnd } from "@/lib/format";
+import TransactionCreate from "@/features/transaction/components/TransactionCreate";
 
 
 interface AmountRange {
@@ -48,6 +49,8 @@ const TransactionPage = () => {
   const [dateFrom, setDateFrom] = useState<Date>(startOfMonth(new Date()));
   const [dateTo, setDateTo] = useState<Date>(endOfMonth(new Date()));
 
+  const [openCreate, setOpenCreate] = useState<boolean>(false)
+
   const { data, isLoading } = useTransactions({
     merchant,
     type,
@@ -67,17 +70,16 @@ const TransactionPage = () => {
     () => groupByDate(data?.items ?? []),
     [data?.items],
   );
-  console.log(grouped)
 
   const isEmpty = !data?.items.length;
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      {/* Sticky header */}
-      <TransactionHeader />
+      <TransactionHeader 
+        setOpen={setOpenCreate}
+      />
 
       <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
-        {/* Stat cards */}
         <div className="flex gap-3 flex-wrap">
           <TransactionStatCard label="Số dư"     value={formatVnd(stats?.netBalance)} sub="tháng này"    icon={Wallet}       trend="+12.4%" trendUp />
           <TransactionStatCard label="Thu nhập"  value={formatVnd(stats?.totalIncome)} sub="giao dịch"    icon={TrendingUp}   trend="+8%"    trendUp />
@@ -152,7 +154,14 @@ const TransactionPage = () => {
             </div>
           </div>
         </Card>
+        {/* dialog  */}
+        <TransactionCreate 
+          open={openCreate}
+          setOpen={setOpenCreate}
+        />
       </div>
+
+
     </div>
   );
 };
