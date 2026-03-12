@@ -69,7 +69,7 @@ const BudgetCard = ({
                 {budget.category?.title}
               </p>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                {periodLabel(budget.period)} · {fmtMonth(budget.month)}
+                {periodLabel(budget.period)} · {fmtMonth(budget.startDate)}
               </p>
             </div>
           </div>

@@ -6,7 +6,7 @@ import { OffsetPaginationDto } from "@/common/interfaces/offset-pagination.inter
 export interface QueryBudget extends OffsetPaginationDto {
     categoryId?: string;
     period?: BudgetPeriod;
-    month?: Date;
+    startDate?: Date;
     minAmount?: number;
     maxAmount?: number;
 }

@@ -41,8 +41,6 @@ const BudgetPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-
-      {/* ── Header ── */}
       <div className="sticky top-0 z-30 border-b border-border/50 bg-white/90 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">

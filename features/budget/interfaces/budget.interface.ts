@@ -9,7 +9,7 @@ export interface Budget extends Base {
     amount: number;
     category: TransactionCategory;
     period: BudgetPeriod;
-    month: Date;
+    startDate: string;
     alertThreshold: number;
     spentAmount: number;
 }
