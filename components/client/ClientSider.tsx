@@ -24,6 +24,7 @@ import {
   LandmarkIcon,
   TrendingUpDown,
   ChartNoAxesCombined,
+  Crosshair,
 } from "lucide-react"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -79,14 +80,19 @@ const menus = [
       },
       {
         name: "Ngân sách",
-        href: "net-worth-tracking",
+        href: "/finance/budget",
         icon: LandmarkIcon
       }, 
       {
-        name: "P&L",
-        href: '/finance/profit-lost',
-        icon: TrendingUpDown
+        name: "Mục tiêu tài chính",
+        href: '/finance/target',
+        icon: Crosshair
       },
+      {
+        name: 'Tổng quan',
+        href: '/finance/overview',
+        icon: ChartNoAxesCombined
+      }
     ]
   },
   {

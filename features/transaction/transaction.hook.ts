@@ -6,6 +6,7 @@ import {
   createTransaction,
   updateTransaction,
   deleteTransaction,
+  getTransactionStats,
 } from "./transaction.api"
 
 import { QueryTransaction } from "./interfaces/query-transaction.interface"
@@ -13,6 +14,12 @@ import { Createtransaction } from "./interfaces/create-transaction.interface"
 import { UpdateTransaction } from "./interfaces/update-transaction.interface"
 
 
+export const useTransactionStats = () => {
+  return useQuery({
+    queryKey: ["transactions", "transaction-stats"],
+    queryFn: () => getTransactionStats(),
+  })
+}
 
 export const useTransactions = (query: QueryTransaction) => {
   return useQuery({

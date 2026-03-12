@@ -19,3 +19,9 @@ export enum TransactionCategoryType {
     TRANSFER = 'transfer',
     INVESTMENT = 'investment'
 }
+
+export enum BudgetPeriod {
+    MONTHLY = 'monthly',
+    WEEKLY = 'weekly',
+    YEARLY = 'yearly'
+}

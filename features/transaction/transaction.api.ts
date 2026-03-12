@@ -6,6 +6,12 @@ import { UpdateTransaction } from "./interfaces/update-transaction.interface"
 
 
 
+export const getTransactionStats = async () => {
+  const res = await api.get("transactions/stats")
+
+  return res.data
+}
+
 export const getTransactions = async (query: QueryTransaction) => {
   const res = await api.get("transactions", {
     params: query,

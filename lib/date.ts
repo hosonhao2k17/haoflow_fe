@@ -103,3 +103,6 @@ export const getNumberWeek = (
 
   return Math.floor(diffDays / 7) + 1
 }
+
+export const fmtMonth = (d: Date) =>
+  new Date(d).toLocaleDateString("vi-VN", { month: "long", year: "numeric" });

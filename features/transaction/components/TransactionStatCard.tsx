@@ -16,7 +16,7 @@ const TransactionStatCard = ({label, value, sub, icon: Icon, trend, trendUp}: Pr
 
 
     return (
-        <Card className="flex-1 min-w-[150px] shadow-none border border-border/70 hover:border-primary/30 hover:shadow-md transition-all duration-200 rounded-2xl">
+        <Card className="flex-1 min-w-[150px] border border-border/70 hover:border-primary/30 hover:shadow-md shadow-primary shadow-md transition-all duration-200 rounded-2xl">
             <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
                     <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{label}</span>

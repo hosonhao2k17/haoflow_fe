@@ -17,10 +17,11 @@ import TransactionFilter from "@/features/transaction/components/TransactionFilt
 import TransactionEmptyRow from "@/features/transaction/components/TransactionEmptyRow";
 import TransactionRow from "@/features/transaction/components/TransactionRow";
 import TransactionDateRow from "@/features/transaction/components/TransactionDateRow";
-import { useTransactions } from "@/features/transaction/transaction.hook";
+import { useTransactions, useTransactionStats } from "@/features/transaction/transaction.hook";
 import { useState, useMemo, Fragment } from "react";
 import { format } from "date-fns";
 import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/TransactionRowSkeleton";
+import { formatVnd } from "@/lib/format";
 
 
 interface AmountRange {
@@ -54,10 +55,13 @@ const TransactionPage = () => {
     maxAmount: rangeAmount.maxAmount,
   });
 
+  const {data:stats} = useTransactionStats()
+
   const grouped = useMemo(
     () => groupByDate(data?.items ?? []),
     [data?.items],
   );
+  console.log(stats)
 
   const isEmpty = !data?.items.length;
 
@@ -69,10 +73,10 @@ const TransactionPage = () => {
       <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
         {/* Stat cards */}
         <div className="flex gap-3 flex-wrap">
-          <TransactionStatCard label="Số dư"     value="0 ₫" sub="tháng này"    icon={Wallet}       trend="+12.4%" trendUp />
-          <TransactionStatCard label="Thu nhập"  value="0 ₫" sub="giao dịch"    icon={TrendingUp}   trend="+8%"    trendUp />
-          <TransactionStatCard label="Chi tiêu"  value="0 ₫" sub="giao dịch"    icon={TrendingDown} trend="-3%"    trendUp={false} />
-          <TransactionStatCard label="Tài khoản" value="0"   sub="đang kết nối" icon={CreditCard} />
+          <TransactionStatCard label="Số dư"     value={formatVnd(stats?.netBalance)} sub="tháng này"    icon={Wallet}       trend="+12.4%" trendUp />
+          <TransactionStatCard label="Thu nhập"  value={formatVnd(stats?.totalIncome)} sub="giao dịch"    icon={TrendingUp}   trend="+8%"    trendUp />
+          <TransactionStatCard label="Chi tiêu"  value={formatVnd(stats?.totalExpense)} sub="giao dịch"    icon={TrendingDown} trend="-3%"    trendUp={false} />
+          <TransactionStatCard label="Tài khoản" value={stats?.totalAccount}  sub="đang kết nối" icon={CreditCard} />
         </div>
 
         {/* Filters */}
