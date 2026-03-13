@@ -13,82 +13,66 @@ interface Props {
 }
 
 
-const AccountCard = ({account, setAccount, setOpenUpdate}: Props) => {
+const AccountCard = ({ account, setAccount, setOpenUpdate }: Props) => {
+  return (
+    <div className="group relative bg-card border border-border/50 rounded-[20px] p-5 overflow-hidden transition-all duration-200 hover:-translate-y-0.5">
 
+      {/* Top accent */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[20px]"
+        style={{ backgroundColor: account.color ?? "var(--primary)" }}
+      />
 
-    return (
-        <div className="group relative bg-card border border-border rounded-2xl p-5 overflow-hidden transition-all duration-200 hover:-translate-y-1">
-        {/* Top accent */}
-        <div 
-            className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl bg-primary blur(24px) "
-            style={{
-                backgroundColor: account.color ?? "var(--primary)"
-            }}
-        />
+      {/* Actions */}
+      <div className="absolute top-3.5 right-3.5 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          type="button"
+          onClick={() => { setAccount(account); setOpenUpdate(true) }}
+          className="w-7 h-7 rounded-lg bg-muted border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Pencil size={12} />
+        </button>
+        <button
+          type="button"
+          className="w-7 h-7 rounded-lg bg-muted border border-border/50 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+        >
+          <Trash2 size={12} />
+        </button>
+      </div>
 
-        {/* Soft glow */}
-        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full pointer-events-none" />
-
-        {/* Actions — visible on hover */}
-        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button 
-                className="w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                <Pencil size={11} 
-                onClick={() => {
-                    setAccount(account)
-                    setOpenUpdate(true)
-                }}
-            />
-            </button>
-            <button 
-            className="w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors cursor-pointer">
-            <Trash2 size={11} />
-            </button>
+      {/* Logo + name */}
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-11 h-11 rounded-[14px] overflow-hidden border border-border/50 bg-muted flex items-center justify-center shrink-0">
+          <img
+            src={account.logo ?? "https://img.freepik.com/free-vector/wallet-glyph-style-blue-colour_78370-7159.jpg"}
+            alt={account.title}
+            className="w-9 h-9 object-contain"
+          />
         </div>
+        <div>
+          <p className="text-sm font-medium text-foreground leading-tight">{account.title}</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{account.type}</p>
+        </div>
+      </div>
 
-        {/* Icon + name */}
-        <div className="flex items-center gap-3 mb-5">
-            <Avatar className="w-11 h-11 rounded-[13px] flex items-center justify-center shrink-0">
-                <AvatarImage 
-                    src={
-                        account.logo 
-                        ?
-                        account.logo
-                        :
-                        'https://img.freepik.com/free-vector/wallet-glyph-style-blue-colour_78370-7159.jpg?semt=ais_hybrid&w=740&q=80'
-                    }
-                />
-            </Avatar>
-            <div>
-            <p className="font-semibold text-foreground text-sm leading-tight">{account.title}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{account.type}</p>
-            </div>
-        </div>
+      {/* Balance */}
+      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Số dư</p>
+      <p
+        className="text-[22px] font-semibold tracking-tight mb-4"
+        style={{ color: account.color ?? "var(--primary)" }}
+      >
+        {formatVnd(account.balance)}
+      </p>
 
-        {/* Balance */}
-        <div className="mb-4">
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">Số dư</p>
-            <p 
-                className="text-2xl font-bold tracking-tight transition-all duration-200"
-                style={{
-                    color: account.color ?? "var(--primary)"
-                }}
-            >
-                {formatVnd(account.balance)}
-            </p>
-        </div>
+      {/* Footer */}
+      <div className="flex items-center justify-end pt-3.5 border-t border-border/50">
+        <span className="text-[10px] font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-md border border-border/50">
+          {account.status}
+        </span>
+      </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1 text-[11px] font-semibold">
-                20% <TrendingUp />    tháng này
-            </span>
-            <div className="flex items-center gap-2">
-                <span className="text-[9px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-md border border-border">{account.status}</span>
-            </div>
-        </div>
-        </div>
-    )
+    </div>
+  )
 }
 
 export default AccountCard 

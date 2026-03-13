@@ -42,6 +42,7 @@ const TransactionCategoryCreate = ({ open, setOpen, parentId }: Props) => {
       onSuccess: () => {
         toast.success("Thêm trạng thái thành công")
         setOpen(false)
+        setCategory(defaultState)
       }
     })
   }

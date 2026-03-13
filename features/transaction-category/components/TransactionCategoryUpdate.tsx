@@ -39,6 +39,7 @@ const TransactionCategoryUpdate = ({open, setOpen, transactionCategory}: Props) 
         updateTransactionCategory.mutate({id: transactionCategory.id, updateDto: category},{
             onSuccess: () => {
                 toast.success("Cập nhật thành công")
+                setOpen(false)
             }
         })
         

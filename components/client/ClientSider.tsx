@@ -69,7 +69,7 @@ const menus = [
         icon: Wallet,
       },
       {
-        name: "Danh mục giao dịch",
+        name: "Danh mục tài chính",
         href: '/finance/transaction-category',
         icon: Captions
       },

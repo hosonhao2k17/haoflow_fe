@@ -111,7 +111,7 @@ const TransactionForm = ({ form, setForm, isPending = false }: Props) => {
                       className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[10px] font-bold shrink-0"
                       style={{ backgroundColor: item.color ?? "#03002e" }}
                     >
-                      {item.icon ?? item.title?.charAt(0).toUpperCase()}
+                      {item.logo ?? item.title?.charAt(0).toUpperCase()}
                     </span>
                     {item.title}
                   </div>
