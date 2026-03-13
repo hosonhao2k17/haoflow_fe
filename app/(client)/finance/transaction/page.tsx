@@ -24,6 +24,7 @@ import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/
 import { formatVnd } from "@/lib/format";
 import TransactionCreate from "@/features/transaction/components/TransactionCreate";
 import TransactionReceiptPreview from "@/features/transaction/components/TransactionReceiptPreview";
+import TransactionUpdate from "@/features/transaction/components/TransactionUpdate";
 
 
 interface AmountRange {
@@ -51,7 +52,9 @@ const TransactionPage = () => {
   const [dateTo, setDateTo] = useState<Date>(endOfMonth(new Date()));
 
   const [openCreate, setOpenCreate] = useState<boolean>(false);
-  const [openReceipt, setOpenReceipt] = useState<boolean>(false)
+  const [openReceipt, setOpenReceipt] = useState<boolean>(false);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [transaction, setTransaction] = useState<Transaction>();
 
   const { data, isLoading } = useTransactions({
     merchant,
@@ -134,7 +137,12 @@ const TransactionPage = () => {
                     <Fragment key={dateKey}>
                       <TransactionDateRow date={new Date(dateKey)} count={txs.length} />
                       {txs.map((tx) => (
-                        <TransactionRow key={tx.id} transaction={tx} />
+                        <TransactionRow 
+                          key={tx.id} 
+                          transaction={tx} 
+                          setOpenUpdate={setOpenUpdate}
+                          setTransaction={setTransaction}
+                        />
                       ))}
                     </Fragment>
                   ))
@@ -166,6 +174,12 @@ const TransactionPage = () => {
           open={openReceipt}
           setOpen={setOpenReceipt}
         />
+        <TransactionUpdate 
+          open={openUpdate}
+          setOpen={setOpenUpdate}
+          transaction={transaction}
+        />
+
       </div>
 
 

@@ -48,8 +48,6 @@ const BudgetForm = ({ setBudget, budget }: Props) => {
 
   return (
     <div className="space-y-5">
-
-      {/* ── Category ── */}
       <div className="space-y-1.5">
         <Label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
           <Tag size={12} className="text-muted-foreground" />
@@ -153,7 +151,7 @@ const BudgetForm = ({ setBudget, budget }: Props) => {
             placeholder="80"
             min={0}
             max={100}
-            value={budget.alertThreshold ?? 80}
+            value={budget.alertThreshold ?? 100}
             onChange={(e) => update({ alertThreshold: Number(e.target.value) })}
             className="h-10 rounded-xl border-border/60 pr-8 text-sm shadow-none"
           />
