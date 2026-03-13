@@ -32,9 +32,9 @@ const periodLabel = (p: BudgetPeriod) =>
 
 const getStatus = (pct: number, threshold: number) => {
   if (pct >= 100)
-    return { label: "Vượt ngân sách", icon: XCircle,       cls: "text-rose-600",    bg: "bg-rose-50",    bar: "bg-rose-500"    };
+    return { label: "Vượt ngân sách", icon: XCircle, cls: "text-rose-600", bg: "bg-rose-50", bar: "bg-rose-500"    };
   if (pct >= threshold)
-    return { label: "Sắp vượt",       icon: AlertTriangle, cls: "text-amber-600",   bg: "bg-amber-50",   bar: "bg-amber-500"   };
+    return { label: "Sắp vượt", icon: AlertTriangle, cls: "text-amber-600", bg: "bg-amber-50", bar: "bg-amber-500"   };
   return   { label: "Trong ngân sách",icon: CheckCircle2,  cls: "text-emerald-600", bg: "bg-emerald-50", bar: "bg-emerald-500" };
 };
 
@@ -55,6 +55,7 @@ const BudgetCard = ({
   setBudget,
   setOpenRemove
 }: Props) => {
+
   const pct = Math.min(Math.round((spent / budget.amount) * 100), 100);
   const status = getStatus(pct, budget.alertThreshold);
   const StatusIcon = status.icon;

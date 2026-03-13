@@ -46,6 +46,12 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       });
     });
 
+    socket.on('alert_threshold', (data) => {
+      toast.warning(`${data.title}`, {
+        description: data.body
+      })
+    })
+
     return () => {
       socket.off('task_alarm');
       disconnectSocket();

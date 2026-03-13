@@ -12,7 +12,7 @@ import TransactionReceiptHover from "./TransactionReceiptHover"
 import { toast } from "sonner"
 
 interface Props {
-  open:    boolean
+  open: boolean
   setOpen: (open: boolean) => void
 }
 
