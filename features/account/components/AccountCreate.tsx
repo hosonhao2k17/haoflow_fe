@@ -35,7 +35,7 @@ const AccountCreate = ({ open, setOpen }: Props) => {
 
   const handleCreate = () => {
     createAccount.mutate(account, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         toast.success("Tạo tài khoản thành công");
         setOpen(false)
         setAccount(defaultValue)
@@ -63,19 +63,14 @@ const AccountCreate = ({ open, setOpen }: Props) => {
             </div>
           </div>
         </DialogHeader>
-
         <Separator />
-
         <div className="px-6 py-3">
           <AccountForm 
             account={account}
             set={setAccount}
           />
         </div>
-
         <Separator />
-
-        {/* Footer */}
         <div className="px-6 py-4 flex gap-2 justify-end">
           <Button
             type="button"
@@ -88,7 +83,7 @@ const AccountCreate = ({ open, setOpen }: Props) => {
           <Button
             type="button"
             onClick={handleCreate}
-            className="rounded-lg h-9 px-5 text-sm bg-indigo-500 hover:bg-indigo-600 text-white"
+            className="rounded-lg h-9 px-5 text-sm bg-primary text-white"
           >
             <Wallet size={14} className="mr-1.5" />
             Tạo tài khoản

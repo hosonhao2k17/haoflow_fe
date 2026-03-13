@@ -16,6 +16,7 @@ import { useTransactionCategories } from "@/features/transaction-category/transa
 import { TransactionCategory } from "@/features/transaction-category/interfaces/transaction-category.interface"
 import { TransactionFormValue } from "../interfaces/transaction-form"
 import { amountToWords } from "@/lib/vnd"
+import InputVnd from "@/components/common/InputVnd"
 
 const TYPE_OPTIONS = [
   { value: TransactionType.INCOME,   label: "Thu nhập",     icon: <ArrowDownCircle size={14} /> },
@@ -62,17 +63,10 @@ const TransactionForm = ({ form, setForm, isPending = false }: Props) => {
       <div className="space-y-1.5">
         <Label className="text-xs text-muted-foreground">Số tiền</Label>
         <div className="relative">
-          <Input
-            disabled={isPending}
-            type="text"
-            inputMode="numeric"
-            placeholder="0"
-            value={form.amount != null ? form.amount.toLocaleString("vi-VN") : ""}
-            onChange={e => {
-              const raw = e.target.value.replace(/\./g, "").replace(/[^0-9]/g, "")
-              set("amount", raw ? Number(raw) : undefined)
-            }}
-            className="h-11 rounded-xl border-border/60 text-base font-medium pr-8 shadow-none"
+          <InputVnd
+            isPending={isPending}
+            value={form.amount}
+            onChange={(value) => set("amount", value)}
           />
           <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">₫</span>
         </div>

@@ -51,7 +51,6 @@ const IconPicker = ({ value, onChange }: Props) => {
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-        {/* ── Trigger input ── */}
         <PopoverTrigger asChild>
             <button
             type="button"
@@ -82,14 +81,12 @@ const IconPicker = ({ value, onChange }: Props) => {
             </button>
         </PopoverTrigger>
 
-        {/* ── Popover panel ── */}
         <PopoverContent
             side="bottom"
             align="start"
             sideOffset={8}
             className="w-[320px] p-0 rounded-2xl border border-border/60 shadow-2xl overflow-hidden"
         >
-            {/* Search */}
             <div className="p-3 border-b border-border/50">
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/50" />
@@ -103,7 +100,6 @@ const IconPicker = ({ value, onChange }: Props) => {
             </div>
             </div>
 
-            {/* Category tabs */}
             {!search && (
                 <div className="border-b border-border/50 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <div className="flex gap-0.5 p-2 w-max">
