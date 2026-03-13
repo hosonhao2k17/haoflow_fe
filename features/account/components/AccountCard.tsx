@@ -51,9 +51,9 @@ const AccountCard = ({account, setAccount, setOpenUpdate}: Props) => {
             <Avatar className="w-11 h-11 rounded-[13px] flex items-center justify-center shrink-0">
                 <AvatarImage 
                     src={
-                        account.icon 
+                        account.logo 
                         ?
-                        account.icon
+                        account.logo
                         :
                         'https://img.freepik.com/free-vector/wallet-glyph-style-blue-colour_78370-7159.jpg?semt=ais_hybrid&w=740&q=80'
                     }

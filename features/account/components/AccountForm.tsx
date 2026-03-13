@@ -34,6 +34,7 @@ import IconPicker from "@/components/common/IconPicker";
 import ColorPicker from "@/components/common/ColorPicker";
 import InputVnd from "@/components/common/InputVnd";
 import { amountToWords } from "@/lib/vnd";
+import  LogoPicker  from "@/components/common/LogoPicker";
 
 interface Props {
     account: AccountFormValue;
@@ -137,11 +138,11 @@ const AccountForm = ({account, set}: Props) => {
            <Field>
               <Label className="flex items-center text-sm font-medium ">
                 <ImagePlus size={13} className="text-muted-foreground" />
-                Icon
+                Logo
               </Label>
-              <IconPicker 
-                value={account.icon as string}
-                onChange={(val) => set({...account, icon: val})}
+              <LogoPicker 
+                value={account.logo as string}
+                onChange={(logo) => set({...account, logo})}
               />
             </Field>
 

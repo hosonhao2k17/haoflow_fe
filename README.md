@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
+Logo momo 
+
+https://brandlogos.net/wp-content/uploads/2023/09/momo-logo_brandlogos.net_mtkvq.png
+
+Logo zalo pay 
+https://images.seeklogo.com/logo-png/39/2/zalopay-logo-png_seeklogo-391409.png
+
+Binnace 
+https://images.seeklogo.com/logo-png/32/1/binance-coin-bnb-logo-png_seeklogo-325081.png

@@ -8,6 +8,6 @@ export interface Account extends Base{
     type: AccountType
     balance: number;
     color?: string;
-    icon?: string;
+    logo?: string;
     status: AccountStatus
 }
