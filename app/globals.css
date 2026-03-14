@@ -45,6 +45,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Màu & token dùng chung: xem thêm common/constants/theme.constant.ts */
 :root {
   --radius: 0.625rem;
   --background: oklch(0.98 0 0);
@@ -130,10 +131,8 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-    @apply bg-background text-foreground;
+  html, body {
+    @apply bg-background text-foreground max-w-full overflow-x-hidden;
   }
 }

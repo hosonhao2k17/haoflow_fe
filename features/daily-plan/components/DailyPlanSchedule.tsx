@@ -30,7 +30,7 @@ const DailyPlanSchedule = ({
 }: Props) => {
   if (isLoading) return <DailyPlanScheduleSkeleton />
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 min-w-0">
       {dailyPlans?.map((plan: DailyPlan) => {
         const { totalTask, completedTasks, progressPercent } = plan.summary
         const today = isToday(plan?.date)

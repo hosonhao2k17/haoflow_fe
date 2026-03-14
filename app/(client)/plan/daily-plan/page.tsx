@@ -45,8 +45,7 @@ const DailyPlanPage = () => {
     }
     return (
         <>
-            <div className="flex flex-col">
-            
+            <div className="flex flex-col w-full max-w-full min-w-0">
                 <DailyPlanTool 
                     setOpen={setOpen} 
                     setMode={setCruMode}
@@ -55,7 +54,7 @@ const DailyPlanPage = () => {
                     startDate={startDate}
                     endDate={endDate}
                 />
-                <div className="p-6 space-y-6">
+                <div className="p-4 sm:p-6 space-y-6 min-w-0">
                     <h1 className="text-2xl flex gap-2 items-center font-semibold uppercase">
                         Kế hoạch hằng tuần
                         <Calendar />

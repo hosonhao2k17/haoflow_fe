@@ -32,9 +32,9 @@ const periodLabel = (p: BudgetPeriod) =>
 
 const getStatus = (pct: number, threshold: number) => {
   if (pct >= 100)
-    return { label: "Vượt ngân sách", icon: XCircle, cls: "text-rose-600", bg: "bg-rose-50", bar: "bg-rose-500"    };
+    return { label: "Vượt ngân sách", icon: XCircle,       cls: "text-rose-600",    bg: "bg-rose-50",    bar: "bg-rose-500"    };
   if (pct >= threshold)
-    return { label: "Sắp vượt", icon: AlertTriangle, cls: "text-amber-600", bg: "bg-amber-50", bar: "bg-amber-500"   };
+    return { label: "Sắp vượt",       icon: AlertTriangle, cls: "text-amber-600",   bg: "bg-amber-50",   bar: "bg-amber-500"   };
   return   { label: "Trong ngân sách",icon: CheckCircle2,  cls: "text-emerald-600", bg: "bg-emerald-50", bar: "bg-emerald-500" };
 };
 
@@ -53,9 +53,8 @@ const BudgetCard = ({
   onClick,
   setOpenUpdate,
   setBudget,
-  setOpenRemove
+  setOpenRemove,
 }: Props) => {
-
   const pct = Math.min(Math.round((spent / budget.amount) * 100), 100);
   const status = getStatus(pct, budget.alertThreshold);
   const StatusIcon = status.icon;
@@ -68,8 +67,10 @@ const BudgetCard = ({
       <CardContent className="p-5">
 
         {/* ── Top row ── */}
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <div className="flex items-center gap-3">
+        <div className="flex items-start justify-between gap-2 mb-4">
+
+          {/* Left: icon + title + subtitle — min-w-0 to allow truncation */}
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-xl shrink-0">
               {budget.category?.icon}
             </div>
@@ -77,18 +78,18 @@ const BudgetCard = ({
               <p className="text-sm font-semibold text-foreground leading-tight truncate">
                 {budget.category?.title}
               </p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
+              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
                 {periodLabel(budget.period)} · {fmtMonth(new Date(budget.startDate))}
               </p>
             </div>
           </div>
 
-          {/* Badge + 3-dot menu */}
+          {/* Right: badge + 3-dot — shrink-0 so it never gets squished */}
           <div className="flex items-center gap-1 shrink-0">
             <Badge
               variant="outline"
               className={cn(
-                "text-[11px] font-semibold px-2 py-0.5 rounded-full border gap-1",
+                "text-[11px] font-semibold px-2 py-0.5 rounded-full border gap-1 whitespace-nowrap",
                 status.bg, status.cls, "border-current/20"
               )}
             >
@@ -111,22 +112,22 @@ const BudgetCard = ({
                 className="rounded-xl w-40 shadow-lg"
                 onClick={(e) => e.stopPropagation()}
               >
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   className="gap-2 text-xs cursor-pointer rounded-lg"
                   onClick={() => {
-                    setOpenUpdate(true)
-                    setBudget(budget)
+                    setOpenUpdate(true);
+                    setBudget(budget);
                   }}
                 >
                   <Pencil size={13} className="text-muted-foreground" />
                   Chỉnh sửa
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   className="gap-2 text-xs cursor-pointer rounded-lg text-rose-600 focus:text-rose-600 focus:bg-rose-50"
                   onClick={() => {
-                    setOpenRemove(true)
-                    setBudget(budget)
+                    setOpenRemove(true);
+                    setBudget(budget);
                   }}
                 >
                   <Trash2 size={13} />
@@ -157,13 +158,13 @@ const BudgetCard = ({
         {/* ── Alert banners ── */}
         {pct >= budget.alertThreshold && pct < 100 && (
           <div className="mt-3 flex items-center gap-1.5 text-[11px] text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
-            <AlertTriangle size={11} />
+            <AlertTriangle size={11} className="shrink-0" />
             <span>Đã đạt <strong>{budget.alertThreshold}%</strong> ngưỡng cảnh báo</span>
           </div>
         )}
         {pct >= 100 && (
           <div className="mt-3 flex items-center gap-1.5 text-[11px] text-rose-600 bg-rose-50 rounded-lg px-3 py-2">
-            <XCircle size={11} />
+            <XCircle size={11} className="shrink-0" />
             <span>Vượt ngân sách <strong>{fmtShort(spent - budget.amount)}</strong></span>
           </div>
         )}

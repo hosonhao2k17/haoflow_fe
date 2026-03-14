@@ -96,28 +96,23 @@ const DailyPlanTool = ({
   }
 
   return (
-    <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 p-4 border bg-card rounded-2xl">
+    <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 p-4 border bg-card rounded-2xl min-w-0">
 
       {/* Left: week navigation */}
-      <div className="flex items-center gap-2 flex-wrap">
-
-        <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => shiftWeek(-1)}>
+      <div className="flex items-center gap-2 flex-wrap min-w-0">
+        <Button variant="outline" size="icon" className="h-9 w-9 shrink-0" onClick={() => shiftWeek(-1)}>
           <ChevronLeft className="w-4 h-4" />
         </Button>
-
-        <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => shiftWeek(1)}>
+        <Button variant="outline" size="icon" className="h-9 w-9 shrink-0" onClick={() => shiftWeek(1)}>
           <ChevronRight className="w-4 h-4" />
         </Button>
-
-        <Button variant="secondary" size="sm" className="h-9 text-xs" onClick={goToCurrentWeek}>
+        <Button variant="secondary" size="sm" className="h-9 text-xs shrink-0" onClick={goToCurrentWeek}>
           Tuần này
         </Button>
-
-        {/* Week range label */}
         {startDate && endDate && (
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-3 py-2 rounded-lg">
-            <CalendarRange className="w-3.5 h-3.5" />
-            <span>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-3 py-2 rounded-lg min-w-0 shrink">
+            <CalendarRange className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">
               {formatDate(new Date(startDate))} – {formatDate(new Date(endDate))}
             </span>
           </div>
@@ -125,11 +120,9 @@ const DailyPlanTool = ({
       </div>
 
       {/* Right: week selector + add button */}
-      <div className="flex items-center gap-2">
-
-        {/* Week selector */}
+      <div className="flex items-center gap-2 flex-wrap shrink-0">
         <Select onValueChange={handleSelectWeek} defaultValue={String(currentWeek)}>
-          <SelectTrigger className="w-72 h-9 text-xs">
+          <SelectTrigger className="w-full min-w-0 max-w-72 h-9 text-xs">
             <SelectValue placeholder="Chọn tuần..." />
           </SelectTrigger>
           <SelectContent className="max-h-64">

@@ -79,13 +79,13 @@ const TransactionPage = () => {
   const isEmpty = !data?.items.length;
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50 w-full max-w-full min-w-0">
       <TransactionHeader 
         setOpen={setOpenCreate}
         setOpenReceipt={setOpenReceipt}
       />
 
-      <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
+      <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 space-y-5">
         <div className="flex gap-3 flex-wrap">
           <TransactionStatCard label="Số dư"     value={formatVnd(stats?.netBalance)} sub="tháng này"    icon={Wallet}       trend="+12.4%" trendUp />
           <TransactionStatCard label="Thu nhập"  value={formatVnd(stats?.totalIncome)} sub="giao dịch"    icon={TrendingUp}   trend="+8%"    trendUp />
@@ -109,8 +109,8 @@ const TransactionPage = () => {
           dateTo={dateTo}
         />
 
-        <Card className="shadow-none border border-border/60 rounded-2xl overflow-hidden">
-          <Table>
+        <Card className="shadow-none border border-border/60 rounded-2xl overflow-hidden min-w-0">
+          <Table className="min-w-[600px]">
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50 border-b border-border/50">
                 <TableHead className="pl-5 text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-[32%]">Giao dịch</TableHead>

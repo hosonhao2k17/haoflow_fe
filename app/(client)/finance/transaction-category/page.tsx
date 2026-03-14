@@ -12,7 +12,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import TransactionCategoryCardSkeleton from "@/features/transaction-category/components/skeletons/TransactionCategroryCardSkeleton";
 
+const TYPE_FILTERS: { label: string; value: TransactionCategoryType | undefined }[] = [
+  { label: "Tất cả",   value: undefined                       },
+  { label: "Thu nhập", value: TransactionCategoryType.INCOME  },
+  { label: "Chi tiêu", value: TransactionCategoryType.EXPENSE },
+];
 
 const TransactionCategoryPage = () => {
 
@@ -21,15 +28,18 @@ const TransactionCategoryPage = () => {
   const [category, setCategory] = useState<TransactionCategory>();
   const [parentId, setParentId] = useState<string>();
   const [openRemove, setOpenRemove] = useState<boolean>(false);
-  const { data } = useTransactionCategories()
+  const [type, setType] = useState<TransactionCategoryType>();
+  const [keyword, setKeyword] = useState<string>();
 
-  const removeTransactionCategory = useDeleteTransactionCategory()
+  const { data, isPending } = useTransactionCategories({ keyword, type });
+
+  const removeTransactionCategory = useDeleteTransactionCategory();
   const handleRemove = () => {
     if (!category) return;
     removeTransactionCategory.mutate(category.id, {
-      onSuccess: () => toast.success("Xóa thành công")
-    })
-  }
+      onSuccess: () => toast.success("Xóa thành công"),
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -43,7 +53,7 @@ const TransactionCategoryPage = () => {
             </div>
             <div>
               <h1 className="text-sm font-bold text-foreground leading-tight">Danh mục giao dịch</h1>
-              <p className="text-[10px] text-muted-foreground">Finance › Settings</p>
+              <p className="text-[10px] text-muted-foreground">Finance › Categories</p>
             </div>
           </div>
           <Button
@@ -60,18 +70,21 @@ const TransactionCategoryPage = () => {
 
         {/* ── Filter bar ── */}
         <div className="flex flex-wrap items-center gap-2">
+
           {/* Type toggle */}
           <div className="flex items-center gap-1 p-1 bg-muted rounded-xl border border-border/40">
-            {["Tất cả", "Thu nhập", "Chi tiêu"].map((f, i) => (
+            {TYPE_FILTERS.map((f) => (
               <button
-                key={f}
-                className={`px-3 h-7 rounded-lg text-xs font-semibold transition-all ${
-                  i === 0
+                key={f.label}
+                onClick={() => setType(f.value)}
+                className={cn(
+                  "px-3 h-7 rounded-lg text-xs font-semibold transition-all",
+                  type === f.value
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/80"
-                }`}
+                )}
               >
-                {f}
+                {f.label}
               </button>
             ))}
           </div>
@@ -80,6 +93,7 @@ const TransactionCategoryPage = () => {
           <div className="relative flex-1 min-w-[200px]">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">🔍</span>
             <Input
+              onChange={(e) => setKeyword(e.target.value || undefined)}
               placeholder="Tìm danh mục..."
               className="pl-8 h-9 rounded-xl border-border/60 bg-white text-sm shadow-none"
             />
@@ -88,17 +102,24 @@ const TransactionCategoryPage = () => {
 
         {/* ── Grid ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {data?.items.map((cat: TransactionCategory) =>
-            <TransactionCategoryCard
-              key={cat.id}
-              cat={cat}
-              setOpenUpdate={setOpenUpdate}
-              setCategory={setCategory}
-              setOpenCreate={setOpenCreate}
-              setParentId={setParentId}
-              setOpenRemove={setOpenRemove}
-            />
-          )}
+          {
+            isPending
+            ?
+            Array.from({length: 6}).map((item, i) => (
+              <TransactionCategoryCardSkeleton key={i} />
+            ))
+            :
+            data?.items.map((cat: TransactionCategory) => (
+              <TransactionCategoryCard
+                key={cat.id}
+                cat={cat}
+                setOpenUpdate={setOpenUpdate}
+                setCategory={setCategory}
+                setOpenCreate={setOpenCreate}
+                setParentId={setParentId}
+                setOpenRemove={setOpenRemove}
+              />
+            ))}
         </div>
       </div>
 
@@ -120,7 +141,7 @@ const TransactionCategoryPage = () => {
         handleRemove={handleRemove}
       />
     </div>
-  )
-}
+  );
+};
 
 export default TransactionCategoryPage;

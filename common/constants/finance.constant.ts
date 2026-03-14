@@ -16,8 +16,6 @@ export enum AccountStatus {
 export enum TransactionCategoryType {
     INCOME = 'income',
     EXPENSE = 'expense',
-    TRANSFER = 'transfer',
-    INVESTMENT = 'investment'
 }
 
 export enum BudgetPeriod {

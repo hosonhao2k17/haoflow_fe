@@ -61,7 +61,11 @@ const BudgetCreate = ({ open, setOpen }: Props) => {
                         setBudget={setBudget} 
                     />
                     <div className="flex gap-2 pt-1">
-                        <Button variant="outline" className="flex-1 h-10 rounded-xl text-sm">
+                        <Button
+                            variant="outline"
+                            className="flex-1 h-10 rounded-xl text-sm"
+                            onClick={() => { setOpen(false); setBudget(DEFAULT_STATE); }}
+                        >
                             Huỷ
                         </Button>
                         <Button 
