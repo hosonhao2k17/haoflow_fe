@@ -303,7 +303,7 @@ const UsersForm = ({
                                                     birthDate: new Date(e.target.value)
                                                 })
                                             }
-                                            value={user.birthDate ? formatDateForInput(user.birthDate.toString()) : ""}
+                                            value={user.birthDate ? formatDateForInput(new Date(user.birthDate)) : ""}
                                         />
                                         <InputGroupAddon align="inline-end">
                                             <Cake  />

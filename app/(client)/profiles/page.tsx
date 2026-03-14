@@ -11,6 +11,7 @@ import {
   Trophy, Target, Link2, Plus, Unlink,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 import { useUserStore } from "@/store/user.store"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -303,7 +304,7 @@ const Profiles = () => {
           <InfoRow
             icon={<Calendar className="w-4 h-4" />}
             label="Ngày sinh"
-            value={user.birthDate ?? <span className="text-muted-foreground italic text-xs">Chưa cập nhật</span>}
+            value={user.birthDate ? format(new Date(user.birthDate), "dd/MM/yyyy") : <span className="text-muted-foreground italic text-xs">Chưa cập nhật</span>}
           />
           <Separator />
           <InfoRow

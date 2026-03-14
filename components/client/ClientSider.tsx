@@ -17,6 +17,7 @@ import {
   LandmarkIcon,
   ChartNoAxesCombined,
   Crosshair,
+  Bell,
 } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -53,6 +54,7 @@ const menus = [
     ],
   },
   { name: "Nhật ký", href: "/journal", icon: BookType },
+  { name: "Thông báo", href: "/notifications", icon: Bell },
   { name: "AI Coach", href: "/ai", icon: Brain },
 ];
 

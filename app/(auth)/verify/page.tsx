@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect } from "react"
+import { Suspense, useEffect } from "react"
 import { useVerify } from "@/features/auth/auth.hook"
 import { Loader } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
-const VerifyLoadingPage = () => {
+const VerifyContent = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get("token")
@@ -60,4 +60,14 @@ const VerifyLoadingPage = () => {
     )
 }
 
-export default VerifyLoadingPage
+export default function VerifyLoadingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <Loader className="h-16 w-16 animate-spin text-primary-foreground [animation-duration:2s]" />
+      </div>
+    }>
+      <VerifyContent />
+    </Suspense>
+  )
+}

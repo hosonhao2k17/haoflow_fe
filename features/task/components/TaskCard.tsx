@@ -53,7 +53,7 @@ const TaskCard = ({
           <div className="shrink-0 pt-0.5">
             <TaskStatusTab
               isPending={updateTaskMutation.isPending}
-              handleChangeValue={handleChangeStatus}
+              handleChangeValue={(val) => handleChangeStatus(val as TaskStatus)}
               defaultStatus={task.status}
             />
           </div>

@@ -34,7 +34,7 @@ const AccountUpdate = ({open, setOpen, account}: Props) => {
         balance: account.balance,
         type: account.type,
         color: account.color,
-        icon: account.icon,
+        logo: account.logo,
         status: account.status
     });
 
@@ -45,7 +45,7 @@ const AccountUpdate = ({open, setOpen, account}: Props) => {
             balance: account.balance,
             type: account.type,
             color: account.color,
-            icon: account.icon,
+            logo: account.logo,
             status: account.status,
         });
     }, [account?.id]);

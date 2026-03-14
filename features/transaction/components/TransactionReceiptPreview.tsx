@@ -42,8 +42,7 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
   const createTransactionReceipt = useCreateTransactionReceipt()
   const handleCreate = () => {
     if(!form) return;
-    const {isRecurring, ...result} = form;
-    createTransactionReceipt.mutate(result , {
+    createTransactionReceipt.mutate(form, {
       onSuccess: () => {
         toast.success("Thêm thành công")
       }
@@ -136,7 +135,7 @@ const TransactionReceiptPreview = ({ open, setOpen }: Props) => {
 
               <TransactionForm 
                 form={form} 
-                setForm={setForm} 
+                setForm={(val) => setForm(val as CreateTransactionReceipt)} 
               />
             </>
           )}
