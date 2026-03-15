@@ -1,18 +1,28 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { generateCalendarDays } from "../utils/calendar";
 import { DAY_NAMES, MONTH_NAMES } from "../constants/overview-data";
 import { cn } from "@/lib/utils";
 import DayCell from "./DayCell";
+import { useDailyPlans } from "@/features/daily-plan/daly-plan.hook";
+import type { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface";
+
+export function getMonthRange(year: number, month: number): { startDate: Date; endDate: Date } {
+  const startDate = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0);
+  return { startDate, endDate };
+}
 
 interface DailyPlanCalendarProps {
   year: number;
   month: number;
   onPrevMonth: () => void;
   onNextMonth: () => void;
+  /** Gọi khi đổi tháng, trả về startDate/endDate của tháng (khoảng 1 tháng) */
+  onRangeChange?: (startDate: Date, endDate: Date) => void;
 }
 
 const LEGEND = [
@@ -22,13 +32,55 @@ const LEGEND = [
   ["bg-destructive/60", "Hủy"],
 ] as const;
 
+function toYYYYMMDD(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export default function DailyPlanCalendar({
   year,
   month,
   onPrevMonth,
   onNextMonth,
+  onRangeChange,
 }: DailyPlanCalendarProps) {
-  const calDays = useMemo(() => generateCalendarDays(year, month), [year, month]);
+  const { startDate, endDate } = useMemo(
+    () => getMonthRange(year, month),
+    [year, month]
+  );
+  const startStr = useMemo(() => toYYYYMMDD(startDate), [startDate]);
+  const endStr = useMemo(() => toYYYYMMDD(endDate), [endDate]);
+
+  const { data: dailyPlansData } = useDailyPlans({
+    startDate: startStr,
+    endDate: endStr,
+  });
+
+  const plansByDate = useMemo(() => {
+    const map: Record<string, { progressPercent: number; id: string }> = {};
+    const items = (dailyPlansData?.items ?? []) as DailyPlan[];
+    items.forEach((plan) => {
+      const dateStr = plan.date?.split("T")[0] ?? plan.date;
+      if (dateStr && plan.summary) {
+        map[dateStr] = {
+          progressPercent: plan.summary.progressPercent ?? 0,
+          id: plan.id,
+        };
+      }
+    });
+    return map;
+  }, [dailyPlansData?.items]);
+
+  const calDays = useMemo(
+    () => generateCalendarDays(year, month, plansByDate),
+    [year, month, plansByDate]
+  );
+
+  useEffect(() => {
+    onRangeChange?.(startDate, endDate);
+  }, [startDate, endDate, onRangeChange]);
 
   return (
     <Card className="shadow-none border-border/60 rounded-2xl">

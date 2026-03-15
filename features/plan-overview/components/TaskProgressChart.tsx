@@ -6,22 +6,18 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recha
 import { chartColors } from "@/common/constants/theme.constant";
 import ChartTooltip from "./ChartTooltip";
 
-export interface ChartDataItem {
+/** Mỗi cột: nhãn theo filter (T2..CN / Tuần 1..4 / T1..T12), value = % tiến độ (0–100) */
+export interface DailyProgressChartItem {
   label: string;
-  done: number;
-  todo: number;
-  skipped: number;
+  value: number;
 }
 
 interface TaskProgressChartProps {
-  data: ChartDataItem[];
+  data: DailyProgressChartItem[];
   periodLabel: string;
 }
 
-const LEGEND: [string, string][] = [
-  [chartColors.primary, "Hoàn thành"],
-  [chartColors.primaryLightest, "Bỏ qua"],
-];
+const Y_PERCENT_TICKS = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
 export default function TaskProgressChart({ data, periodLabel }: TaskProgressChartProps) {
   return (
@@ -31,23 +27,18 @@ export default function TaskProgressChart({ data, periodLabel }: TaskProgressCha
           <span className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
             <LayoutGrid size={13} className="text-primary" />
           </span>
-          Task Progress
+          Tiến trình nhiệm vụ hằng ngày
           <span className="text-[11px] text-muted-foreground font-normal ml-auto">
             {periodLabel}
           </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="px-5 pb-5">
-        <div className="flex gap-4 mb-4 mt-3">
-          {LEGEND.map(([c, l]) => (
-            <div key={l} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <span className="w-2 h-2 rounded-sm inline-block" style={{ background: c }} />
-              {l}
-            </div>
-          ))}
-        </div>
+        <p className="text-[11px] text-muted-foreground mb-3 mt-1">
+          Trục dưới: ngày / tuần / tháng theo kỳ — Cột: % hoàn thành (0–100)
+        </p>
         <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={data} barGap={2} barCategoryGap="30%">
+          <BarChart data={data} barGap={2} barCategoryGap="15%">
             <XAxis
               dataKey="label"
               tick={{ fontSize: 11, fill: chartColors.mutedForeground }}
@@ -55,6 +46,8 @@ export default function TaskProgressChart({ data, periodLabel }: TaskProgressCha
               tickLine={false}
             />
             <YAxis
+              domain={[0, 100]}
+              ticks={Y_PERCENT_TICKS}
               tick={{ fontSize: 11, fill: chartColors.mutedForeground }}
               axisLine={false}
               tickLine={false}
@@ -64,15 +57,9 @@ export default function TaskProgressChart({ data, periodLabel }: TaskProgressCha
               cursor={{ fill: chartColors.mutedAlpha, radius: 6 }}
             />
             <Bar
-              dataKey="done"
-              name="Hoàn thành"
+              dataKey="value"
+              name="Tiến độ %"
               fill={chartColors.primary}
-              radius={[5, 5, 0, 0]}
-            />
-            <Bar
-              dataKey="skipped"
-              name="Bỏ qua"
-              fill={chartColors.primaryLightest}
               radius={[5, 5, 0, 0]}
             />
           </BarChart>

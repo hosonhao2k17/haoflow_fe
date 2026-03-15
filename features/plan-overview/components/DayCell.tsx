@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
 import type { CalendarDay } from "../utils/calendar";
@@ -29,15 +30,13 @@ export default function DayCell({ day }: DayCellProps) {
 
   const s = styles[day.status] ?? styles.future;
   const b = barColor[day.status] ?? barColor.future;
-
-  return (
-    <div
-      className={cn(
-        "relative border rounded-xl p-1.5 min-h-[60px] flex flex-col items-center justify-between transition-transform cursor-default",
-        day.status !== "future" && "cursor-pointer hover:scale-[1.04]",
-        s
-      )}
-    >
+  const wrapperClass = cn(
+    "relative border rounded-xl p-1.5 min-h-[60px] flex flex-col items-center justify-between transition-transform cursor-default",
+    day.status !== "future" && "cursor-pointer hover:scale-[1.04]",
+    s
+  );
+  const content = (
+    <>
       {day.isToday && (
         <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_6px_var(--primary)]" />
       )}
@@ -59,6 +58,15 @@ export default function DayCell({ day }: DayCellProps) {
           <span className="text-[9px] font-bold block text-center mt-0.5">{day.progress}%</span>
         </div>
       )}
-    </div>
+    </>
   );
+
+  if (day.dailyPlanId) {
+    return (
+      <Link href={`/plan/${day.dailyPlanId}`} className={wrapperClass}>
+        {content}
+      </Link>
+    );
+  }
+  return <div className={wrapperClass}>{content}</div>;
 }

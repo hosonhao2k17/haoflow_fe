@@ -9,4 +9,5 @@ export interface TaskCategory extends Base {
     color?: string;
     icon?: string;
     totalTask: number
+    doneTask: number
 }

@@ -8,20 +8,28 @@ import TaskProgressChart from "@/features/plan-overview/components/TaskProgressC
 import CategoryListCard from "@/features/plan-overview/components/CategoryListCard";
 import DailyPlanCalendar from "@/features/plan-overview/components/DailyPlanCalendar";
 import WeekdayPerformance from "@/features/plan-overview/components/WeekdayPerformance";
-import CategoryStatusChart from "@/features/plan-overview/components/CategoryStatusChart";
+import CategoryStatusChart, {
+  type CategoryStatusItem,
+} from "@/features/plan-overview/components/CategoryStatusChart";
 import AIAnalysis from "@/features/plan-overview/components/AIAnalysis";
-import { useTaskStats } from "@/features/task/task.hook";
+import { useTaskStats, useTasks } from "@/features/task/task.hook";
 import { StatsType } from "@/features/task/constants/stats-type.constant";
+import { TaskStatus } from "@/common/constants/app.constant";
+import { useDailyPlans } from "@/features/daily-plan/daly-plan.hook";
+import { useTaskCategories } from "@/features/task-category/task-category.hook";
 import {
-  WEEK_DATA,
-  MONTH_DATA,
-  YEAR_DATA,
-} from "@/features/plan-overview/constants/overview-data";
+  getDateRangeForFilter,
+  toYYYYMMDD,
+  buildDailyProgressByPeriod,
+} from "@/features/plan-overview/utils/calendar";
+import type { DailyPlan } from "@/features/daily-plan/interfaces/daily-plan.interface";
+import type { Task } from "@/features/task/interfaces/task.interface";
+import type { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface";
 
 const PERIOD_LABELS: Record<FilterMode, string> = {
-  week: "T2 → CN",
-  month: "Tuần 1 → 4",
-  year: "T1 → T12",
+  week: "Tuần này",
+  month: "Tháng này",
+  year: "Năm nay",
 };
 
 export default function TaskOverviewPage() {
@@ -29,13 +37,46 @@ export default function TaskOverviewPage() {
   const [calYear, setCalYear] = useState(new Date().getFullYear());
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const statsType: StatsType = filterMode === "week" ? StatsType.WEEK : filterMode === "month" ? StatsType.MONTH : StatsType.YEAR;
-  const { data: taskStats, isPending: statsLoading } = useTaskStats(statsType);
+  const { data: taskStats } = useTaskStats(statsType);
+
+  const dateRange = useMemo(() => getDateRangeForFilter(filterMode), [filterMode]);
+  const startStr = useMemo(() => toYYYYMMDD(dateRange.startDate), [dateRange.startDate]);
+  const endStr = useMemo(() => toYYYYMMDD(dateRange.endDate), [dateRange.endDate]);
+  const { data: dailyPlansData } = useDailyPlans({ startDate: startStr, endDate: endStr });
+  const { data: tasksData } = useTasks({ limit: 500 });
+  const { data: categoriesData } = useTaskCategories({ limit: 100 });
 
   const chartData = useMemo(() => {
-    if (filterMode === "week") return WEEK_DATA;
-    if (filterMode === "month") return MONTH_DATA;
-    return YEAR_DATA;
-  }, [filterMode]);
+    const items = (dailyPlansData?.items ?? []) as DailyPlan[];
+    const plans = items.map((p) => ({
+      date: p.date?.split("T")[0] ?? p.date ?? "",
+      progressPercent: p.summary?.progressPercent ?? 0,
+    }));
+    return buildDailyProgressByPeriod(filterMode, dateRange, plans);
+  }, [dailyPlansData?.items, filterMode, dateRange]);
+
+  const categoryStatusData = useMemo((): CategoryStatusItem[] => {
+    const items = (tasksData?.items ?? []) as Task[];
+    const categories = (categoriesData?.items ?? []) as TaskCategory[];
+    const counts: Record<string, { done: number; skipped: number }> = {};
+    categories.forEach((c) => {
+      counts[c.id] = { done: 0, skipped: 0 };
+    });
+    items.forEach((t) => {
+      const cid = t.category?.id;
+      if (!cid || !counts[cid]) return;
+      if (t.status === TaskStatus.DONE) counts[cid].done += 1;
+      else if (t.status === TaskStatus.SKIPPED) counts[cid].skipped += 1;
+    });
+    return categories
+      .map((c) => ({
+        category: c.title ?? "",
+        done: counts[c.id]?.done ?? 0,
+        skipped: counts[c.id]?.skipped ?? 0,
+      }))
+      .filter((row) => row.done > 0 || row.skipped > 0)
+      .sort((a, b) => b.done + b.skipped - (a.done + a.skipped));
+  }, [tasksData?.items, categoriesData?.items]);
 
   const prevMonth = () => {
     let m = calMonth - 1;
@@ -88,7 +129,7 @@ export default function TaskOverviewPage() {
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           <WeekdayPerformance />
-          <CategoryStatusChart />
+          <CategoryStatusChart data={categoryStatusData} />
         </div>
 
         <AIAnalysis />
