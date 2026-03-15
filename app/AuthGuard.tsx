@@ -34,10 +34,13 @@ export default function AuthGuard({ children, requiredRole }: Props) {
       setUser(user);
     }
 
-    if (requiredRole && user?.role?.name !== requiredRole) {
-      router.replace("/");
+    // Chỉ redirect khi đã load xong user; tránh redirect khi user còn undefined (trang vừa load)
+    if (requiredRole && !userLoading) {
+      if (!user || user.role?.name !== requiredRole) {
+        router.replace("/");
+      }
     }
-  }, [accessToken, authLoading, user, isSuccess, requiredRole, router, setUser]);
+  }, [accessToken, authLoading, user, isSuccess, requiredRole, userLoading, router, setUser]);
 
   if (authLoading || !accessToken) {
     return null;
