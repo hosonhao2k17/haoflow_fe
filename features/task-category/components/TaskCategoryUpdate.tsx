@@ -66,8 +66,12 @@ const TaskCategoryUpdate = ({ open, setOpen, taskCategory }: Props) => {
                             </p>
                         </div>
 
-                        <div className="relative z-10 w-12 h-12 rounded-xl bg-primary-foreground/15 border border-primary-foreground/20 flex items-center justify-center text-xl shadow-inner">
-                            {taskCategory.icon || "🏷️"}
+                        <div className="relative z-10 w-12 h-12 rounded-xl bg-primary-foreground/15 border border-primary-foreground/20 flex items-center justify-center text-xl shadow-inner overflow-hidden">
+                            {taskCategory.icon && (/^https?:\/\//i.test(taskCategory.icon) || taskCategory.icon.startsWith("/") || taskCategory.icon.startsWith("data:")) ? (
+                                <img src={taskCategory.icon} alt="" className="w-7 h-7 object-contain" />
+                            ) : (
+                                <span>{taskCategory.icon || "🏷️"}</span>
+                            )}
                         </div>
                     </div>
 

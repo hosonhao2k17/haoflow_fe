@@ -5,6 +5,7 @@ import CategoryTool from "@/features/task-category/components/CategoryTool"
 import TaskCategoryCard from "@/features/task-category/components/TaskCategoryCard"
 import TaskCategoryCreate from "@/features/task-category/components/TaskCategoryCreate"
 import TaskCategoryUpdate from "@/features/task-category/components/TaskCategoryUpdate"
+import TaskCategorySkeleton from "@/features/task-category/components/skeletons/TaskCategorySkeleton"
 import { TaskCategory } from "@/features/task-category/interfaces/task-catgegory.interface"
 import { useRemoveTaskCategory, useTaskCategories } from "@/features/task-category/task-category.hook"
 import { useState } from "react"
@@ -18,9 +19,9 @@ const Category = () => {
   const [openRemove, setOpenRemove] = useState<boolean>(false);
   
   const [category, setCategory] = useState<TaskCategory>();
-  const { data } = useTaskCategories({
-    keyword, 
-    limit
+  const { data, isPending } = useTaskCategories({
+    keyword,
+    limit,
   })
 
   const removeTaskCategory = useRemoveTaskCategory();
@@ -41,19 +42,21 @@ const Category = () => {
         setLimit={setLimit}
         setOpenCreate={setOpenCreate}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
-        {
-          data?.items.map((category: TaskCategory) => (
-            <TaskCategoryCard 
+      {isPending ? (
+        <TaskCategorySkeleton count={8} />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+          {data?.items?.map((category: TaskCategory) => (
+            <TaskCategoryCard
               key={category.id}
               setOpenUpdate={setOpenUpdate}
               category={category}
               setCategory={setCategory}
               setOpenRemove={setOpenRemove}
             />
-          ))
-        }
-      </div>
+          ))}
+        </div>
+      )}
       <TaskCategoryCreate 
         open={openCreate}
         setOpen={setOpenCreate}

@@ -56,7 +56,11 @@ export default function CategoryListCard() {
                   style={cat.color ? { borderColor: cat.color, backgroundColor: `${cat.color}20` } : undefined}
                 >
                   {cat.icon ? (
-                    <img src={cat.icon} alt="" className="w-5 h-5 object-contain" />
+                    /^https?:\/\//i.test(cat.icon) || cat.icon.startsWith("/") || cat.icon.startsWith("data:") ? (
+                      <img src={cat.icon} alt="" className="w-5 h-5 object-contain" />
+                    ) : (
+                      <span className="text-base leading-none">{cat.icon}</span>
+                    )
                   ) : (
                     <span>📁</span>
                   )}

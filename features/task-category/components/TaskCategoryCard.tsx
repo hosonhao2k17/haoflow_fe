@@ -40,11 +40,17 @@ const TaskCategoryCard = ({category, setOpenUpdate, setCategory, setOpenRemove}:
                             className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden ring-2 ring-primary/20 bg-primary/10 flex-shrink-0"
                             style={category.color ? { boxShadow: `0 0 0 2px ${category.color}40` } : undefined}
                         >
-                            <img
-                                src={category.icon ?? 'https://t4.ftcdn.net/jpg/03/85/95/63/360_F_385956366_Zih7xDcSLqDxiJRYUfG5ZHNoFCSLMRjm.jpg'}
-                                alt={category.title}
-                                className="w-7 h-7 object-contain"
-                            />
+                            {category.icon && (/^https?:\/\//i.test(category.icon) || category.icon.startsWith("/") || category.icon.startsWith("data:")) ? (
+                                <img
+                                    src={category.icon}
+                                    alt={category.title}
+                                    className="w-7 h-7 object-contain"
+                                />
+                            ) : (
+                                <span className="text-2xl leading-none">
+                                    {category.icon ?? "📁"}
+                                </span>
+                            )}
                         </div>
                         {/* Stop propagation so card click doesn't fire on menu open */}
                         <div onClick={(e) => e.stopPropagation()}>
