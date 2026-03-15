@@ -19,16 +19,18 @@ const TaskCategoryUpdate = ({ open, setOpen, taskCategory }: Props) => {
         description: taskCategory.description,
         color: taskCategory.color,
         icon: taskCategory.icon,
+        doneTask: taskCategory.doneTask,
     });
 
     useEffect(() => {
         if (!taskCategory) return;
-        
+
         setTaskCategory({
             title: taskCategory.title,
             description: taskCategory.description,
             color: taskCategory.color,
             icon: taskCategory.icon,
+            doneTask: taskCategory.doneTask,
         });
     }, [taskCategory]);
 

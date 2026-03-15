@@ -40,9 +40,16 @@ interface Props {
   children: React.ReactNode
   title: string
   subtitle?: string
+  /** Redirect sang backend Google OAuth khi bấm nút Google */
+  onGoogleClick?: () => void
 }
 
-const CardAuth = ({ children, title, subtitle }: Props) => {
+const CardAuth = ({ children, title, subtitle, onGoogleClick }: Props) => {
+  const getButtonClick = (id: string) => {
+    if (id === "google" && onGoogleClick) return onGoogleClick
+    return undefined
+  }
+
   return (
     <Card className="w-full max-w-sm shadow-2xl shadow-primary/10 border-border">
       {/* Header */}
@@ -63,7 +70,7 @@ const CardAuth = ({ children, title, subtitle }: Props) => {
             <button
               key={btn.id}
               type="button"
-              onClick={btn.onClick}
+              onClick={getButtonClick(btn.id)}
               className="flex items-center justify-center gap-2 h-9 rounded-lg border border-border bg-background hover:bg-muted/60 transition-colors text-xs font-medium text-card-foreground"
             >
               {btn.icon}

@@ -3,27 +3,34 @@ import { Trash2 } from "lucide-react"
 
 
 interface Props {
+    /** Tên item hiển thị trong mô tả (vd. tên danh mục, merchant giao dịch) */
     title: string;
+    /** Tiêu đề dialog (vd. "Xóa danh mục?", "Xóa giao dịch?") */
+    dialogTitle?: string;
     openConfirm: boolean;
     setOpenConfirm: (open: boolean) => void;
     handleRemove: () => void;
-    isPending?: boolean
+    isPending?: boolean;
 }
 
-
-const AlertRemoveDialog = ({openConfirm, setOpenConfirm, title, handleRemove, isPending = false}: Props) => {
-
-
-    return (
-        <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                            <span className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-                                <Trash2 className="w-4 h-4 text-destructive" />
-                            </span>
-                            Xóa danh mục?
-                        </AlertDialogTitle>
+const AlertRemoveDialog = ({
+  openConfirm,
+  setOpenConfirm,
+  title,
+  dialogTitle = "Xóa danh mục?",
+  handleRemove,
+  isPending = false,
+}: Props) => {
+  return (
+    <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+              <Trash2 className="w-4 h-4 text-destructive" />
+            </span>
+            {dialogTitle}
+          </AlertDialogTitle>
                         <AlertDialogDescription>
                             Bạn có chắc muốn xóa 
                             <span className="font-semibold text-foreground">

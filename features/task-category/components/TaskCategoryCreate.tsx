@@ -17,6 +17,7 @@ const DEFAULT_STATE: TaskCategoryFormValue = {
   description: "",
   color: undefined,
   icon: undefined,
+  doneTask: 0,
 }
 
 const TaskCategoryCreate = ({ open, setOpen }: Props) => {

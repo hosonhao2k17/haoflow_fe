@@ -17,7 +17,11 @@ import TransactionFilter from "@/features/transaction/components/TransactionFilt
 import TransactionEmptyRow from "@/features/transaction/components/TransactionEmptyRow";
 import TransactionRow from "@/features/transaction/components/TransactionRow";
 import TransactionDateRow from "@/features/transaction/components/TransactionDateRow";
-import { useTransactions, useTransactionStats } from "@/features/transaction/transaction.hook";
+import {
+  useTransactions,
+  useTransactionStats,
+  useDeleteTransaction,
+} from "@/features/transaction/transaction.hook";
 import { useState, useMemo, Fragment } from "react";
 import { endOfMonth, endOfWeek, format, setDate, startOfMonth, startOfWeek } from "date-fns";
 import TransactionRowSkeleton from "@/features/transaction/components/Skeletons/TransactionRowSkeleton";
@@ -25,6 +29,8 @@ import { formatVnd } from "@/lib/format";
 import TransactionCreate from "@/features/transaction/components/TransactionCreate";
 import TransactionReceiptPreview from "@/features/transaction/components/TransactionReceiptPreview";
 import TransactionUpdate from "@/features/transaction/components/TransactionUpdate";
+import AlertRemoveDialog from "@/components/common/AlertRemoveDialog";
+import { toast } from "sonner";
 
 
 interface AmountRange {
@@ -55,6 +61,8 @@ const TransactionPage = () => {
   const [openReceipt, setOpenReceipt] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
   const [transaction, setTransaction] = useState<Transaction>();
+  const [openRemove, setOpenRemove] = useState<boolean>(false);
+  const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null);
 
   const { data, isLoading } = useTransactions({
     merchant,
@@ -69,7 +77,30 @@ const TransactionPage = () => {
 
   });
 
-  const {data:stats} = useTransactionStats()
+  const { data: stats } = useTransactionStats();
+  const deleteMutation = useDeleteTransaction();
+
+  const handleDeleteClick = (tx: Transaction) => {
+    setTransactionToDelete(tx);
+    setOpenRemove(true);
+  };
+
+  const handleConfirmRemove = () => {
+    if (!transactionToDelete) return;
+    deleteMutation.mutate(transactionToDelete.id, {
+      onSuccess: () => {
+        toast.success("Đã xóa giao dịch");
+        setOpenRemove(false);
+        setTransactionToDelete(null);
+      },
+      onError: () => toast.error("Không thể xóa giao dịch"),
+    });
+  };
+
+  const setOpenRemoveDialog = (open: boolean) => {
+    setOpenRemove(open);
+    if (!open) setTransactionToDelete(null);
+  };
 
   const grouped = useMemo(
     () => groupByDate(data?.items ?? []),
@@ -137,11 +168,12 @@ const TransactionPage = () => {
                     <Fragment key={dateKey}>
                       <TransactionDateRow date={new Date(dateKey)} count={txs.length} />
                       {txs.map((tx) => (
-                        <TransactionRow 
-                          key={tx.id} 
-                          transaction={tx} 
+                        <TransactionRow
+                          key={tx.id}
+                          transaction={tx}
                           setOpenUpdate={setOpenUpdate}
                           setTransaction={setTransaction}
+                          onDelete={handleDeleteClick}
                         />
                       ))}
                     </Fragment>
@@ -174,12 +206,20 @@ const TransactionPage = () => {
           open={openReceipt}
           setOpen={setOpenReceipt}
         />
-        <TransactionUpdate 
+        <TransactionUpdate
           open={openUpdate}
           setOpen={setOpenUpdate}
           transaction={transaction}
         />
 
+        <AlertRemoveDialog
+          openConfirm={openRemove}
+          setOpenConfirm={setOpenRemoveDialog}
+          title={transactionToDelete?.merchant ?? ""}
+          dialogTitle="Xóa giao dịch?"
+          handleRemove={handleConfirmRemove}
+          isPending={deleteMutation.isPending}
+        />
       </div>
 
 

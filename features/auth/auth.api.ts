@@ -23,3 +23,10 @@ export const verify = async (token: string) => {
     const res = await api.get(`auth/verify?token=${token}`);
     return res.data;
 }
+
+/** URL để redirect user sang backend Google OAuth. Sau khi đăng nhập Google, backend redirect về /oauth/callback?token=... */
+export const getGoogleAuthUrl = (): string => {
+  const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+  return `${base.replace(/\/$/, "")}/auth/google`;
+};
+

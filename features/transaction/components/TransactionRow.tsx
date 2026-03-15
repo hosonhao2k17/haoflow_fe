@@ -9,13 +9,18 @@ import { fmtDateShort, fmtShort } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 interface Props {
-    transaction: Transaction;
-    setOpenUpdate: (open: boolean) => void;
-    setTransaction: (transaction: Transaction) => void;
-   
+  transaction: Transaction;
+  setOpenUpdate: (open: boolean) => void;
+  setTransaction: (transaction: Transaction) => void;
+  onDelete?: (transaction: Transaction) => void;
 }
 
-const TransactionRow = ({ transaction, setOpenUpdate, setTransaction }: Props) => {
+const TransactionRow = ({
+  transaction,
+  setOpenUpdate,
+  setTransaction,
+  onDelete,
+}: Props) => {
     return (
         <TableRow className="cursor-pointer border-border/30 hover:bg-primary/[0.025] transition-colors group">
             <TableCell className="pl-5 py-3">
@@ -86,7 +91,7 @@ const TransactionRow = ({ transaction, setOpenUpdate, setTransaction }: Props) =
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="rounded-lg gap-2 text-sm cursor-pointer text-rose-600 focus:text-rose-600 focus:bg-rose-50"
-                            onClick={() =>{}}
+                            onClick={() => onDelete?.(transaction)}
                         >
                             <Trash2 size={13} />
                             Xóa
