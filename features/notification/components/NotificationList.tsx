@@ -7,6 +7,7 @@ import { Bell } from "lucide-react";
 interface NotificationListProps {
   items: Notification[];
   isLoading?: boolean;
+  onMarkRead?: (id: string) => void;
   onMarkUnread?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
@@ -14,6 +15,7 @@ interface NotificationListProps {
 export default function NotificationList({
   items,
   isLoading,
+  onMarkRead,
   onMarkUnread,
   onDelete,
 }: NotificationListProps) {
@@ -62,6 +64,7 @@ export default function NotificationList({
         <li key={item.id}>
           <NotificationItem
             notification={item}
+            onMarkRead={onMarkRead}
             onMarkUnread={onMarkUnread}
             onDelete={onDelete}
           />

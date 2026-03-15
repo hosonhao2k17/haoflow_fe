@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useCallback } from "react";
 import { Notification, NotificationType } from "../interfaces/notification.interface";
 import { cn } from "@/lib/utils";
 import {
@@ -11,9 +12,8 @@ import {
   Mail,
   X,
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
 import { formatCreatedAt } from "@/lib/date";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const TYPE_CONFIG: Record<
   string,
@@ -53,21 +53,34 @@ const TYPE_CONFIG: Record<
 
 interface NotificationItemProps {
   notification: Notification;
+  onMarkRead?: (id: string) => void;
   onMarkUnread?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
 
 export default function NotificationItem({
   notification,
+  onMarkRead,
   onMarkUnread,
   onDelete,
 }: NotificationItemProps) {
   const config = TYPE_CONFIG[notification.type] ?? TYPE_CONFIG.default;
   const Icon = config.icon;
   const isUnread = !notification.isRead;
+  const articleRef = useRef<HTMLElement>(null);
+
+  const handleSeen = useCallback(() => {
+    if (isUnread && onMarkRead) onMarkRead(notification.id);
+  }, [notification.id, isUnread, onMarkRead]);
+
+  useIntersectionObserver(articleRef, handleSeen, {
+    once: true,
+    threshold: 0.2,
+  });
 
   return (
     <article
+      ref={articleRef}
       className={cn(
         "relative rounded-2xl border bg-card overflow-hidden transition-all duration-200",
         "hover:shadow-md hover:border-border/80",

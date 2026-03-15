@@ -19,3 +19,13 @@ export const getNotifications = async (
   return res.data;
 };
 
+export const updateRead = async (id: string, isRead: boolean) => {
+  const res = await api.patch(`notifications/${id}/read`, { isRead });
+  return res.data;
+};
+
+
+export const removeNotification = async (id: string) => {
+  const res = await api.delete(`notifications/${id}`);
+  return res.data;
+};

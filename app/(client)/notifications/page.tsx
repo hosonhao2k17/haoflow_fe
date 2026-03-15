@@ -1,18 +1,34 @@
 "use client";
 
+import { useCallback } from "react";
 import NotificationHeader from "@/features/notification/components/NotificationHeader";
 import NotificationList from "@/features/notification/components/NotificationList";
-import { useNotifications } from "@/features/notification/notificaition.hook";
+import {
+  useNotifications,
+  useUpdateRead,
+} from "@/features/notification/notificaition.hook";
 
 export default function NotificationsPage() {
   const { data, isLoading } = useNotifications({ page: 1, limit: 50 });
+  const updateReadMutation = useUpdateRead();
   const items = data?.items ?? [];
+
+  const handleMarkRead = useCallback(
+    (id: string) => {
+      updateReadMutation.mutate({ id, isRead: true });
+    },
+    [updateReadMutation]
+  );
 
   return (
     <div className="min-h-screen bg-gray-50/50">
       <NotificationHeader />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
-        <NotificationList items={items} isLoading={isLoading} />
+        <NotificationList
+          items={items}
+          isLoading={isLoading}
+          onMarkRead={handleMarkRead}
+        />
       </div>
     </div>
   );
