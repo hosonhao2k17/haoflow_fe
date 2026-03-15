@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { useUserStore } from "@/store/user.store"
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface SocialProvider {
   id: string
@@ -32,7 +31,6 @@ interface AchievementBadge {
   desc: string
 }
 
-// ─── Mock extras (thay bằng API sau) ─────────────────────────────────────────
 
 const STATS = [
   { label: "Tasks hoàn thành", value: "248", icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" /> },
@@ -165,7 +163,7 @@ const Profiles = () => {
 
             <div className="space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl font-bold text-card-foreground">{user.fullName}</h1>
+                <h1 className="text-xl font-bold text-card-foreground">Trang này chưa làm kịp</h1>
                 {user.verified && <BadgeCheck className="w-5 h-5 text-primary shrink-0" />}
               </div>
               <div className="flex items-center gap-2 flex-wrap">

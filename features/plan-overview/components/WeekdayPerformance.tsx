@@ -17,7 +17,7 @@ export default function WeekdayPerformance() {
           <span className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
             <Calendar size={13} className="text-primary" />
           </span>
-          Hiệu suất theo thứ
+          Hiệu suất theo thứ (Chức năng này chưa làm kịp)
         </CardTitle>
         <p className="text-[11px] text-muted-foreground mt-0.5">
           Thứ nào hoàn thành ít task nhất trong daily plan
