@@ -6,7 +6,8 @@ import { IdPayload } from "@/common/interfaces/id-payload.interface"
 import { Task } from "./interfaces/task.interface"
 import { QueryTask } from "./interfaces/query-task.interface"
 import { CreateMultiTask } from "./interfaces/create-multi-task.interface"
-
+import { taskStats } from "./task.api";
+import { StatsType } from "./constants/stats-type.constant";
 
 export const useCreateTask = () => {
 
@@ -18,6 +19,13 @@ export const useCreateTask = () => {
         }
     })
 }
+
+export const useTaskStats = (type: StatsType) => {
+  return useQuery({
+    queryKey: ["tasks", "stats", type],
+    queryFn: () => taskStats(type),
+  });
+};
 
 export const useCreateMultiTask = () => {
 

@@ -10,17 +10,13 @@ import DailyPlanCalendar from "@/features/plan-overview/components/DailyPlanCale
 import WeekdayPerformance from "@/features/plan-overview/components/WeekdayPerformance";
 import CategoryStatusChart from "@/features/plan-overview/components/CategoryStatusChart";
 import AIAnalysis from "@/features/plan-overview/components/AIAnalysis";
+import { useTaskStats } from "@/features/task/task.hook";
+import { StatsType } from "@/features/task/constants/stats-type.constant";
 import {
   WEEK_DATA,
   MONTH_DATA,
   YEAR_DATA,
 } from "@/features/plan-overview/constants/overview-data";
-
-const totalDone = 247;
-const totalTodo = 38;
-const totalSkipped = 19;
-const streak = 12;
-const totalTasks = totalDone + totalTodo + totalSkipped;
 
 const PERIOD_LABELS: Record<FilterMode, string> = {
   week: "T2 → CN",
@@ -32,6 +28,8 @@ export default function TaskOverviewPage() {
   const [filterMode, setFilterMode] = useState<FilterMode>("week");
   const [calYear, setCalYear] = useState(new Date().getFullYear());
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
+  const statsType: StatsType = filterMode === "week" ? StatsType.WEEK : filterMode === "month" ? StatsType.MONTH : StatsType.YEAR;
+  const { data: taskStats, isPending: statsLoading } = useTaskStats(statsType);
 
   const chartData = useMemo(() => {
     if (filterMode === "week") return WEEK_DATA;
@@ -67,11 +65,13 @@ export default function TaskOverviewPage() {
         <OverviewHeader filterMode={filterMode} onFilterChange={setFilterMode} />
 
         <OverviewStatCards
-          totalTasks={totalTasks}
-          totalDone={totalDone}
-          totalTodo={totalTodo}
-          totalSkipped={totalSkipped}
-          streak={streak}
+          totalTasks={taskStats?.total ?? 0}
+          totalDone={taskStats?.done ?? 0}
+          totalTodo={taskStats?.todo ?? 0}
+          totalSkipped={taskStats?.skipped ?? 0}
+          streak={taskStats?.streak ?? 0}
+          doneProgress={taskStats?.doneProgress}
+          skipProgress={taskStats?.skipProgress}
         />
 
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-4">

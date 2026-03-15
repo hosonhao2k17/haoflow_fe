@@ -3,7 +3,13 @@ import { Createtask } from "./interfaces/create-task.interface";
 import { UpdateTask } from "./interfaces/update-task.interface";
 import { QueryTask } from "./interfaces/query-task.interface";
 import { CreateMultiTask } from "./interfaces/create-multi-task.interface";
+import { TaskStats } from "./interfaces/task-stats.interface";
+import { StatsType } from "./constants/stats-type.constant";
 
+export const taskStats = async (type: StatsType): Promise<TaskStats> => {
+  const res = await api.get<TaskStats>("tasks/stats", { params: { type } });
+  return res.data;
+};
 
 
 export const createMultiTask = async (req: CreateMultiTask) => {

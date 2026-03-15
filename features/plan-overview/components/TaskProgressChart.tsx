@@ -20,7 +20,6 @@ interface TaskProgressChartProps {
 
 const LEGEND: [string, string][] = [
   [chartColors.primary, "Hoàn thành"],
-  [chartColors.primaryLight, "Chưa làm"],
   [chartColors.primaryLightest, "Bỏ qua"],
 ];
 
@@ -68,12 +67,6 @@ export default function TaskProgressChart({ data, periodLabel }: TaskProgressCha
               dataKey="done"
               name="Hoàn thành"
               fill={chartColors.primary}
-              radius={[5, 5, 0, 0]}
-            />
-            <Bar
-              dataKey="todo"
-              name="Chưa làm"
-              fill={chartColors.primaryLight}
               radius={[5, 5, 0, 0]}
             />
             <Bar
