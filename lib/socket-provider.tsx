@@ -46,6 +46,12 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       });
     });
 
+    socket.on('remind_task', (data) => {
+      toast.warning(`${data.title}`, {
+        description: data.body
+      })
+    })
+
     socket.on('alert_threshold', (data) => {
       toast.warning(`${data.title}`, {
         description: data.body

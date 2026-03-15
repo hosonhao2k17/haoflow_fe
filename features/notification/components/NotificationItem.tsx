@@ -1,127 +1,135 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Notification } from "../interfaces/notification.interface";
+import { Notification, NotificationType } from "../interfaces/notification.interface";
 import { cn } from "@/lib/utils";
 import {
-  Bell,
   CheckCircle2,
   AlertTriangle,
   Info,
-  XCircle,
+  Clock,
+  Zap,
+  Mail,
+  X,
 } from "lucide-react";
-import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
+import { formatCreatedAt } from "@/lib/date";
 
-const TYPE_CONFIG = {
-  info: {
+const TYPE_CONFIG: Record<
+  string,
+  { icon: React.ComponentType<{ className?: string }>; bg: string; iconColor: string }
+> = {
+  [NotificationType.SYSTEM]: {
     icon: Info,
     bg: "bg-primary/10",
     iconColor: "text-primary",
-    border: "border-primary/20",
   },
-  success: {
+  [NotificationType.TASK_ASSIGN]: {
     icon: CheckCircle2,
     bg: "bg-emerald-500/10",
     iconColor: "text-emerald-600",
-    border: "border-emerald-500/20",
   },
-  warning: {
+  [NotificationType.BUDGET_THRESHOLD]: {
     icon: AlertTriangle,
     bg: "bg-amber-500/10",
     iconColor: "text-amber-600",
-    border: "border-amber-500/20",
   },
-  error: {
-    icon: XCircle,
-    bg: "bg-rose-500/10",
-    iconColor: "text-rose-600",
-    border: "border-rose-500/20",
+  [NotificationType.TASK_ALARM]: {
+    icon: Clock,
+    bg: "bg-blue-500/10",
+    iconColor: "text-blue-600",
   },
-} as const;
-
-function formatTimeAgo(iso: string) {
-  try {
-    return formatDistanceToNow(new Date(iso), { addSuffix: true, locale: vi });
-  } catch {
-    return "";
-  }
-}
+  [NotificationType.REMIND_TASK]: {
+    icon: Zap,
+    bg: "bg-violet-500/10",
+    iconColor: "text-violet-600",
+  },
+  default: {
+    icon: Info,
+    bg: "bg-primary/10",
+    iconColor: "text-primary",
+  },
+};
 
 interface NotificationItemProps {
   notification: Notification;
-  onMarkRead?: (id: string) => void;
+  onMarkUnread?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 export default function NotificationItem({
   notification,
-  onMarkRead,
+  onMarkUnread,
+  onDelete,
 }: NotificationItemProps) {
-  const config = TYPE_CONFIG[notification.type] ?? TYPE_CONFIG.info;
+  const config = TYPE_CONFIG[notification.type] ?? TYPE_CONFIG.default;
   const Icon = config.icon;
+  const isUnread = !notification.isRead;
 
-  const content = (
-    <Card
+  return (
+    <article
       className={cn(
-        "shadow-none border rounded-xl transition-colors",
-        notification.read
-          ? "bg-card border-border/60"
-          : "bg-primary/5 border-primary/20"
+        "relative rounded-2xl border bg-card overflow-hidden transition-all duration-200",
+        "hover:shadow-md hover:border-border/80",
+        isUnread
+          ? "border-l-4 border-l-primary shadow-sm bg-primary/[0.03]"
+          : "border-border/60"
       )}
     >
-      <CardContent className="p-4">
-        <div className="flex gap-3">
-          <div
-            className={cn(
-              "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
-              config.bg
-            )}
-          >
-            <Icon className={cn("w-5 h-5", config.iconColor)} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <h3
-                className={cn(
-                  "text-sm font-semibold text-foreground",
-                  !notification.read && "font-bold"
-                )}
-              >
-                {notification.title}
-              </h3>
-              <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
-                {formatTimeAgo(notification.createdAt)}
+      <div className="flex gap-4 p-4 sm:p-5">
+        <div
+          className={cn(
+            "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
+            config.bg
+          )}
+        >
+          <Icon className={cn("w-6 h-6", config.iconColor)} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <h3
+              className={cn(
+                "text-[15px] leading-tight",
+                isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/95"
+              )}
+            >
+              {notification.title}
+            </h3>
+            <div className="flex items-center gap-1 shrink-0">
+              <span className="text-xs text-muted-foreground whitespace-nowrap mt-0.5">
+                {formatCreatedAt(notification.createdAt)}
               </span>
-            </div>
-            <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
-              {notification.message}
-            </p>
-            {!notification.read && onMarkRead && (
               <button
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  onMarkRead(notification.id);
+                  onDelete?.(notification.id);
                 }}
-                className="text-xs font-medium text-primary mt-2 hover:underline"
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                aria-label="Xóa"
               >
-                Đánh dấu đã đọc
+                <X className="w-4 h-4" />
               </button>
-            )}
+            </div>
           </div>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-3">
+            {notification.body}
+          </p>
+          {notification.isRead && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                onMarkUnread?.(notification.id);
+              }}
+              className="mt-3 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              Đánh dấu chưa đọc
+            </button>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
-
-  if (notification.link) {
-    return (
-      <Link href={notification.link} className="block">
-        {content}
-      </Link>
-    );
-  }
-
-  return content;
 }

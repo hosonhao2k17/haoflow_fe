@@ -1,9 +1,21 @@
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import { vi } from "date-fns/locale";
 
+export const formatDate = (date: string | Date) =>
+  new Intl.DateTimeFormat("vi-VN").format(new Date(date));
 
-export const formatDate = (date: string | Date) => 
-    new Intl.DateTimeFormat('vi-VN').format(new Date(date)) 
-
+/**
+ * Format createdAt/updatedAt as relative time (e.g. "3 phút trước", "2 giờ trước").
+ */
+export const formatCreatedAt = (date: string | Date): string => {
+  try {
+    const d = typeof date === "string" ? new Date(date) : date;
+    if (isNaN(d.getTime())) return "";
+    return formatDistanceToNow(d, { addSuffix: true, locale: vi });
+  } catch {
+    return "";
+  }
+};
 
 export const getBirthDateRange = () => {
     const today = new Date()

@@ -1,12 +1,18 @@
-export type NotificationType = "info" | "success" | "warning" | "error";
+import { Base } from "@/common/interfaces/base.interface";
 
-export interface Notification {
+export enum NotificationType {
+  SYSTEM = 'system',
+  TASK_ASSIGN = 'task_assign',
+  BUDGET_THRESHOLD = 'budget_threshold',
+  TASK_ALARM = 'task_alarm',
+  REMIND_TASK = 'remind_task'
+}
+export interface Notification extends  Base {
   id: string;
   title: string;
-  message: string;
+  body: string;
   type: NotificationType;
-  read: boolean;
-  createdAt: string;
-  /** Link khi bấm vào (optional) */
-  link?: string;
+  isRead: boolean;
+  readAt: string;
+  metadata?: Record<string, any>;
 }
