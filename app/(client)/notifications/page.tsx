@@ -6,11 +6,14 @@ import NotificationList from "@/features/notification/components/NotificationLis
 import {
   useNotifications,
   useUpdateRead,
+  useRemoveNotification,
 } from "@/features/notification/notificaition.hook";
+import { toast } from "sonner";
 
 export default function NotificationsPage() {
   const { data, isLoading } = useNotifications({ page: 1, limit: 50 });
   const updateReadMutation = useUpdateRead();
+  const removeMutation = useRemoveNotification();
   const items = data?.items ?? [];
 
   const handleMarkRead = useCallback(
@@ -18,6 +21,16 @@ export default function NotificationsPage() {
       updateReadMutation.mutate({ id, isRead: true });
     },
     [updateReadMutation]
+  );
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      removeMutation.mutate(id, {
+        onSuccess: () => toast.success("Đã xóa thông báo"),
+        onError: () => toast.error("Không thể xóa thông báo"),
+      });
+    },
+    [removeMutation]
   );
 
   return (
@@ -28,6 +41,7 @@ export default function NotificationsPage() {
           items={items}
           isLoading={isLoading}
           onMarkRead={handleMarkRead}
+          onDelete={handleDelete}
         />
       </div>
     </div>
